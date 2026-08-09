@@ -1,12 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  ArrowLeft, ArrowRight, ArrowUpRight, Check, Circle,
-  List, MagnifyingGlass, Play, Sparkle, X
+  ArrowLeft, ArrowRight, Check, Circle,
+  List, Play, Sparkle, UserCircle, X
 } from "@phosphor-icons/react";
 import {
-  CoursePage, ProfilePage, ProjectPage, RetrospectivePage, SetupPage, SprintPage, StoryLesson
+  CertificatesPage, CoursePage, ProfilePage, ProjectPage, RetrospectivePage, SetupPage, SprintPage, StoryLesson
 } from "./components/LearningPages.jsx";
 import { CourseEditor } from "./components/CourseEditor.jsx";
+import { AcademyHub, PublicGoLanding, getGoChallenge, GoTrainer } from "./components/AcademyExperience.jsx";
 
 const modules = [
   { n: "00", title: "Старт", text: "Как устроен курс, среда разработки и первая программа.", lessons: ["Добро пожаловать в Go", "Установка Go и редактора", "Первая программа"] },
@@ -15,15 +16,6 @@ const modules = [
   { n: "03", title: "Интерфейсы и ошибки", text: "Идиоматичный Go: композиция, контракты и обработка ошибок.", lessons: ["Интерфейсы", "Композиция", "Ошибки", "Panic и recover", "Generics"] },
   { n: "04", title: "Конкурентность", text: "Горутины, каналы и безопасная параллельная работа.", lessons: ["Горутины", "Каналы", "Select", "Mutex", "Context", "Паттерны конкурентности"] },
   { n: "05", title: "Backend на Go", text: "HTTP API, JSON, базы данных, тесты и production-практики.", lessons: ["HTTP-сервер", "REST API", "JSON", "Работа с PostgreSQL", "Тестирование", "Логирование", "Профилирование"] },
-];
-
-const tasks = [
-  { id: 1, title: "Сумма чётных чисел", level: "Лёгкая", tags: ["Слайсы", "Циклы"] },
-  { id: 2, title: "Частотный словарь", level: "Лёгкая", tags: ["Map", "Строки"] },
-  { id: 3, title: "Безопасный счётчик", level: "Средняя", tags: ["Горутины", "Mutex"] },
-  { id: 4, title: "Worker pool", level: "Сложная", tags: ["Каналы", "Горутины"] },
-  { id: 5, title: "HTTP middleware", level: "Средняя", tags: ["HTTP", "Интерфейсы"] },
-  { id: 6, title: "Кэш с TTL", level: "Сложная", tags: ["Context", "Map"] },
 ];
 
 function Logo({ onHome }) {
@@ -37,24 +29,27 @@ function Header({ setPage }) {
     <header className="site-header">
       <Logo onHome={() => nav("home")} />
       <nav>
-        <button onClick={() => nav("/go")}>Курс</button>
+        <button onClick={() => nav("/academy")}>Курс</button>
         <button onClick={() => nav("/#how")}>Как это работает</button>
-        <button className="hide-mobile" onClick={() => nav("/go/task-tracker")}>Проекты</button>
+        <button className="hide-mobile" onClick={() => nav("/#projects")}>Проекты</button>
       </nav>
       <div className="header-actions">
-        <button className="login hide-mobile" onClick={() => nav("/go/task-tracker")}>Начать бесплатно</button>
+        <button className="hide-mobile" aria-label="Профиль" onClick={() => nav("/profile")}><UserCircle size={20}/></button>
+        <button className="login hide-mobile" onClick={() => nav("/academy")}>Начать</button>
         <button className="mobile-menu" aria-label={menuOpen ? "Закрыть меню" : "Открыть меню"} aria-expanded={menuOpen} onClick={() => setMenuOpen((value) => !value)}>{menuOpen ? <X size={21}/> : <List size={21}/>}</button>
       </div>
       {menuOpen && <nav className="mobile-nav-panel" aria-label="Мобильная навигация">
-        <button onClick={() => { nav("/go"); setMenuOpen(false); }}>Курс</button>
+        <button onClick={() => { nav("/academy"); setMenuOpen(false); }}>Курс</button>
         <button onClick={() => { nav("/#how"); setMenuOpen(false); }}>Как это работает</button>
-        <button onClick={() => { nav("/go/task-tracker"); setMenuOpen(false); }}>Первый проект</button>
+        <button onClick={() => { nav("/academy"); setMenuOpen(false); }}>Начать</button>
       </nav>}
     </header>
   );
 }
 
 function Home({ setPage }) {
+  return <PublicGoLanding navigate={setPage}/>;
+  /* Legacy landing retained below while the academy layout is being evaluated.
   return (
     <>
       <section className="hero">
@@ -99,6 +94,7 @@ function Home({ setPage }) {
       </section>
     </>
   );
+  */
 }
 
 export function LegacyLesson({ setPage }) {
@@ -143,6 +139,8 @@ function Course({ setPage }) {
 }
 
 function Trainer({ setPage }) {
+  return <GoTrainer navigate={setPage}/>;
+  /* Legacy trainer retained below while the academy layout is being evaluated.
   const [query, setQuery] = useState("");
   const [level, setLevel] = useState("Все");
   const shown = useMemo(() => tasks.filter(t => (level==="Все" || t.level===level) && t.title.toLowerCase().includes(query.toLowerCase())), [query,level]);
@@ -156,19 +154,21 @@ function Trainer({ setPage }) {
       </section>
     </main>
   );
+  */
 }
 
-function Task() {
-  const starter = `package main\n\nfunc SumEven(nums []int) int {\n    // Напишите решение\n    return 0\n}`;
+function Task({ challengeId }) {
+  const challenge = getGoChallenge(challengeId);
+  const starter = challenge.starter;
   const [code, setCode] = useState(starter);
   const [output, setOutput] = useState("Нажмите «Запустить», чтобы проверить код");
-  const run = () => setOutput(code.includes("sum +=") ? "✓ TestBasic — OK\n✓ TestEmpty — OK\n✓ TestNegative — OK\n\n3 теста пройдено · 0.08 сек." : "✕ TestBasic\nожидалось: 12\nполучено: 0\n\nПодсказка: накапливайте сумму в цикле.");
+  const run = () => setOutput(code.includes(challenge.successToken) ? "✓ Базовый сценарий — OK\n✓ Граничный сценарий — OK\n✓ Ошибка обработана — OK\n\n3 проверки пройдено · 0.08 сек." : `✕ Проверка пока не прошла\n\nПодсказка: ${challenge.hint}`);
   return <main className="workspace">
     <section className="problem">
-      <div className="crumb">Тренажёр / Задача 01</div><span className="badge">ЛЁГКАЯ</span><h1>Сумма чётных чисел</h1><p>Реализуйте функцию <code>SumEven</code>, которая принимает слайс целых чисел и возвращает сумму всех чётных элементов.</p>
-      <h3>Пример</h3><pre>SumEven([]int{"{1, 2, 4, 5, 6}"}) // 12</pre>
-      <h3>Условия</h3><ul><li>Пустой слайс возвращает 0</li><li>Отрицательные числа учитываются</li><li>Не изменяйте входной слайс</li></ul>
-      <button className="hint" onClick={()=>setOutput("Подсказка: используйте цикл range и проверку n % 2 == 0.")}><Sparkle size={17}/> Попросить подсказку</button>
+      <div className="crumb">Тренажёр Go / {challenge.category}</div><span className="badge">{challenge.level.toUpperCase()}</span><h1>{challenge.title}</h1><p>{challenge.description}</p>
+      <h3>Рабочий контекст</h3><pre>Bit Tech · {challenge.minutes} минут · самостоятельная проверка</pre>
+      <h3>Условия</h3><ul><li>Не меняйте публичный контракт функции</li><li>Обработайте хотя бы один граничный сценарий</li><li>Сделайте решение читаемым для ревью</li></ul>
+      <button className="hint" onClick={()=>setOutput(`Подсказка: ${challenge.hint}`)}><Sparkle size={17}/> Попросить подсказку</button>
     </section>
     <section className="coding">
       <div className="code-tabs"><b>main.go</b><span>Go 1.25</span></div><div className="code-area"><div className="lines">{code.split("\n").map((_,i)=><span key={i}>{i+1}</span>)}</div><textarea aria-label="Редактор кода" value={code} onChange={e=>setCode(e.target.value)} spellCheck="false"/></div>
@@ -193,11 +193,13 @@ export function App() {
   useEffect(() => {
     const titleByRoute = {
       "/": "Godemy — обучение Go через реальные проекты",
+      "/academy": "Godemy — курс и тренажёр Go",
       "/go": "Курс Go с нуля до Junior — Godemy",
       "/go/task-tracker": "Проект Task Tracker — Godemy",
       "/go/task-tracker/setup": "Подготовка к проекту — Godemy",
       "/go/task-tracker/retrospective": "Ретроспектива проекта — Godemy",
       "/profile": "Прогресс обучения — Godemy",
+      "/certificates": "Сертификаты Godemy",
       "/course-editor": "Редактор курса — Godemy",
     };
     const sprint = route.match(/^\/go\/task-tracker\/sprint\/([1-4])$/);
@@ -207,10 +209,11 @@ export function App() {
   const navigate = (target) => {
     const routes = { home: "/", course: "/go", trainer: "/trainer", lesson: "/lesson", task: "/task" };
     const next = routes[target] || target;
-    if (next === "/#how") {
-      history.pushState({}, "", "/#how");
+    if (next === "/#how" || next === "/#projects") {
+      const anchor = next.split("#")[1];
+      history.pushState({}, "", next);
       setRoute("/");
-      requestAnimationFrame(() => document.querySelector(".audience")?.scrollIntoView({ behavior: "smooth" }));
+      requestAnimationFrame(() => document.querySelector(anchor === "how" ? ".public-value" : ".public-projects")?.scrollIntoView({ behavior: "smooth" }));
     } else {
       history.pushState({}, "", next);
       setRoute(next);
@@ -219,24 +222,27 @@ export function App() {
   };
   const sprintMatch = route.match(/^\/go\/task-tracker\/sprint\/([1-4])$/);
   const lessonMatch = route.match(/^\/go\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
+  const taskMatch = route.match(/^\/task(?:\/([^/]+))?$/);
   let content;
   if (route === "/") content = <Home setPage={navigate}/>;
+  else if (route === "/academy") content = <AcademyHub navigate={navigate}/>;
   else if (route === "/go") content = <CoursePage navigate={navigate}/>;
   else if (route === "/go/task-tracker") content = <ProjectPage navigate={navigate}/>;
   else if (route === "/go/task-tracker/setup") content = <SetupPage navigate={navigate}/>;
   else if (sprintMatch) content = <SprintPage number={Number(sprintMatch[1])} navigate={navigate}/>;
   else if (route === "/go/task-tracker/retrospective") content = <RetrospectivePage navigate={navigate}/>;
   else if (route === "/profile") content = <ProfilePage navigate={navigate}/>;
+  else if (route === "/certificates") content = <CertificatesPage navigate={navigate}/>;
   else if (route === "/course-editor") content = <CourseEditor navigate={navigate}/>;
   else if (lessonMatch) content = <StoryLesson sectionId={lessonMatch[1]} topicId={lessonMatch[2]} lessonId={lessonMatch[3]} navigate={navigate}/>;
   else if (route === "/lesson") content = <StoryLesson navigate={navigate}/>;
   else if (route === "/trainer") content = <Trainer setPage={navigate}/>;
-  else if (route === "/task") content = <Task/>;
+  else if (taskMatch) content = <Task challengeId={taskMatch[1]}/>;
   else content = <CoursePage navigate={navigate}/>;
-  const immersive = route === "/task" || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
+  const immersive = Boolean(taskMatch) || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
   return <>{!immersive && <Header setPage={navigate}/>} {content}{!immersive && <Footer setPage={navigate}/>}</>;
 }
 
 function Footer({setPage}) {
-  return <footer><Logo onHome={()=>setPage("/")}/><p>Бесплатное обучение Go через проекты, спринты и GitHub.</p><div><button onClick={()=>setPage("/go")}>Курс</button><button onClick={()=>setPage("/go/task-tracker")}>Первый проект</button><button onClick={()=>setPage("/go/task-tracker/setup")}>Подготовка</button><button onClick={()=>setPage("/go/task-tracker/retrospective")}>Ретроспектива</button></div><small>© 2026 Godemy · Бесплатный учебный проект</small></footer>;
+  return <footer><Logo onHome={()=>setPage("/")}/><p>Бесплатное обучение Go через проекты, спринты и GitHub.</p><div><button onClick={()=>setPage("/academy")}>Курс и тренажёр</button><button onClick={()=>setPage("/go")}>Программа</button><button onClick={()=>setPage("/profile")}>Профиль</button><button onClick={()=>setPage("/certificates")}>Сертификаты</button></div><small>© 2026 Godemy · Бесплатный учебный проект</small></footer>;
 }

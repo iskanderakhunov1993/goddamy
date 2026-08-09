@@ -5,7 +5,7 @@ import {
   ArrowLeft, ArrowRight, Check, CheckCircle, Circle, Code,
   GithubLogo, Lightbulb, RocketLaunch, Target, BookOpen, House,
   List, X, CaretRight, UserCircle, PencilSimple, Trophy, Flame,
-  Certificate, Briefcase, GitBranch
+  Certificate, Briefcase, GitBranch, CalendarBlank, Eye, LinkSimple, MapPin
 } from "@phosphor-icons/react";
 import { project, setupTasks, sprints, stages, storyBeats } from "../content/goCourse.js";
 import { courseCurriculum, courseExperience } from "../content/courseCurriculum.js";
@@ -145,16 +145,34 @@ export function CoursePage({ navigate }) {
 export function ProfilePage({ navigate }) {
   const [course] = useState(loadCourseDraft);
   const lessonCount = flattenCourse(course).length;
+  const [editing, setEditing] = useState(false);
+  const [isPublic, setIsPublic] = useState(false);
+  const [profile, setProfile] = useState({ name: "Стажёр Bit Tech", about: "Учусь собирать backend-сервисы на Go через реальные задачи команды.", city: "Москва, Россия", github: "" });
+  const changeProfile = (key, value) => setProfile((current) => ({ ...current, [key]: value }));
+  const activity = Array.from({ length: 52 }, (_, index) => index);
   return <main className="profile-shell">
-    <aside className="profile-rail" aria-label="Навигация кабинета"><button className="dashboard-logo" onClick={() => navigate("/")}><span>GO</span>DEMY</button><nav><button aria-label="Мой курс" onClick={() => navigate("/go")}><BookOpen size={20}/></button><button className="active" aria-label="Профиль стажёра"><UserCircle size={21}/></button><button aria-label="Редактор курса" onClick={() => navigate("/course-editor")}><PencilSimple size={20}/></button></nav></aside>
     <div className="profile-content">
-      <header className="profile-header"><div><small>BIT TECH · ЛИЧНЫЙ КАБИНЕТ</small><h1>Стажёр Go-команды</h1><p>Твой маршрут от первого commit до трёх GitHub-проектов.</p></div><button onClick={() => navigate("/go")}>Продолжить стажировку <ArrowRight size={17}/></button></header>
-      <section className="profile-overview"><article><Flame size={21}/><small>РАБОЧИЙ РИТМ</small><b>0 из 2 сессий</b><p>Выбери комфортную цель на неделю.</p></article><article><GitBranch size={21}/><small>ТЕКУЩИЙ ШАГ</small><b>Онбординг</b><p>Настрой инструменты и сделай первый push.</p></article><article><Trophy size={21}/><small>ПРОВЕРЕНО</small><b>0 из 3 проектов</b><p>Прогресс подтверждается через GitHub.</p></article></section>
-      <section className="profile-section"><div className="profile-section-heading"><div><small>АРТЕФАКТЫ ПОРТФОЛИО</small><h2>Три проекта Bit Tech</h2></div><span>{lessonCount} уроков в программе</span></div><div className="project-portfolio-grid">{courseExperience.projects.map((item, index) => <article key={item.id}><span>0{index + 1}</span><small>{item.level}</small><h3>{item.title}</h3><p>{item.result}</p><div>{item.stack.map((skill) => <em key={skill}>{skill}</em>)}</div><footer><Circle size={15}/><span>Откроется после предыдущего проекта</span></footer></article>)}</div></section>
-      <section className="profile-section profile-achievements"><div className="profile-section-heading"><div><small>ДОСТИЖЕНИЯ</small><h2>Проверяемые сигналы роста</h2></div><span>Никаких наград за клики</span></div><div>{courseExperience.achievements.map((achievement) => <article key={achievement.id}><Trophy size={19}/><div><b>{achievement.title}</b><p>{achievement.description}</p></div><small>{achievement.condition}</small></article>)}</div></section>
-      <section className="certificate-card"><Certificate size={29}/><div><small>СЕРТИФИКАТ GODemy</small><h2>Go Backend Internship</h2><p>Будет доступен после трёх проверенных проектов, финальной ретроспективы и оформленных GitHub-артефактов.</p></div><span>0 / 3 проекта</span></section>
+      <div className="profile-header"><div><small>BIT TECH · ЛИЧНЫЙ КАБИНЕТ</small><h1>Профиль стажёра</h1><p>Прогресс, портфолио и подтверждения твоей практики.</p></div><button onClick={() => navigate("/certificates")}>Сертификаты <Certificate size={17}/></button></div>
+      <div className="profile-layout">
+        <aside className="profile-card"><img src="/characters/avatar-protagonist-neutral-v1.png" alt="Аватар стажёра"/><div><small>PRE-JUNIOR · BIT TECH</small><h2>{profile.name}</h2></div><button className="profile-edit" onClick={() => setEditing((value) => !value)}><PencilSimple size={16}/>{editing ? "Готово" : "Редактировать профиль"}</button><p className="profile-joined"><CalendarBlank size={16}/> В программе с августа 2026</p>{editing ? <form onSubmit={(event) => { event.preventDefault(); setEditing(false); }}><label>Имя<input value={profile.name} onChange={(event) => changeProfile("name", event.target.value)} maxLength={40}/></label><label>О себе<textarea value={profile.about} onChange={(event) => changeProfile("about", event.target.value)} maxLength={280}/></label><label>Город<input value={profile.city} onChange={(event) => changeProfile("city", event.target.value)} maxLength={60}/></label><label>GitHub<input value={profile.github} onChange={(event) => changeProfile("github", event.target.value)} placeholder="https://github.com/username"/></label><button className="profile-save">Сохранить</button></form> : <><p className="profile-about">{profile.about}</p><p className="profile-location"><MapPin size={16}/>{profile.city}</p>{profile.github && <a href={profile.github} target="_blank" rel="noreferrer"><LinkSimple size={16}/> GitHub</a>}</>}<div className="profile-level"><b>Intern <ArrowRight size={15}/> Junior</b><i><span style={{ width: "0%" }}/></i><small>0 / 100 XP · рост через выполненные задачи</small></div></aside>
+        <div className="profile-main">
+          <section className="profile-public"><div><Eye size={20}/><span><b>Профиль публичный</b><small>После включения ссылку на профиль можно будет добавить в портфолио.</small></span></div><button aria-pressed={isPublic} className={isPublic ? "toggle on" : "toggle"} onClick={() => setIsPublic((value) => !value)}><i/></button></section>
+          <section className="profile-progress"><div className="profile-panel-heading"><div><h2>Прогресс по обучению</h2><p>Начни онбординг — первый урок откроет рабочий ритм.</p></div><button onClick={() => navigate("/go")}>К программе <ArrowRight size={16}/></button></div>{[{ title: "Go Backend Internship", value: `0 / ${lessonCount} уроков`, progress: 0 }, ...courseExperience.projects.map((project) => ({ title: project.title, value: "0 / 1 проект", progress: 0 }))].map((item) => <article key={item.title}><div><b>{item.title}</b><span>{item.value}</span></div><i><em style={{ width: `${item.progress}%` }}/></i></article>)}<div className="profile-stats"><div><Flame size={25}/><span><b>0</b><small>Текущая серия</small></span></div><div><Trophy size={25}/><span><b>0</b><small>Личный рекорд</small></span></div><div><GitBranch size={25}/><span><b>0 / 3</b><small>Проверено проектов</small></span></div></div><div className="profile-week"><b>Последние 7 дней</b><div>{["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"].map((day) => <span key={day}><Flame size={20}/><small>{day}</small></span>)}</div></div></section>
+          <section className="profile-activity"><div className="profile-panel-heading"><div><h2>Активность за 12 месяцев</h2><p>После завершения уроков здесь появится история практики.</p></div><span>Всего активностей: 0</span></div><div className="activity-grid">{activity.map((item) => <i key={item} aria-label="Нет активности"/>)}</div></section>
+          <section className="profile-cert-preview"><Certificate size={28}/><div><small>СЕРТИФИКАТЫ GODEMY</small><h2>Подтверждай не время на платформе, а результат.</h2><p>Сертификат станет доступен после трёх проверенных проектов, финальной ретроспективы и GitHub-артефактов.</p></div><button onClick={() => navigate("/certificates")}>Все сертификаты <ArrowRight size={17}/></button></section>
+        </div>
+      </div>
     </div>
   </main>;
+}
+
+export function CertificatesPage({ navigate }) {
+  const certificates = [
+    { title: "Go Backend Internship", progress: "0 из 3 проектов", description: "Итоговый сертификат Godemy после трёх проверенных GitHub-проектов и финальной ретроспективы.", action: "Открыть программу", path: "/go" },
+    { title: "Практика Go", progress: "0 из 9 задач", description: "Подтверждает самостоятельное решение задач разных уровней сложности в тренажёре.", action: "Перейти в тренажёр", path: "/trainer" },
+    { title: "Task Tracker CLI", progress: "0 из 1 проекта", description: "Первый проект: CLI-приложение с JSON-хранилищем, тестами, README и release.", action: "Начать проект", path: "/go" },
+  ];
+  return <main className="certificates-shell"><section className="certificates-content"><div className="certificates-header"><small>GODEMY · ДОСТИЖЕНИЯ</small><h1>Доступные сертификаты</h1><p>Сертификат — это аккуратное подтверждение практической работы. Он не заменяет опыт и не гарантирует трудоустройство.</p></div><div className="certificate-grid">{certificates.map((item) => <article key={item.title}><div className="certificate-lock"><Certificate size={26}/><span>В процессе</span></div><h2>{item.title}</h2><p>{item.description}</p><div className="certificate-progress"><b>{item.progress}</b><i><span style={{ width: "0%" }}/></i></div><button onClick={() => navigate(item.path)}>{item.action} <ArrowRight size={17}/></button></article>)}</div><section className="certificate-how"><h2>Как получить сертификат</h2><ol><li>Выполни обязательные уроки и практические задачи.</li><li>Опубликуй проект в GitHub: README, тесты и release.</li><li>Пройди финальную ретроспективу и добавь ссылки на артефакты.</li></ol><button onClick={() => navigate("/profile")}>К профилю <ArrowLeft size={17}/></button></section></section></main>;
 }
 
 export function StoryLesson({ sectionId = "intro", topicId = "welcome", lessonId = "welcome", navigate }) {
