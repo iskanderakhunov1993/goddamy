@@ -1,0 +1,92 @@
+/* Visual refinements for the course cabinet and editorial lesson. */
+body { min-width: 0; }
+
+.dashboard-stage { min-height: 210px; }
+
+.stage-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 28px;
+  border-radius: 10px;
+  background: #f3f4ff;
+  color: #625cff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.story-scene { min-height: auto; padding: 24px; }
+.story-message { grid-template-columns: 1fr; }
+
+.lesson-reader { max-width: 760px; }
+
+.lesson-reader > header i { grid-template-columns: repeat(6, 1fr); }
+.lesson-reader > header i b.complete { background: #282828; }
+
+.lesson-copy { margin: 46px 0; font-size: 18px; line-height: 1.55; }
+.lesson-copy h2 { margin: 42px 0 20px; font-size: 30px; }
+.lesson-copy p + p { margin-top: 20px; }
+.lesson-copy ul { display: grid; gap: 12px; padding-left: 26px; }
+.lesson-dialogue { margin: 56px 0; }
+.lesson-checkpoint { margin-top: 52px; }
+.lesson-example {
+  padding: 28px 30px;
+  border-radius: 18px;
+  background: #f5f6ff;
+}
+.lesson-example > small {
+  color: #625cff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+.lesson-example h2 { margin-top: 10px; }
+.lesson-footer { justify-content: space-between; }
+.lesson-feedback {
+  padding: 9px 12px !important;
+  border: 1px solid #ddd !important;
+  border-radius: 8px !important;
+  color: #555;
+  font: 500 12px inherit;
+}
+.lesson-feedback:hover { background: #f4f4f4 !important; }
+.lesson-pager { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.lesson-pager > button:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 13px 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #fff;
+  font: 600 14px inherit;
+}
+
+@media (max-width: 720px) {
+  .story-lesson-shell { min-width: 0; }
+  .story-lesson { width: calc(100% - 36px); min-width: 0; }
+  .story-lesson h1 { overflow-wrap: anywhere; }
+  .lesson-copy { margin: 32px 0; font-size: 16px; }
+  .lesson-copy h2 { margin-top: 30px; font-size: 26px; }
+  .lesson-dialogue { margin: 38px 0; }
+  .lesson-footer { align-items: stretch !important; }
+  .lesson-pager { width: 100%; margin: 14px 0 0; }
+  .lesson-pager > button { flex: 1; justify-content: center; }
+}
+
+.outline-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 18px 0 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #666;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.outline-back:hover { color: #426bff; }

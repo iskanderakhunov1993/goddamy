@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { course, setupTasks, sprints, stages } from "../src/content/goCourse.js";
+import { course, setupTasks, sprints, stages, storyBeats } from "../src/content/goCourse.js";
 
 test("course exposes one available project and four roadmap projects", () => {
   assert.equal(course.projects.length, 5);
@@ -28,6 +28,17 @@ test("every sprint contains the universal learning sections", () => {
     assert.ok(sprint.criteria.length >= 4);
     assert.ok(sprint.hints.length >= 3);
     assert.ok(sprint.github.length >= 3);
+    assert.ok(sprint.story?.name);
+    assert.ok(sprint.story?.message);
+    assert.match(sprint.story?.avatar ?? "", /^\/characters\/avatar-/);
+  }
+});
+
+test("key project stages have a Bit Tech story message", () => {
+  for (const stage of ["project", "setup", "retrospective"]) {
+    assert.ok(storyBeats[stage].name);
+    assert.ok(storyBeats[stage].message);
+    assert.match(storyBeats[stage].avatar, /^\/characters\/avatar-/);
   }
 });
 

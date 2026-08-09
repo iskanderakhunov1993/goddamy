@@ -1,0 +1,58 @@
+.editor-field select {
+  width: 100%;
+  border: 1px solid #d8d8d5;
+  border-radius: 11px;
+  background: #fff;
+  padding: 13px 38px 13px 14px;
+  color: #242424;
+  outline: 0;
+}
+
+.editor-field select:focus {
+  border-color: #706aff;
+  box-shadow: 0 0 0 3px rgba(112, 106, 255, .12);
+}
+
+.lesson-block-editor { margin-top: 42px; padding-top: 34px; border-top: 1px solid #dededb; }
+.block-editor-heading small { color: #6d68dc; font: 800 10px Roboto Mono; letter-spacing: .08em; }
+.block-editor-heading h2 { margin: 7px 0 6px; font-size: 25px; letter-spacing: -.7px; }
+.block-editor-heading p { margin: 0; color: #777; font-size: 13px; line-height: 1.5; }
+.block-add-menu { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0; }
+.block-add-menu button { display: flex; align-items: center; gap: 7px; border: 1px solid #d9d9d5; border-radius: 9px; background: #fff; padding: 9px 11px; color: #414141; font-size: 12px; cursor: pointer; }
+.block-add-menu button:hover { border-color: #7772e7; background: #f7f6ff; color: #514cd1; }
+.lesson-block-list { display: grid; gap: 13px; }
+.lesson-editor-block { overflow: hidden; border: 1px solid #dededb; border-radius: 14px; background: #fff; }
+.lesson-editor-block > header { position: static; height: auto; display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border: 0; border-bottom: 1px solid #ececea; background: #f8f8f7; box-shadow: none; backdrop-filter: none; }
+.lesson-editor-block > header::after { display: none; }
+.lesson-editor-block > header > span { color: #666; font: 700 10px Roboto Mono; text-transform: uppercase; letter-spacing: .05em; }
+.lesson-editor-block > header > div { display: flex; gap: 4px; }
+.lesson-editor-block > header button { display: grid; place-items: center; width: 29px; height: 29px; border: 0; border-radius: 7px; background: transparent; color: #666; cursor: pointer; }
+.lesson-editor-block > header button:hover { background: #e8e8e5; color: #222; }
+.lesson-editor-block > header button:disabled { opacity: .28; cursor: default; }
+.lesson-editor-block > header .block-delete { color: #a34a4a; }
+.lesson-editor-block.is-dragging { opacity: .48; border-color: #706aff; }
+.lesson-editor-block > header > span { cursor: grab; user-select: none; }
+.lesson-editor-block > .editor-field, .lesson-editor-block > .block-fields { margin: 17px; }
+.lesson-editor-block .editor-field { margin-bottom: 0; }
+.block-fields { display: grid; gap: 16px; }
+.block-fields.two { grid-template-columns: minmax(0, 1fr) minmax(180px, .55fr); }
+.blocks-empty { display: grid; justify-items: center; gap: 7px; padding: 34px; border: 1px dashed #d2d2ce; border-radius: 13px; color: #777; text-align: center; }
+.blocks-empty b { color: #3a3a3a; }
+.blocks-empty span { font-size: 12px; }
+.image-source { display: grid; grid-template-columns: 1fr auto auto; align-items: end; gap: 12px; }
+.image-source > span { padding-bottom: 13px; color: #999; font-size: 11px; }
+.image-upload { position: relative; display: flex; align-items: center; gap: 7px; border: 1px solid #d8d8d5; border-radius: 10px; background: #f6f6f4; padding: 12px 14px; font-size: 12px; font-weight: 700; cursor: pointer; }
+.image-upload input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.editor-image-preview { display: block; max-width: 100%; max-height: 340px; margin: auto; border-radius: 10px; object-fit: contain; background: #f3f3f1; }
+.code-input { min-height: 210px; background: #20231f !important; color: #e3e8e2 !important; font: 13px/1.65 "Roboto Mono", monospace; tab-size: 2; }
+.divider-note { margin: 0; padding: 25px; color: #858585; font-size: 12px; text-align: center; }
+.editor-preview { margin-top: 24px; }
+.course-editor-shell select:focus-visible, .course-editor-shell .image-upload:focus-within { outline: 3px solid rgba(112, 106, 255, .25); outline-offset: 2px; }
+
+@media (max-width: 540px) {
+  .block-fields.two, .image-source { grid-template-columns: 1fr; }
+  .image-source > span { padding: 0; text-align: center; }
+  .image-upload { justify-content: center; }
+  .block-add-menu { display: grid; grid-template-columns: 1fr 1fr; }
+  .block-add-menu button { justify-content: center; }
+}

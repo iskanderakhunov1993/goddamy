@@ -4,8 +4,9 @@ import {
   List, MagnifyingGlass, Play, Sparkle, X
 } from "@phosphor-icons/react";
 import {
-  CoursePage, ProjectPage, RetrospectivePage, SetupPage, SprintPage
+  CoursePage, ProfilePage, ProjectPage, RetrospectivePage, SetupPage, SprintPage, StoryLesson
 } from "./components/LearningPages.jsx";
+import { CourseEditor } from "./components/CourseEditor.jsx";
 
 const modules = [
   { n: "00", title: "Старт", text: "Как устроен курс, среда разработки и первая программа.", lessons: ["Добро пожаловать в Go", "Установка Go и редактора", "Первая программа"] },
@@ -57,20 +58,20 @@ function Home({ setPage }) {
   return (
     <>
       <section className="hero">
-        <div className="eyebrow">GO 1.25 · КУРС НА РУССКОМ</div>
-        <h1>Интерактивный онлайн<br /><em>курс по Go</em></h1>
-        <p>Освойте Go на практике: от первой функции до конкурентных сервисов, готовых к production.</p>
+        <div className="eyebrow">BIT TECH · GO BACKEND INTERNSHIP</div>
+        <h1>Стажировка по Go<br /><em>через реальные проекты</em></h1>
+        <p>Пройди путь от первого commit до трёх GitHub-проектов: CLI, backend-сервис с PostgreSQL и API в Docker.</p>
         <div className="hero-actions">
           <button className="primary" onClick={() => setPage("course")}>Начать учиться <ArrowRight size={17}/></button>
           <button className="secondary" onClick={() => setPage("trainer")}>Открыть тренажёр</button>
         </div>
-        <div className="proof"><b>12 800+</b><span>разработчиков уже учатся</span><div className="avatars"><i>АК</i><i>МС</i><i>ИВ</i></div></div>
+        <div className="proof"><b>3 проекта</b><span>с проверяемыми артефактами в GitHub</span><div className="avatars"><i>BT</i><i>GO</i><i>CI</i></div></div>
       </section>
 
       <section className="path-grid container">
-        <button className="path-card blue" onClick={() => setPage("course")}><small>01 · ТЕОРИЯ + ПРАКТИКА</small><h2>Курс по Go</h2><p>Пошаговый путь с короткими уроками и проверкой знаний</p><b>42 урока <ArrowUpRight size={22}/></b></button>
+        <button className="path-card blue" onClick={() => setPage("course")}><small>01 · ТЕОРИЯ + ПРАКТИКА</small><h2>Курс по Go</h2><p>Шесть модулей, 30 тем и маленькие шаги, связанные с задачами команды</p><b>150 уроков <ArrowUpRight size={22}/></b></button>
         <button className="path-card mint" onClick={() => setPage("trainer")}><small>02 · УЧИМСЯ КОДОМ</small><h2>Go-тренажёр</h2><p>Задачи из реальной backend-разработки и собеседований</p><b>120 задач <ArrowUpRight size={22}/></b></button>
-        <div className="path-card dark"><small>03 · В ПОРТФОЛИО</small><h2>3 проекта</h2><p>CLI-утилита, REST API и конкурентный сервис</p><b>С код-ревью <ArrowUpRight size={22}/></b></div>
+        <div className="path-card dark"><small>03 · В ПОРТФОЛИО</small><h2>3 проекта</h2><p>Task Tracker, Expense Tracker и URL Shortener API</p><b>GitHub + CI <ArrowUpRight size={22}/></b></div>
       </section>
 
       <section className="audience container">
@@ -100,7 +101,7 @@ function Home({ setPage }) {
   );
 }
 
-function Course({ setPage }) {
+export function LegacyLesson({ setPage }) {
   return (
     <main className="inner container">
       <div className="page-intro"><small>ИНТЕРАКТИВНЫЙ КУРС</small><h1>Go с нуля до backend-разработчика</h1><p>Осмысленный маршрут через язык, стандартную библиотеку и практики создания надёжных сервисов.</p><div className="stats"><span><b>42</b> урока</span><span><b>67</b> упражнений</span><span><b>≈ 8</b> недель</span></div></div>
@@ -114,7 +115,7 @@ function Course({ setPage }) {
   );
 }
 
-function Lesson({ setPage }) {
+function Course({ setPage }) {
   const [answer, setAnswer] = useState("");
   const [checked, setChecked] = useState(false);
   return (
@@ -197,9 +198,11 @@ export function App() {
       "/go/task-tracker/setup": "Подготовка к проекту — Godemy",
       "/go/task-tracker/retrospective": "Ретроспектива проекта — Godemy",
       "/profile": "Прогресс обучения — Godemy",
+      "/course-editor": "Редактор курса — Godemy",
     };
     const sprint = route.match(/^\/go\/task-tracker\/sprint\/([1-4])$/);
-    document.title = sprint ? `Спринт ${sprint[1]} · Task Tracker — Godemy` : titleByRoute[route] || "Godemy — обучение Go";
+    const courseLesson = route.match(/^\/go\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
+    document.title = courseLesson ? "Урок курса Основы Go — Godemy" : sprint ? `Спринт ${sprint[1]} · Task Tracker — Godemy` : titleByRoute[route] || "Godemy — обучение Go";
   }, [route]);
   const navigate = (target) => {
     const routes = { home: "/", course: "/go", trainer: "/trainer", lesson: "/lesson", task: "/task" };
@@ -215,6 +218,7 @@ export function App() {
     }
   };
   const sprintMatch = route.match(/^\/go\/task-tracker\/sprint\/([1-4])$/);
+  const lessonMatch = route.match(/^\/go\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
   let content;
   if (route === "/") content = <Home setPage={navigate}/>;
   else if (route === "/go") content = <CoursePage navigate={navigate}/>;
@@ -222,12 +226,15 @@ export function App() {
   else if (route === "/go/task-tracker/setup") content = <SetupPage navigate={navigate}/>;
   else if (sprintMatch) content = <SprintPage number={Number(sprintMatch[1])} navigate={navigate}/>;
   else if (route === "/go/task-tracker/retrospective") content = <RetrospectivePage navigate={navigate}/>;
-  else if (route === "/lesson") content = <Lesson setPage={navigate}/>;
+  else if (route === "/profile") content = <ProfilePage navigate={navigate}/>;
+  else if (route === "/course-editor") content = <CourseEditor navigate={navigate}/>;
+  else if (lessonMatch) content = <StoryLesson sectionId={lessonMatch[1]} topicId={lessonMatch[2]} lessonId={lessonMatch[3]} navigate={navigate}/>;
+  else if (route === "/lesson") content = <StoryLesson navigate={navigate}/>;
   else if (route === "/trainer") content = <Trainer setPage={navigate}/>;
   else if (route === "/task") content = <Task/>;
   else content = <CoursePage navigate={navigate}/>;
-  const immersive = route === "/task";
-  return <><Header setPage={navigate}/>{content}{!immersive && <Footer setPage={navigate}/>}</>;
+  const immersive = route === "/task" || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
+  return <>{!immersive && <Header setPage={navigate}/>} {content}{!immersive && <Footer setPage={navigate}/>}</>;
 }
 
 function Footer({setPage}) {
