@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
 import {
-  ArrowLeft, ArrowRight, CheckCircle, Code, FilePy,
-  MagnifyingGlass, Play, ShieldCheck, SlidersHorizontal, Stack,
+  ArrowLeft, ArrowRight, CheckCircle, MagnifyingGlass, Play,
+  SlidersHorizontal,
 } from "@phosphor-icons/react";
 import "../styles-sql.css";
+import { CourseCabinet } from "./CourseCabinet.jsx";
 
 export const pythonModules = [
   { n: "01", title: "Старт и базовый синтаксис", text: "Настройте Python, запустите первую программу и освойте переменные.", topics: ["Среда и первый запуск", "Переменные", "Числа и строки", "Ввод и вывод", "Функции"] },
@@ -33,11 +34,7 @@ function PythonContextNav({ navigate, active }) {
 }
 
 export function PythonCoursePage({ navigate }) {
-  const [open, setOpen] = useState("01");
-  return <main className="sql-course-shell python-course-shell"><PythonContextNav navigate={navigate} active="course"/><section className="sql-course-hero container"><div><p className="academy-kicker">КУРС · PYTHON ДЛЯ РАБОТЫ</p><h1>Автоматизируйте задачи и собирайте полезные инструменты</h1><p>Освойте Python через небольшие рабочие сценарии Bit Tech: обработку данных, отчёты и надёжный CLI-сервис.</p><div className="sql-hero-actions"><button onClick={() => navigate("/python/practice/clean-name")}>Начать первый урок <ArrowRight size={17}/></button><button onClick={() => navigate("/python/practice")}>Открыть тренажёр</button></div></div><aside><FilePy size={42}/><small>РЕЗУЛЬТАТ КУРСА</small><h2>30 уроков · 45 задач · 1 проект</h2><ul><li>Синтаксис Python</li><li>Коллекции и файлы</li><li>Классы и тесты</li><li>Проект в GitHub</li></ul></aside></section>
-  <section className="sql-workflow container"><div><Stack size={23}/><b>Получаете рабочий сценарий</b><p>Понимаете входные данные и ожидаемый результат.</p></div><div><Code size={23}/><b>Пишете код самостоятельно</b><p>Закрепляете короткую теорию в тренажёре.</p></div><div><ShieldCheck size={23}/><b>Проверяете и объясняете</b><p>Запускаете тесты и готовите код к ревью.</p></div></section>
-  <section className="sql-program container"><header><div><p className="academy-kicker">ПРОГРАММА</p><h2>От первой функции до полезного сервиса</h2></div><button onClick={() => navigate("/python/practice")}>45 задач в практике <ArrowRight size={16}/></button></header><div>{pythonModules.map((module) => <article className={open === module.n ? "open" : ""} key={module.n}><button onClick={() => setOpen(open === module.n ? "" : module.n)}><span>{module.n}</span><div><h3>{module.title}</h3><p>{module.text}</p></div><b>{module.topics.length} тем</b><ArrowRight size={19}/></button>{open === module.n && <ol>{module.topics.map((topic, index) => <li key={topic}><span>{String(index + 1).padStart(2, "0")}</span><b>{topic}</b><small>урок + практика</small></li>)}</ol>}</article>)}</div></section>
-  <section className="sql-final container"><FilePy size={31}/><div><small>ФИНАЛЬНЫЙ ПРОЕКТ</small><h2>Сервис подготовки отчётов</h2><p>Примите данные из CSV, проверьте их, сформируйте сводку и опубликуйте CLI-приложение в GitHub.</p></div><button onClick={() => navigate("/python/practice")}>Начать с практики <ArrowRight size={17}/></button></section></main>;
+  return <CourseCabinet navigate={navigate} course={{ slug: "python", label: "Python", kicker: "АВТОМАТИЗАЦИЯ · BIT TECH", title: "Python для рабочих задач", description: "От первой функции до сервиса подготовки отчётов и проекта в GitHub.", modules: pythonModules, phases: ["СТАРТ", "ЛОГИКА", "ДАННЫЕ", "ИНСТРУМЕНТЫ", "АРХИТЕКТУРА", "ПРОЕКТ"], role: "Текущая роль: стажёр по автоматизации.", nextStep: "Освойте базовый синтаксис, закрепите его в практике и соберите CLI-сервис.", practicePath: "/python/practice", firstPath: "/python/practice/clean-name", startLabel: "Начать обучение" }}/>;
 }
 
 export function PythonTrainer({ navigate }) {

@@ -29,7 +29,7 @@ const audience = [
 
 export function PublicGoLanding({ navigate }) {
   const tracks = [
-    { title: "Go Backend", status: "Доступен сейчас", description: "Создайте три backend-проекта и пройдите путь от первой строки до релиза.", icon: <Code size={52}/>, action: () => navigate("/academy"), visual: <TerminalWindow size={72}/> },
+    { title: "Go Backend", status: "Доступен сейчас", description: "Создайте три backend-проекта и пройдите путь от первой строки до релиза.", icon: <Code size={52}/>, action: () => navigate("/go"), visual: <TerminalWindow size={72}/> },
     { title: "SQL", status: "Доступен сейчас", description: "Научитесь получать данные, строить отчёты и принимать решения на их основе.", icon: <Stack size={52}/>, action: () => navigate("/sql"), visual: <BracketsCurly size={72}/> },
     { title: "Python", status: "Доступен сейчас", description: "Автоматизируйте рабочие задачи и соберите сервис обработки данных.", icon: <FilePy size={52}/>, action: () => navigate("/python"), visual: <Code size={72}/> },
     { title: "Docker", status: "Скоро", description: "Упакуйте приложение в контейнер и разверните его в любой среде.", icon: <RocketLaunch size={52}/>, visual: <Stack size={72}/> },
@@ -39,7 +39,7 @@ export function PublicGoLanding({ navigate }) {
       <div className="universal-hero-copy">
         <h1>Осваивайте IT через реальные задачи</h1>
         <p>Короткая теория, настоящая практика и сертификат за подтверждённый результат.</p>
-        <div className="universal-hero-actions"><button onClick={() => navigate("/academy")}>Войти в команду <ArrowRight size={20}/></button><button onClick={() => navigate("/#courses")}>Выбрать направление</button></div>
+        <div className="universal-hero-actions"><button onClick={() => navigate("/go")}>Войти в команду <ArrowRight size={20}/></button><button onClick={() => navigate("/#courses")}>Выбрать направление</button></div>
         <div className="universal-subscription-note"><Stack size={20}/><span>Все курсы по одной подписке</span></div>
       </div>
       <div className="universal-hero-art"><img src="/characters/godemy-universal-team-hero.png" alt="Команда Godemy совместно решает учебную задачу"/></div>
@@ -54,7 +54,7 @@ export function PublicGoLanding({ navigate }) {
 
     <section className="universal-practice" id="practice"><div className="container"><div><p className="academy-kicker">ТОЛЬКО ВАЖНОЕ</p><h2>Не смотрите, как работают другие. Делайте сами.</h2></div><ol><li><b>Короткая теория</b><p>Только знания, нужные для следующей задачи.</p></li><li><b>Практика с проверкой</b><p>Тренажёр сразу показывает, что получилось.</p></li><li><b>Проект и сертификат</b><p>Результат можно открыть и показать другим.</p></li></ol></div></section>
 
-    <section className="universal-subscription container" id="subscription"><div><p className="academy-kicker">ОДНА ПОДПИСКА</p><h2>Учитесь в своём темпе, а не по расписанию потока</h2><p>Подписка открывает каждый курс вместе с его практикой, проектами и сертификатами. Можно начать с Go и позже добавить новые навыки.</p></div><div className="universal-subscription-card"><CheckCircle size={31}/><h3>Всё обучение в одном доступе</h3><ul><li>Практические IT-курсы</li><li>Свой тренажёр внутри каждого курса</li><li>Проекты для портфолио</li><li>Проверяемые сертификаты</li></ul><button onClick={() => navigate("/academy")}>Попробовать Godemy <ArrowRight size={18}/></button><small>Условия подписки появятся перед оплатой</small></div></section>
+    <section className="universal-subscription container" id="subscription"><div><p className="academy-kicker">ОДНА ПОДПИСКА</p><h2>Учитесь в своём темпе, а не по расписанию потока</h2><p>Подписка открывает каждый курс вместе с его практикой, проектами и сертификатами. Можно начать с Go и позже добавить новые навыки.</p></div><div className="universal-subscription-card"><CheckCircle size={31}/><h3>Всё обучение в одном доступе</h3><ul><li>Практические IT-курсы</li><li>Свой тренажёр внутри каждого курса</li><li>Проекты для портфолио</li><li>Проверяемые сертификаты</li></ul><button onClick={() => navigate("/go")}>Попробовать Godemy <ArrowRight size={18}/></button><small>Условия подписки появятся перед оплатой</small></div></section>
 
     <section className="universal-certificate container"><ShieldCheck size={54}/><div><p className="academy-kicker">СЕРТИФИКАТЫ</p><h2>Не за просмотр. За подтверждённый результат.</h2><p>Сертификат появляется в профиле после обязательных задач и проектов. Его можно открыть по ссылке и добавить в портфолио.</p></div><button onClick={() => navigate("/certificates")}>Посмотреть сертификаты <ArrowRight size={18}/></button></section>
   </main>;

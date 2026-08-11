@@ -37,14 +37,14 @@ function Header({ setPage }) {
       </nav>
       <div className="header-actions">
         <button className="hide-mobile" aria-label="Профиль" onClick={() => nav("/profile")}><UserCircle size={20}/></button>
-        <button className="login hide-mobile" onClick={() => nav("/academy")}>Начать</button>
+        <button className="login hide-mobile" onClick={() => nav("/go")}>Начать</button>
         <button className="mobile-menu" aria-label={menuOpen ? "Закрыть меню" : "Открыть меню"} aria-expanded={menuOpen} onClick={() => setMenuOpen((value) => !value)}>{menuOpen ? <X size={21}/> : <List size={21}/>}</button>
       </div>
       {menuOpen && <nav className="mobile-nav-panel" aria-label="Мобильная навигация">
         <button onClick={() => { nav("/#courses"); setMenuOpen(false); }}>Курсы</button>
         <button onClick={() => { nav("/certificates"); setMenuOpen(false); }}>Сертификаты</button>
         <button onClick={() => { nav("/#subscription"); setMenuOpen(false); }}>Подписка</button>
-        <button onClick={() => { nav("/academy"); setMenuOpen(false); }}>Начать</button>
+        <button onClick={() => { nav("/go"); setMenuOpen(false); }}>Начать</button>
       </nav>}
     </header>
   );

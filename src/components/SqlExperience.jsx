@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
 import {
-  ArrowLeft, ArrowRight, BracketsCurly, CheckCircle, Database,
-  MagnifyingGlass, Play, ShieldCheck, SlidersHorizontal, Stack,
+  ArrowLeft, ArrowRight, CheckCircle, MagnifyingGlass, Play,
+  SlidersHorizontal,
 } from "@phosphor-icons/react";
 import "../styles-sql.css";
+import { CourseCabinet } from "./CourseCabinet.jsx";
 
 export const sqlModules = [
   { n: "01", title: "Данные и реляционные базы", text: "Разберитесь, как устроены таблицы, строки, ключи и связи.", topics: ["Как хранятся данные", "Таблицы и типы", "Первичные ключи", "Связи между таблицами"] },
@@ -33,11 +34,7 @@ function SqlContextNav({ navigate, active }) {
 }
 
 export function SqlCoursePage({ navigate }) {
-  const [open, setOpen] = useState("01");
-  return <main className="sql-course-shell"><SqlContextNav navigate={navigate} active="course"/><section className="sql-course-hero container"><div><p className="academy-kicker">КУРС · SQL ДЛЯ РАБОТЫ</p><h1>Научитесь отвечать на вопросы с помощью данных</h1><p>От первой выборки до итогового отчёта для команды Bit Tech. Короткая теория сразу закрепляется запросом.</p><div className="sql-hero-actions"><button onClick={() => navigate("/sql/practice/active-clients")}>Начать первый урок <ArrowRight size={17}/></button><button onClick={() => navigate("/sql/practice")}>Открыть тренажёр</button></div></div><aside><Database size={42}/><small>РЕЗУЛЬТАТ КУРСА</small><h2>30 уроков · 45 задач · 1 проект</h2><ul><li>SELECT и фильтрация</li><li>Агрегации и JOIN</li><li>PostgreSQL</li><li>Отчёт в портфолио</li></ul></aside></section>
-  <section className="sql-workflow container"><div><Stack size={23}/><b>Получаете вопрос бизнеса</b><p>Сначала понимаете, какое решение должен поддержать отчёт.</p></div><div><BracketsCurly size={23}/><b>Пишете и проверяете SQL</b><p>Работаете с приближённой к продуктовой базой.</p></div><div><ShieldCheck size={23}/><b>Объясняете результат</b><p>Проверяете качество данных и фиксируете вывод.</p></div></section>
-  <section className="sql-program container"><header><div><p className="academy-kicker">ПРОГРАММА</p><h2>От таблицы до рабочего исследования</h2></div><button onClick={() => navigate("/sql/practice")}>45 задач в практике <ArrowRight size={16}/></button></header><div>{sqlModules.map((module) => <article className={open === module.n ? "open" : ""} key={module.n}><button onClick={() => setOpen(open === module.n ? "" : module.n)}><span>{module.n}</span><div><h3>{module.title}</h3><p>{module.text}</p></div><b>{module.topics.length} тем</b><ArrowRight size={19}/></button>{open === module.n && <ol>{module.topics.map((topic, index) => <li key={topic}><span>{String(index + 1).padStart(2, "0")}</span><b>{topic}</b><small>урок + практика</small></li>)}</ol>}</article>)}</div></section>
-  <section className="sql-final container"><Database size={31}/><div><small>ФИНАЛЬНЫЙ ПРОЕКТ</small><h2>Исследование операций Bit Tech</h2><p>Соберите запросы, проверьте метрики и подготовьте короткий аналитический вывод для продуктовой команды.</p></div><button onClick={() => navigate("/sql/practice")}>Начать с практики <ArrowRight size={17}/></button></section></main>;
+  return <CourseCabinet navigate={navigate} course={{ slug: "sql", label: "SQL", kicker: "АНАЛИТИКА · BIT TECH", title: "SQL для работы с данными", description: "От первой выборки до итогового исследования операций криптобанка.", modules: sqlModules, phases: ["СТАРТ", "ОСНОВЫ", "ФИЛЬТРАЦИЯ", "ОТЧЁТЫ", "СВЯЗИ", "ПРОЕКТ"], role: "Текущая роль: младший аналитик данных.", nextStep: "Пройдите основы, решите первые запросы и подготовьте итоговый отчёт.", practicePath: "/sql/practice", firstPath: "/sql/practice/active-clients", startLabel: "Начать обучение" }}/>;
 }
 
 export function SqlTrainer({ navigate }) {

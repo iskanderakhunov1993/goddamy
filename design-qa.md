@@ -49,3 +49,13 @@
 - Verified `/python/practice/clean-name`: the editor accepts code, “Запустить тесты” works, and successful automated checks appear in the result panel.
 - The universal catalogue exposes Python as available while practice remains inside the Python course rather than global navigation.
 - Final result: passed.
+
+## Unified course cabinet
+
+- Selected reference: `/var/folders/sg/szq02d257p75jlbsg24kswnw0000gn/T/TemporaryItems/NSIRD_screencaptureui_m9Ezp4/Снимок экрана 2026-08-11 в 23.09.19.png`.
+- Latest implementation capture: `/Users/iskander/Documents/go acafemy/course-cabinet-python-final.png`.
+- Compared at the available desktop viewport: compact left rail, white progress card, vertically stacked course actions, study-rhythm prompt, role note and three-column six-module grid match the selected reference structure and density.
+- Go, SQL and Python each render six cards with their own content and course-specific practice button; no horizontal overflow was found.
+- From the universal landing, the Go card now opens `/go` directly. SQL and Python already open `/sql` and `/python` directly; the hero and subscription CTA also avoid the intermediate `/academy` page.
+- Opening a module produces a working topic dialog with five topic rows and a clear close action.
+- Final result: passed.
