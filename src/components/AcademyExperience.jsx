@@ -32,6 +32,8 @@ export function PublicGoLanding({ navigate }) {
     { title: "Go Backend", status: "Доступен сейчас", description: "Создайте три backend-проекта и пройдите путь от первой строки до релиза.", icon: <Code size={52}/>, action: () => navigate("/go"), visual: <TerminalWindow size={72}/> },
     { title: "SQL", status: "Доступен сейчас", description: "Научитесь получать данные, строить отчёты и принимать решения на их основе.", icon: <Stack size={52}/>, action: () => navigate("/sql"), visual: <BracketsCurly size={72}/> },
     { title: "Python", status: "Доступен сейчас", description: "Автоматизируйте рабочие задачи и соберите сервис обработки данных.", icon: <FilePy size={52}/>, action: () => navigate("/python"), visual: <Code size={72}/> },
+    { title: "Product Management", status: "Доступен сейчас", description: "Научитесь исследовать проблему, выбирать метрики и вести продуктовую задачу к релизу.", icon: <GitBranch size={52}/>, action: () => navigate("/product"), visual: <Stack size={72}/> },
+    { title: "QA", status: "Доступен сейчас", description: "Проверяйте требования, API и релизы, чтобы команда выпускала надёжный продукт.", icon: <ShieldCheck size={52}/>, action: () => navigate("/qa"), visual: <CheckCircle size={72}/> },
     { title: "Docker", status: "Скоро", description: "Упакуйте приложение в контейнер и разверните его в любой среде.", icon: <RocketLaunch size={52}/>, visual: <Stack size={72}/> },
   ];
   return <main className="universal-landing">

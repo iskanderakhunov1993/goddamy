@@ -28,6 +28,10 @@ body { min-width: 0; }
 .course-dashboard-sql .module-art-accent { background: #e5f6f0; }
 .course-dashboard-python .module-art { color: #7256d8; }
 .course-dashboard-python .module-art-accent { background: #eeeaff; }
+.course-dashboard-product .module-art { color: #b36625; }
+.course-dashboard-product .module-art-accent { background: #fff0df; }
+.course-dashboard-qa .module-art { color: #27856d; }
+.course-dashboard-qa .module-art-accent { background: #e4f5ef; }
 .dashboard-stage.locked .module-art { filter: grayscale(.35); }
 
 .stage-number {
@@ -167,6 +171,18 @@ body { min-width: 0; }
 .course-dashboard-python .stage-number { background: #edf1ff; }
 .course-dashboard-python .dashboard-stage.active { outline-color: #496bef; }
 .course-dashboard-python .dashboard-stage.active i span { background: #496bef; }
+.course-dashboard-product .dashboard-course-card small,
+.course-dashboard-product .dashboard-practice-block > div > svg,
+.course-dashboard-product .dashboard-practice-block small { color: #a75d21; }
+.course-dashboard-product .dashboard-stage.active { outline-color: #b36625; }
+.course-dashboard-product .dashboard-stage.active i span { background: #b36625; }
+.course-dashboard-product .dashboard-practice { border-color: #f2d8c0; background: #fff0df; color: #a75d21; }
+.course-dashboard-qa .dashboard-course-card small,
+.course-dashboard-qa .dashboard-practice-block > div > svg,
+.course-dashboard-qa .dashboard-practice-block small { color: #27856d; }
+.course-dashboard-qa .dashboard-stage.active { outline-color: #27856d; }
+.course-dashboard-qa .dashboard-stage.active i span { background: #27856d; }
+.course-dashboard-qa .dashboard-practice { border-color: #cce9df; background: #e4f5ef; color: #27856d; }
 .outline-list > button em { color: #858585; font-size: 11px; font-style: normal; }
 
 @media (max-width: 720px) {

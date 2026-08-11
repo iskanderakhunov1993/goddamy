@@ -10,6 +10,7 @@ import { CourseEditor } from "./components/CourseEditor.jsx";
 import { AcademyHub, PublicGoLanding, getGoChallenge, GoTrainer } from "./components/AcademyExperience.jsx";
 import { SqlCoursePage, SqlTask, SqlTrainer } from "./components/SqlExperience.jsx";
 import { PythonCoursePage, PythonTask, PythonTrainer } from "./components/PythonExperience.jsx";
+import { BusinessPracticeComing, ProductCoursePage, QaCoursePage } from "./components/BusinessCourses.jsx";
 
 const modules = [
   { n: "00", title: "Старт", text: "Как устроен курс, среда разработки и первая программа.", lessons: ["Добро пожаловать в Go", "Установка Go и редактора", "Первая программа"] },
@@ -203,6 +204,10 @@ export function App() {
       "/sql/practice": "Практика курса SQL — Godemy",
       "/python": "Интерактивный курс Python — Godemy",
       "/python/practice": "Практика курса Python — Godemy",
+      "/product": "Курс Product Management — Godemy",
+      "/product/practice": "Практика Product Management — Godemy",
+      "/qa": "Курс QA — Godemy",
+      "/qa/practice": "Практика QA — Godemy",
       "/go/task-tracker": "Проект Task Tracker — Godemy",
       "/go/task-tracker/setup": "Подготовка к проекту — Godemy",
       "/go/task-tracker/retrospective": "Ретроспектива проекта — Godemy",
@@ -243,6 +248,10 @@ export function App() {
   else if (route === "/python") content = <PythonCoursePage navigate={navigate}/>;
   else if (route === "/python/practice") content = <PythonTrainer navigate={navigate}/>;
   else if (pythonTaskMatch) content = <PythonTask challengeId={pythonTaskMatch[1]} navigate={navigate}/>;
+  else if (route === "/product") content = <ProductCoursePage navigate={navigate}/>;
+  else if (route === "/product/practice") content = <BusinessPracticeComing navigate={navigate} course="product"/>;
+  else if (route === "/qa") content = <QaCoursePage navigate={navigate}/>;
+  else if (route === "/qa/practice") content = <BusinessPracticeComing navigate={navigate} course="qa"/>;
   else if (route === "/go/task-tracker") content = <ProjectPage navigate={navigate}/>;
   else if (route === "/go/task-tracker/setup") content = <SetupPage navigate={navigate}/>;
   else if (sprintMatch) content = <SprintPage number={Number(sprintMatch[1])} navigate={navigate}/>;
@@ -255,10 +264,10 @@ export function App() {
   else if (route === "/trainer" || route === "/go/practice") content = <Trainer setPage={navigate}/>;
   else if (taskMatch) content = <Task challengeId={taskMatch[1]}/>;
   else content = <CoursePage navigate={navigate}/>;
-  const immersive = Boolean(taskMatch) || Boolean(sqlTaskMatch) || Boolean(pythonTaskMatch) || route === "/trainer" || route === "/go/practice" || route === "/sql" || route === "/sql/practice" || route === "/python" || route === "/python/practice" || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
+  const immersive = Boolean(taskMatch) || Boolean(sqlTaskMatch) || Boolean(pythonTaskMatch) || route === "/trainer" || route === "/go/practice" || route === "/sql" || route === "/sql/practice" || route === "/python" || route === "/python/practice" || route === "/product" || route === "/product/practice" || route === "/qa" || route === "/qa/practice" || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
   return <>{!immersive && <Header setPage={navigate}/>} {content}{!immersive && <Footer setPage={navigate}/>}</>;
 }
 
 function Footer({setPage}) {
-  return <footer><Logo onHome={()=>setPage("/")}/><p>Практическое IT-обучение через курсы, проекты и проверяемые результаты.</p><div><button onClick={()=>setPage("/academy")}>Курс Go</button><button onClick={()=>setPage("/sql")}>Курс SQL</button><button onClick={()=>setPage("/python")}>Курс Python</button><button onClick={()=>setPage("/certificates")}>Сертификаты</button></div><small>© 2026 Godemy · Практический учебный проект</small></footer>;
+  return <footer><Logo onHome={()=>setPage("/")}/><p>Практическое IT-обучение через курсы, проекты и проверяемые результаты.</p><div><button onClick={()=>setPage("/academy")}>Курс Go</button><button onClick={()=>setPage("/sql")}>Курс SQL</button><button onClick={()=>setPage("/python")}>Курс Python</button><button onClick={()=>setPage("/product")}>Product</button><button onClick={()=>setPage("/qa")}>QA</button><button onClick={()=>setPage("/certificates")}>Сертификаты</button></div><small>© 2026 Godemy · Практический учебный проект</small></footer>;
 }

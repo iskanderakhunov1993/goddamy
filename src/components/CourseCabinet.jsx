@@ -1,9 +1,9 @@
 import { useState } from "react";
 import {
   ArrowRight, ArrowsClockwise, ArrowsDownUp, BookOpen, BracketsCurly,
-  Briefcase, ChartBar, ChartLineUp, Code, Cube, Database, FileCode,
+  Briefcase, ChartBar, ChartLineUp, CheckCircle, Code, Cube, Database, FileCode,
   Funnel, Function, GitBranch, House, List, ListBullets,
-  PresentationChart, RocketLaunch, ShareNetwork, SlidersHorizontal,
+  PresentationChart, RocketLaunch, ShareNetwork, ShieldCheck, SlidersHorizontal,
   Stack, Table, TerminalWindow, UserCircle, X,
 } from "@phosphor-icons/react";
 
@@ -11,11 +11,15 @@ const artworkSets = {
   go: [TerminalWindow, BracketsCurly, ListBullets, Database, ShareNetwork, RocketLaunch],
   sql: [Table, Funnel, ArrowsDownUp, ChartBar, GitBranch, PresentationChart],
   python: [Function, ArrowsClockwise, ListBullets, FileCode, Cube, ChartLineUp],
+  product: [Briefcase, UserCircle, ChartLineUp, Funnel, ListBullets, RocketLaunch],
+  qa: [CheckCircle, ListBullets, FileCode, BracketsCurly, ShieldCheck, RocketLaunch],
 };
 const accentSets = {
   go: [Code, BracketsCurly, GitBranch, Stack, TerminalWindow, RocketLaunch],
   sql: [Database, SlidersHorizontal, Table, ChartLineUp, ShareNetwork, PresentationChart],
   python: [TerminalWindow, Function, Stack, BracketsCurly, Code, RocketLaunch],
+  product: [ChartLineUp, Briefcase, Funnel, GitBranch, PresentationChart, RocketLaunch],
+  qa: [CheckCircle, BracketsCurly, ListBullets, Code, ShieldCheck, RocketLaunch],
 };
 
 export function ModuleArtwork({ course = "go", index = 0, number = null }) {
