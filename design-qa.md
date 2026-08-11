@@ -59,3 +59,13 @@
 - From the universal landing, the Go card now opens `/go` directly. SQL and Python already open `/sql` and `/python` directly; the hero and subscription CTA also avoid the intermediate `/academy` page.
 - Opening a module produces a working topic dialog with five topic rows and a clear close action.
 - Final result: passed.
+
+## Direction-specific module artwork
+
+- Selected reference: `/var/folders/sg/szq02d257p75jlbsg24kswnw0000gn/T/TemporaryItems/NSIRD_screencaptureui_GBJB6f/Снимок экрана 2026-08-11 в 23.42.01.png`.
+- Implementation captures: `/Users/iskander/Documents/go acafemy/module-art-go-final.png`, `/Users/iskander/Documents/go acafemy/module-art-sql-final.png`, `/Users/iskander/Documents/go acafemy/module-art-python-final.png`.
+- Card anatomy now follows the reference: a generous visual panel, content area and bottom progress rule, while retaining the existing light Godemy cabinet.
+- All 18 module cards have distinct semantic compositions using the existing Phosphor icon system: cobalt engineering diagrams for Go, mint data diagrams for SQL and violet automation diagrams for Python.
+- Verified six artwork panels and twelve icon elements per course, correct course-specific accents and no desktop horizontal overflow.
+- Remaining P3: artwork intentionally stays lighter and more minimal than the dark paid-course reference to preserve Godemy's durable light-theme decision.
+- Final result: passed.

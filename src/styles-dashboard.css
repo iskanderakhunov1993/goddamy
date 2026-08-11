@@ -1,7 +1,34 @@
 /* Visual refinements for the course cabinet and editorial lesson. */
 body { min-width: 0; }
 
-.dashboard-stage { min-height: 210px; }
+.dashboard-stage { min-height: 310px; }
+
+.module-art {
+  position: relative;
+  height: 138px;
+  border: 1px solid #eceff4;
+  background: #fff;
+  color: #4e70ef;
+}
+.module-art-primary { transform: translateX(-7px); }
+.module-art-accent {
+  position: absolute;
+  right: 44px;
+  bottom: 26px;
+  border-radius: 9px;
+  background: #eef2ff;
+  padding: 7px;
+  box-sizing: content-box;
+}
+.module-art span {
+  color: currentColor;
+  background: #f6f7ff;
+}
+.course-dashboard-sql .module-art { color: #199272; }
+.course-dashboard-sql .module-art-accent { background: #e5f6f0; }
+.course-dashboard-python .module-art { color: #7256d8; }
+.course-dashboard-python .module-art-accent { background: #eeeaff; }
+.dashboard-stage.locked .module-art { filter: grayscale(.35); }
 
 .stage-number {
   display: inline-flex;
@@ -110,12 +137,31 @@ body { min-width: 0; }
   cursor: pointer;
 }
 .dashboard-practice:hover { background: #e3e4ff; }
+.dashboard-practice-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  margin: 18px 0;
+  border: 1px solid #e1e4e8;
+  border-radius: 20px;
+  background: #fff;
+  padding: 28px 30px;
+}
+.dashboard-practice-block > div { display: flex; align-items: center; gap: 18px; }
+.dashboard-practice-block > div > svg { flex: 0 0 auto; color: #5c5ad8; }
+.dashboard-practice-block small { color: #5c5ad8; font: 700 10px "Roboto Mono", monospace; letter-spacing: .08em; }
+.dashboard-practice-block h2 { margin: 6px 0 4px; font-size: 20px; letter-spacing: -.5px; }
+.dashboard-practice-block p { margin: 0; color: #727b87; font-size: 13px; }
+.dashboard-practice-block .dashboard-practice { flex: 0 0 auto; }
 .course-dashboard-sql .dashboard-course-card small,
 .course-dashboard-sql .stage-number { color: #14765f; }
 .course-dashboard-sql .stage-number { background: #e9f6f1; }
 .course-dashboard-sql .dashboard-stage.active { outline-color: #168064; }
 .course-dashboard-sql .dashboard-stage.active i span { background: #168064; }
 .course-dashboard-sql .dashboard-practice { border-color: #d7ece5; background: #e9f6f1; color: #14765f; }
+.course-dashboard-sql .dashboard-practice-block > div > svg,
+.course-dashboard-sql .dashboard-practice-block small { color: #14765f; }
 .course-dashboard-python .dashboard-course-card small,
 .course-dashboard-python .stage-number { color: #496bef; }
 .course-dashboard-python .stage-number { background: #edf1ff; }
@@ -126,4 +172,10 @@ body { min-width: 0; }
 @media (max-width: 720px) {
   .dashboard-course-actions { width: 100%; }
   .dashboard-practice { width: 100%; }
+  .dashboard-practice-block { align-items: stretch; flex-direction: column; padding: 22px; }
+  .dashboard-practice-block > div { align-items: flex-start; }
+  .dashboard-stage { min-height: 275px; }
+  .module-art { height: 112px; }
+  .module-art-primary { width: 62px; height: 62px; }
+  .module-art-accent { right: 25px; bottom: 18px; width: 23px; height: 23px; }
 }
