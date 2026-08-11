@@ -31,3 +31,21 @@
 - Initial comparison: hero height was too short and the team illustration felt undersized.
 - Fix: increased desktop hero height and adjusted image scale and positioning to restore the selected visual balance.
 - Final result: passed.
+
+## SQL course extension
+
+- Reference reviewed: `https://sql-academy.org/ru` for course/trainer information architecture only; Godemy copy, curriculum, data and visual treatment are original.
+- Verified `/sql` at 1910 px: course hero, outcome card, learning loop and expandable six-module programme render without horizontal overflow.
+- Verified `/sql/practice`: search/filter surface exposes nine realistic starter tasks and keeps practice inside the SQL course context.
+- Verified `/sql/practice/monthly-turnover`: editor accepts a query, the run action works, and a successful result table is rendered.
+- Global landing now presents SQL as an available direction; global navigation still avoids a generic practice destination.
+- Final result: passed.
+
+## Python course extension
+
+- Reference reviewed: `https://python-academy.org/ru` for information architecture, curriculum breadth and course-to-trainer flow; all Godemy copy, exercises, mock data and interface styling are original.
+- Verified `/python`: six-module programme, outcome card, learning loop and final project render without horizontal overflow at the available desktop viewport.
+- Verified `/python/practice`: nine tasks, course-scoped navigation, search and topic/difficulty controls render correctly.
+- Verified `/python/practice/clean-name`: the editor accepts code, “Запустить тесты” works, and successful automated checks appear in the result panel.
+- The universal catalogue exposes Python as available while practice remains inside the Python course rather than global navigation.
+- Final result: passed.

@@ -8,6 +8,8 @@ import {
 } from "./components/LearningPages.jsx";
 import { CourseEditor } from "./components/CourseEditor.jsx";
 import { AcademyHub, PublicGoLanding, getGoChallenge, GoTrainer } from "./components/AcademyExperience.jsx";
+import { SqlCoursePage, SqlTask, SqlTrainer } from "./components/SqlExperience.jsx";
+import { PythonCoursePage, PythonTask, PythonTrainer } from "./components/PythonExperience.jsx";
 
 const modules = [
   { n: "00", title: "Старт", text: "Как устроен курс, среда разработки и первая программа.", lessons: ["Добро пожаловать в Go", "Установка Go и редактора", "Первая программа"] },
@@ -30,7 +32,6 @@ function Header({ setPage }) {
       <Logo onHome={() => nav("home")} />
       <nav>
         <button onClick={() => nav("/#courses")}>Курсы</button>
-        <button onClick={() => nav("/trainer")}>Практика</button>
         <button className="hide-mobile" onClick={() => nav("/certificates")}>Сертификаты</button>
         <button className="hide-mobile" onClick={() => nav("/#subscription")}>Подписка</button>
       </nav>
@@ -41,7 +42,6 @@ function Header({ setPage }) {
       </div>
       {menuOpen && <nav className="mobile-nav-panel" aria-label="Мобильная навигация">
         <button onClick={() => { nav("/#courses"); setMenuOpen(false); }}>Курсы</button>
-        <button onClick={() => { nav("/trainer"); setMenuOpen(false); }}>Практика</button>
         <button onClick={() => { nav("/certificates"); setMenuOpen(false); }}>Сертификаты</button>
         <button onClick={() => { nav("/#subscription"); setMenuOpen(false); }}>Подписка</button>
         <button onClick={() => { nav("/academy"); setMenuOpen(false); }}>Начать</button>
@@ -168,7 +168,7 @@ function Task({ challengeId }) {
   const run = () => setOutput(code.includes(challenge.successToken) ? "✓ Базовый сценарий — OK\n✓ Граничный сценарий — OK\n✓ Ошибка обработана — OK\n\n3 проверки пройдено · 0.08 сек." : `✕ Проверка пока не прошла\n\nПодсказка: ${challenge.hint}`);
   return <main className="workspace">
     <section className="problem">
-      <div className="crumb">Тренажёр Go / {challenge.category}</div><span className="badge">{challenge.level.toUpperCase()}</span><h1>{challenge.title}</h1><p>{challenge.description}</p>
+      <div className="crumb">Курс Go / Практика / {challenge.category}</div><span className="badge">{challenge.level.toUpperCase()}</span><h1>{challenge.title}</h1><p>{challenge.description}</p>
       <h3>Рабочий контекст</h3><pre>Bit Tech · {challenge.minutes} минут · самостоятельная проверка</pre>
       <h3>Условия</h3><ul><li>Не меняйте публичный контракт функции</li><li>Обработайте хотя бы один граничный сценарий</li><li>Сделайте решение читаемым для ревью</li></ul>
       <button className="hint" onClick={()=>setOutput(`Подсказка: ${challenge.hint}`)}><Sparkle size={17}/> Попросить подсказку</button>
@@ -185,7 +185,7 @@ export function App() {
   const legacyRoute = () => {
     const hash = location.hash.replace("#", "");
     if (location.pathname !== "/") return location.pathname;
-    return ({ course: "/go", trainer: "/trainer", lesson: "/lesson", task: "/task" })[hash] || "/";
+    return ({ course: "/go", trainer: "/go/practice", lesson: "/lesson", task: "/go/practice" })[hash] || "/";
   };
   const [route, setRoute] = useState(legacyRoute);
   useEffect(() => {
@@ -198,6 +198,11 @@ export function App() {
       "/": "Godemy — практические IT-курсы по подписке",
       "/academy": "Godemy — курс и тренажёр Go",
       "/go": "Курс Go с нуля до Junior — Godemy",
+      "/go/practice": "Практика курса Go — Godemy",
+      "/sql": "Интерактивный курс SQL — Godemy",
+      "/sql/practice": "Практика курса SQL — Godemy",
+      "/python": "Интерактивный курс Python — Godemy",
+      "/python/practice": "Практика курса Python — Godemy",
       "/go/task-tracker": "Проект Task Tracker — Godemy",
       "/go/task-tracker/setup": "Подготовка к проекту — Godemy",
       "/go/task-tracker/retrospective": "Ретроспектива проекта — Godemy",
@@ -210,7 +215,7 @@ export function App() {
     document.title = courseLesson ? "Урок курса Основы Go — Godemy" : sprint ? `Спринт ${sprint[1]} · Task Tracker — Godemy` : titleByRoute[route] || "Godemy — обучение Go";
   }, [route]);
   const navigate = (target) => {
-    const routes = { home: "/", course: "/go", trainer: "/trainer", lesson: "/lesson", task: "/task" };
+    const routes = { home: "/", course: "/go", trainer: "/go/practice", lesson: "/lesson", task: "/go/practice" };
     const next = routes[target] || target;
     if (next.startsWith("/#")) {
       const anchor = next.split("#")[1];
@@ -225,11 +230,19 @@ export function App() {
   };
   const sprintMatch = route.match(/^\/go\/task-tracker\/sprint\/([1-4])$/);
   const lessonMatch = route.match(/^\/go\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
-  const taskMatch = route.match(/^\/task(?:\/([^/]+))?$/);
+  const taskMatch = route.match(/^\/(?:task|go\/practice)(?:\/([^/]+))?$/);
+  const sqlTaskMatch = route.match(/^\/sql\/practice\/([^/]+)$/);
+  const pythonTaskMatch = route.match(/^\/python\/practice\/([^/]+)$/);
   let content;
   if (route === "/") content = <Home setPage={navigate}/>;
   else if (route === "/academy") content = <AcademyHub navigate={navigate}/>;
   else if (route === "/go") content = <CoursePage navigate={navigate}/>;
+  else if (route === "/sql") content = <SqlCoursePage navigate={navigate}/>;
+  else if (route === "/sql/practice") content = <SqlTrainer navigate={navigate}/>;
+  else if (sqlTaskMatch) content = <SqlTask challengeId={sqlTaskMatch[1]} navigate={navigate}/>;
+  else if (route === "/python") content = <PythonCoursePage navigate={navigate}/>;
+  else if (route === "/python/practice") content = <PythonTrainer navigate={navigate}/>;
+  else if (pythonTaskMatch) content = <PythonTask challengeId={pythonTaskMatch[1]} navigate={navigate}/>;
   else if (route === "/go/task-tracker") content = <ProjectPage navigate={navigate}/>;
   else if (route === "/go/task-tracker/setup") content = <SetupPage navigate={navigate}/>;
   else if (sprintMatch) content = <SprintPage number={Number(sprintMatch[1])} navigate={navigate}/>;
@@ -239,13 +252,13 @@ export function App() {
   else if (route === "/course-editor") content = <CourseEditor navigate={navigate}/>;
   else if (lessonMatch) content = <StoryLesson sectionId={lessonMatch[1]} topicId={lessonMatch[2]} lessonId={lessonMatch[3]} navigate={navigate}/>;
   else if (route === "/lesson") content = <StoryLesson navigate={navigate}/>;
-  else if (route === "/trainer") content = <Trainer setPage={navigate}/>;
+  else if (route === "/trainer" || route === "/go/practice") content = <Trainer setPage={navigate}/>;
   else if (taskMatch) content = <Task challengeId={taskMatch[1]}/>;
   else content = <CoursePage navigate={navigate}/>;
-  const immersive = Boolean(taskMatch) || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
+  const immersive = Boolean(taskMatch) || Boolean(sqlTaskMatch) || Boolean(pythonTaskMatch) || route === "/trainer" || route === "/go/practice" || route === "/sql" || route === "/sql/practice" || route === "/python" || route === "/python/practice" || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
   return <>{!immersive && <Header setPage={navigate}/>} {content}{!immersive && <Footer setPage={navigate}/>}</>;
 }
 
 function Footer({setPage}) {
-  return <footer><Logo onHome={()=>setPage("/")}/><p>Бесплатное обучение Go через проекты, спринты и GitHub.</p><div><button onClick={()=>setPage("/academy")}>Курс и тренажёр</button><button onClick={()=>setPage("/go")}>Программа</button><button onClick={()=>setPage("/profile")}>Профиль</button><button onClick={()=>setPage("/certificates")}>Сертификаты</button></div><small>© 2026 Godemy · Бесплатный учебный проект</small></footer>;
+  return <footer><Logo onHome={()=>setPage("/")}/><p>Практическое IT-обучение через курсы, проекты и проверяемые результаты.</p><div><button onClick={()=>setPage("/academy")}>Курс Go</button><button onClick={()=>setPage("/sql")}>Курс SQL</button><button onClick={()=>setPage("/python")}>Курс Python</button><button onClick={()=>setPage("/certificates")}>Сертификаты</button></div><small>© 2026 Godemy · Практический учебный проект</small></footer>;
 }
