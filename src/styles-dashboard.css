@@ -90,3 +90,40 @@ body { min-width: 0; }
 }
 
 .outline-back:hover { color: #426bff; }
+
+.dashboard-course-actions {
+  display: grid;
+  gap: 10px;
+  min-width: 190px;
+}
+.dashboard-practice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid #e2e3ff;
+  border-radius: 10px;
+  background: #eeefff;
+  padding: 13px 17px;
+  color: #5c5ad8;
+  font: 600 14px inherit;
+  cursor: pointer;
+}
+.dashboard-practice:hover { background: #e3e4ff; }
+.course-dashboard-sql .dashboard-course-card small,
+.course-dashboard-sql .stage-number { color: #14765f; }
+.course-dashboard-sql .stage-number { background: #e9f6f1; }
+.course-dashboard-sql .dashboard-stage.active { outline-color: #168064; }
+.course-dashboard-sql .dashboard-stage.active i span { background: #168064; }
+.course-dashboard-sql .dashboard-practice { border-color: #d7ece5; background: #e9f6f1; color: #14765f; }
+.course-dashboard-python .dashboard-course-card small,
+.course-dashboard-python .stage-number { color: #496bef; }
+.course-dashboard-python .stage-number { background: #edf1ff; }
+.course-dashboard-python .dashboard-stage.active { outline-color: #496bef; }
+.course-dashboard-python .dashboard-stage.active i span { background: #496bef; }
+.outline-list > button em { color: #858585; font-size: 11px; font-style: normal; }
+
+@media (max-width: 720px) {
+  .dashboard-course-actions { width: 100%; }
+  .dashboard-practice { width: 100%; }
+}
