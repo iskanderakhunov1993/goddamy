@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import {
   ArrowRight, BookOpen, BracketsCurly, CheckCircle, Code,
   GitBranch, MagnifyingGlass, RocketLaunch, ShieldCheck, SlidersHorizontal,
-  Stack, TerminalWindow, UsersThree,
+  Stack, TerminalWindow,
 } from "@phosphor-icons/react";
 import { courseCurriculum } from "../content/courseCurriculum.js";
 import "../styles-academy.css";
@@ -28,19 +28,34 @@ const audience = [
 ];
 
 export function PublicGoLanding({ navigate }) {
-  return <main className="public-go-landing">
-    <section className="public-go-hero container">
-      <div className="public-go-copy"><p className="academy-kicker">БЕСПЛАТНЫЙ КУРС · GO BACKEND</p><h1>Освой Go через<br/><em>реальную работу</em></h1><p>Не смотри, как программируют другие. Получай задачи команды Bit Tech, изучай нужную теорию и собирай три проекта в GitHub.</p><div className="public-go-actions"><button onClick={() => navigate("/academy")}>Начать <ArrowRight size={18}/></button><button onClick={() => navigate("/academy")}>Посмотреть формат</button></div><div className="public-go-proof"><span><b>150</b> уроков</span><span><b>3</b> проекта</span><span><b>0 ₽</b> навсегда</span></div></div>
-      <div className="public-code-card"><div><span/><span/><span/><b>task_service.go</b></div><pre><code><i>type</i> Task <i>struct</i> {'{'}{"\n"}  ID     <strong>int</strong>{"\n"}  Title  <strong>string</strong>{"\n"}  Status <strong>string</strong>{"\n"}{'}'}{"\n\n"}<i>func</i> Complete(task *Task) {'{'}{"\n"}  task.Status = <em>"done"</em>{"\n"}{'}'}</code></pre><footer><CheckCircle size={18}/><span>go test ./... · passed</span></footer></div>
+  const tracks = [
+    { title: "Go Backend", status: "Доступен сейчас", description: "Создайте три backend-проекта и пройдите путь от первой строки до релиза.", icon: <Code size={52}/>, action: () => navigate("/academy"), visual: <TerminalWindow size={72}/> },
+    { title: "SQL", status: "Скоро", description: "Научитесь получать данные, строить отчёты и принимать решения на их основе.", icon: <Stack size={52}/>, visual: <BracketsCurly size={72}/> },
+    { title: "Docker", status: "Скоро", description: "Упакуйте приложение в контейнер и разверните его в любой среде.", icon: <RocketLaunch size={52}/>, visual: <Stack size={72}/> },
+  ];
+  return <main className="universal-landing">
+    <section className="universal-hero container">
+      <div className="universal-hero-copy">
+        <h1>Осваивайте IT через реальные задачи</h1>
+        <p>Короткая теория, настоящая практика и сертификат за подтверждённый результат.</p>
+        <div className="universal-hero-actions"><button onClick={() => navigate("/academy")}>Войти в команду <ArrowRight size={20}/></button><button onClick={() => navigate("/#courses")}>Выбрать направление</button></div>
+        <div className="universal-subscription-note"><Stack size={20}/><span>Все курсы по одной подписке</span></div>
+      </div>
+      <div className="universal-hero-art"><img src="/characters/godemy-universal-team-hero.png" alt="Команда Godemy совместно решает учебную задачу"/></div>
     </section>
 
-    <section className="public-tech container"><span>Go</span><span>Git & GitHub</span><span>PostgreSQL</span><span>Docker</span><span>REST API</span><span>Unit tests</span></section>
+    <section className="universal-courses container" id="courses">
+      <p className="academy-kicker">НАПРАВЛЕНИЯ</p><h2>Каждый курс —<br/>рабочая история</h2>
+      <div className="universal-course-list">{tracks.map((track) => <button key={track.title} disabled={!track.action} onClick={track.action} className={track.action ? "available" : "coming"}>
+        <div className="universal-track-icon">{track.icon}</div><div className="universal-track-copy"><small>{track.status}</small><h3>{track.title}</h3><p>{track.description}</p>{track.action && <span>Подробнее <ArrowRight size={15}/></span>}</div><div className="universal-track-visual">{track.visual}</div><div className="universal-track-result"><ShieldCheck size={28}/><span><b>Сертификат</b><small>Подтвердите навыки<br/>и добавьте в портфолио</small></span></div>
+      </button>)}</div>
+    </section>
 
-    <section className="public-value container"><div className="public-section-copy"><p className="academy-kicker">КАК ЭТО РАБОТАЕТ</p><h2>Курс, похожий на первую работу разработчика</h2><p>Ты попадаешь в вымышленную команду Bit Tech на pre-junior стажировку. Рома помогает разобраться, Юля ставит задачи, Игорь проверяет сценарии, а Женя готовит релиз.</p></div><div className="public-value-grid"><article><UsersThree size={24}/><b>Рабочий контекст</b><p>Каждая тема начинается с ситуации и понятного результата для команды.</p></article><article><TerminalWindow size={24}/><b>Практика руками</b><p>Терминал, Git, Go, PostgreSQL и Docker используются внутри проектов.</p></article><article><ShieldCheck size={24}/><b>Проверяемый результат</b><p>Тесты, чек-листы, README и GitHub Release вместо оценки за просмотр.</p></article></div></section>
+    <section className="universal-practice" id="practice"><div className="container"><div><p className="academy-kicker">ТОЛЬКО ВАЖНОЕ</p><h2>Не смотрите, как работают другие. Делайте сами.</h2></div><ol><li><b>Короткая теория</b><p>Только знания, нужные для следующей задачи.</p></li><li><b>Практика с проверкой</b><p>Тренажёр сразу показывает, что получилось.</p></li><li><b>Проект и сертификат</b><p>Результат можно открыть и показать другим.</p></li></ol></div></section>
 
-    <section className="public-projects container"><div className="public-section-copy"><p className="academy-kicker">ПОРТФОЛИО</p><h2>Три проекта — три уровня самостоятельности</h2></div><div>{[{ n: "01", title: "Task Tracker CLI", stack: "Go · JSON · Git · Unit tests", text: "Первое консольное приложение с сохранением задач и релизом." },{ n: "02", title: "Expense Tracker", stack: "Go · PostgreSQL · SQL · HTTP", text: "Backend-сервис расходов с категориями, отчётами и миграциями." },{ n: "03", title: "URL Shortener API", stack: "REST · Docker · PostgreSQL · CI", text: "API коротких ссылок, который другой разработчик запустит по README." }].map((item) => <article key={item.n}><span>{item.n}</span><small>{item.stack}</small><h3>{item.title}</h3><p>{item.text}</p></article>)}</div></section>
+    <section className="universal-subscription container" id="subscription"><div><p className="academy-kicker">ОДНА ПОДПИСКА</p><h2>Учитесь в своём темпе, а не по расписанию потока</h2><p>Подписка открывает курсы, тренажёр, проекты и сертификаты Godemy. Можно начать с Go и позже добавить новые навыки.</p></div><div className="universal-subscription-card"><CheckCircle size={31}/><h3>Всё обучение в одном доступе</h3><ul><li>Практические IT-курсы</li><li>Интерактивный тренажёр</li><li>Проекты для портфолио</li><li>Проверяемые сертификаты</li></ul><button onClick={() => navigate("/academy")}>Попробовать Godemy <ArrowRight size={18}/></button><small>Условия подписки появятся перед оплатой</small></div></section>
 
-    <section className="public-final-cta container"><div><p className="academy-kicker">ПЕРВЫЙ РАБОЧИЙ ДЕНЬ</p><h2>Начни с первого commit</h2><p>Без банковской карты, подписки и скрытой оплаты.</p></div><button onClick={() => navigate("/academy")}>Перейти в Godemy <ArrowRight size={18}/></button></section>
+    <section className="universal-certificate container"><ShieldCheck size={54}/><div><p className="academy-kicker">СЕРТИФИКАТЫ</p><h2>Не за просмотр. За подтверждённый результат.</h2><p>Сертификат появляется в профиле после обязательных задач и проектов. Его можно открыть по ссылке и добавить в портфолио.</p></div><button onClick={() => navigate("/certificates")}>Посмотреть сертификаты <ArrowRight size={18}/></button></section>
   </main>;
 }
 

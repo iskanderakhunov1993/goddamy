@@ -1,61 +1,33 @@
-# Design QA — Godemy course skeleton
+# Design QA — universal Godemy landing
 
-- source visual truth: `/var/folders/sg/szq02d257p75jlbsg24kswnw0000gn/T/TemporaryItems/NSIRD_screencaptureui_yHaUkT/Снимок экрана 2026-08-02 в 00.22.46.png` and `/var/folders/sg/szq02d257p75jlbsg24kswnw0000gn/T/TemporaryItems/NSIRD_screencaptureui_TMhUWU/Снимок экрана 2026-08-02 в 00.32.45.png`
-- implementation screenshot: `/Users/iskander/Documents/go acafemy/design-qa-lesson.png`
-- viewport: 798 × 818 CSS px, device scale factor 1; screenshot 798 × 796 px
-- source dimensions: lesson reference 988 × 1564 px; outline reference 990 × 780 px
-- density normalization: compared content regions rather than browser chrome; screenshots were viewed together in one comparison pass
-- state: first lesson, light theme, initial checklist state; programme dialog also inspected live through all three levels
+## Reference and implementation
 
-## Findings
+- Source of truth: `/Users/iskander/.codex/generated_images/019faa85-3626-7963-9506-fb9dd93c22c6/exec-c2bbf0ae-43cf-4593-9c28-73f78e5d88f3.png`
+- Desktop implementation: `/Users/iskander/Documents/go acafemy/implementation-home-desktop-final2.png`
+- Mobile implementation: `/Users/iskander/Documents/go acafemy/implementation-home-mobile.png`
+- Side-by-side comparison: `/Users/iskander/Documents/go acafemy/design-qa-comparison-final2.png`
 
-No actionable P0, P1, or P2 differences remain for the requested structural adaptation.
+## Tested states
 
-- Fonts and typography: the implementation keeps a narrow editorial reading column, a strong lesson title, compact course context, and clear h2/body hierarchy. The Godemy system font is intentionally retained.
-- Spacing and layout rhythm: the course uses the requested hierarchy `course → section → topic → lesson`; lesson content has measured text blocks, dialogue, example, self-check, and a final pager. The modal remains centered and scrollable.
-- Colors and visual tokens: warm white background, dark typography, cobalt informational accents, green completion states, and restrained gray borders match the existing Godemy system.
-- Image quality and asset fidelity: no images are rendered, by explicit product decision. No image placeholders, copied assets, or decorative approximations remain.
-- Copy and content: all visible lesson material is original Godemy/Bit Tech copy. The reference contributes only information architecture and interaction rhythm.
-- Responsive behavior: desktop and narrow mobile states were browser-tested. The initial 320 px global minimum caused horizontal overflow at a 260 px test viewport; it was removed. Final measured values are `innerWidth: 260`, `scrollWidth: 260`.
-- Accessibility: navigation uses labelled buttons, the outline is a labelled modal dialog, checkboxes have visible labels, disabled/enabled states are exposed, and focus styles remain present.
+- Desktop landing at CSS viewport width 1440 px.
+- Mobile landing at CSS viewport width 389 px.
+- Default landing state with universal hero and course catalogue.
+- Primary CTA opens `/academy`.
+- Secondary CTA opens `/#courses` and scrolls to the course section.
+- No horizontal overflow at the tested desktop and mobile widths.
+- No browser console errors during the checked path.
 
-## Focused region comparison
+## Visual review
 
-1. Programme dialog: source and implementation both progressively disclose course, topic, and lesson levels inside a centered white modal over a dimmed page.
-2. Lesson reader: source and implementation both use a compact progress context, a focused reading column, clear section hierarchy, inline dialogue, self-check, and one dominant next action.
+- Typography: the large editorial headline, compact navigation and supporting copy follow the selected concept.
+- Layout: the split hero, rounded lavender surface, course rows and generous white space match the selected structure.
+- Colour: warm near-white page, cobalt illustration, dark typography and lime primary actions are preserved.
+- Imagery: the custom team illustration is used as a real image asset and remains legible without carrying essential information alone.
+- Content: the removed “Первый рабочий день” framing was replaced with the universal promise “Осваивайте IT через реальные задачи”.
+- Responsiveness: desktop composition collapses into a readable single-column mobile flow with full-width touch targets.
 
-## Interaction evidence
+## Iteration notes
 
-- opened `/go`, then `Программа курса`;
-- opened `Спринт 1 · Создание задач`, then `Старт Go и рабочая задача`;
-- confirmed the resulting lesson list;
-- opened `/go/lesson/intro/welcome/welcome` directly;
-- checked all three self-check items and confirmed the completion button became enabled;
-- completed the lesson and observed the success message;
-- used `К следующему уроку` and confirmed navigation to `/go/lesson/intro/welcome/why-go`;
-- checked browser console warnings and errors: none observed before screenshot persistence hit the local disk quota.
-
-## Comparison history
-
-- P2: narrow viewport overflowed because the global body minimum width was 320 px.
-- Fix: removed the global minimum and added narrow-layout guards for the lesson shell, reader, and title wrapping.
-- Post-fix browser evidence: `innerWidth: 260`, `documentElement.scrollWidth: 260`, `body.scrollWidth: 260`.
-
-## Implementation checklist
-
-- [x] Central course data model.
-- [x] Six modules, thirty topics, and one hundred fifty lesson routes.
-- [x] Three-level programme navigation.
-- [x] Universal lesson template.
-- [x] Previous/next navigation.
-- [x] Self-check success state.
-- [x] Direct-route recovery.
-- [x] Desktop and narrow mobile checks.
-- [x] Lint, production build, and Sites tests.
-
-## Follow-up polish
-
-- [P3] Persist completed lesson IDs in the server-side progress model when the database layer is connected.
-- [P3] Add Escape-to-close and focus trapping to the programme modal.
-
-final result: passed
+- Initial comparison: hero height was too short and the team illustration felt undersized.
+- Fix: increased desktop hero height and adjusted image scale and positioning to restore the selected visual balance.
+- Final result: passed.

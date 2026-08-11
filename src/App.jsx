@@ -29,9 +29,10 @@ function Header({ setPage }) {
     <header className="site-header">
       <Logo onHome={() => nav("home")} />
       <nav>
-        <button onClick={() => nav("/academy")}>Курс</button>
-        <button onClick={() => nav("/#how")}>Как это работает</button>
-        <button className="hide-mobile" onClick={() => nav("/#projects")}>Проекты</button>
+        <button onClick={() => nav("/#courses")}>Курсы</button>
+        <button onClick={() => nav("/trainer")}>Практика</button>
+        <button className="hide-mobile" onClick={() => nav("/certificates")}>Сертификаты</button>
+        <button className="hide-mobile" onClick={() => nav("/#subscription")}>Подписка</button>
       </nav>
       <div className="header-actions">
         <button className="hide-mobile" aria-label="Профиль" onClick={() => nav("/profile")}><UserCircle size={20}/></button>
@@ -39,8 +40,10 @@ function Header({ setPage }) {
         <button className="mobile-menu" aria-label={menuOpen ? "Закрыть меню" : "Открыть меню"} aria-expanded={menuOpen} onClick={() => setMenuOpen((value) => !value)}>{menuOpen ? <X size={21}/> : <List size={21}/>}</button>
       </div>
       {menuOpen && <nav className="mobile-nav-panel" aria-label="Мобильная навигация">
-        <button onClick={() => { nav("/academy"); setMenuOpen(false); }}>Курс</button>
-        <button onClick={() => { nav("/#how"); setMenuOpen(false); }}>Как это работает</button>
+        <button onClick={() => { nav("/#courses"); setMenuOpen(false); }}>Курсы</button>
+        <button onClick={() => { nav("/trainer"); setMenuOpen(false); }}>Практика</button>
+        <button onClick={() => { nav("/certificates"); setMenuOpen(false); }}>Сертификаты</button>
+        <button onClick={() => { nav("/#subscription"); setMenuOpen(false); }}>Подписка</button>
         <button onClick={() => { nav("/academy"); setMenuOpen(false); }}>Начать</button>
       </nav>}
     </header>
@@ -192,7 +195,7 @@ export function App() {
   }, []);
   useEffect(() => {
     const titleByRoute = {
-      "/": "Godemy — обучение Go через реальные проекты",
+      "/": "Godemy — практические IT-курсы по подписке",
       "/academy": "Godemy — курс и тренажёр Go",
       "/go": "Курс Go с нуля до Junior — Godemy",
       "/go/task-tracker": "Проект Task Tracker — Godemy",
@@ -209,11 +212,11 @@ export function App() {
   const navigate = (target) => {
     const routes = { home: "/", course: "/go", trainer: "/trainer", lesson: "/lesson", task: "/task" };
     const next = routes[target] || target;
-    if (next === "/#how" || next === "/#projects") {
+    if (next.startsWith("/#")) {
       const anchor = next.split("#")[1];
       history.pushState({}, "", next);
       setRoute("/");
-      requestAnimationFrame(() => document.querySelector(anchor === "how" ? ".public-value" : ".public-projects")?.scrollIntoView({ behavior: "smooth" }));
+      requestAnimationFrame(() => document.getElementById(anchor)?.scrollIntoView({ behavior: "smooth" }));
     } else {
       history.pushState({}, "", next);
       setRoute(next);
