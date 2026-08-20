@@ -246,7 +246,7 @@ export function App() {
   else if (route === "/go") content = <CoursePage navigate={navigate}/>;
   else if (route === "/sql") content = <SqlCoursePage navigate={navigate}/>;
   else if (route === "/sql/practice") content = <SqlTrainer navigate={navigate}/>;
-  else if (sqlTaskMatch) content = <SqlTask challengeId={sqlTaskMatch[1]} navigate={navigate}/>;
+  else if (sqlTaskMatch) content = <SqlTask challengeId={sqlTaskMatch[1]} navigate={navigate} key={sqlTaskMatch[1]}/>;
   else if (route === "/python") content = <PythonCoursePage navigate={navigate}/>;
   else if (route === "/python/practice") content = <PythonTrainer navigate={navigate}/>;
   else if (pythonTaskMatch) content = <PythonTask challengeId={pythonTaskMatch[1]} navigate={navigate}/>;

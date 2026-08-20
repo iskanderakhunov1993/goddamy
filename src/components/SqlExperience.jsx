@@ -1,10 +1,15 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft, ArrowRight, CheckCircle, MagnifyingGlass, Play,
-  SlidersHorizontal,
+  SlidersHorizontal, XCircle,
 } from "@phosphor-icons/react";
 import "../styles-sql.css";
 import { CourseCabinet } from "./CourseCabinet.jsx";
+import { getSqlChallenge, sqlChallenges } from "../content/sqlChallenges.js";
+import { sqlSchemaColumns, sqlSchemaTables } from "../content/sqlSchema.js";
+import { compareResults, createSeededDatabase, runQuery } from "../lib/sqlEngine.js";
+
+export { getSqlChallenge, sqlChallenges };
 
 export const sqlModules = [
   { n: "01", title: "Данные и реляционные базы", text: "Разберитесь, как устроены таблицы, строки, ключи и связи.", topics: ["Как хранятся данные", "Таблицы и типы", "Первичные ключи", "Связи между таблицами"] },
@@ -14,20 +19,6 @@ export const sqlModules = [
   { n: "05", title: "Связи и подзапросы", text: "Объединяйте данные из нескольких сущностей.", topics: ["INNER JOIN", "LEFT JOIN", "Несколько JOIN", "Подзапросы", "CTE"] },
   { n: "06", title: "Рабочий SQL-проект", text: "Проведите исследование данных криптобанка и защитите результат.", topics: ["Бриф аналитика", "Декомпозиция запроса", "Проверка качества", "Оптимизация", "Итоговый отчёт"] },
 ];
-
-export const sqlChallenges = [
-  { id: "active-clients", title: "Активные клиенты", category: "SELECT", level: "Лёгкая", minutes: 7, description: "Выведите имена активных клиентов и дату регистрации.", starter: "SELECT\n  -- выберите нужные поля\nFROM clients\nWHERE status = 'active';", token: "name", hint: "Добавьте name и registered_at после SELECT.", result: [["Алина", "2026-07-12"], ["Максим", "2026-07-18"]] },
-  { id: "unique-currencies", title: "Уникальные валюты", category: "DISTINCT", level: "Лёгкая", minutes: 8, description: "Узнайте, в каких валютах проводились операции.", starter: "SELECT currency\nFROM transactions;", token: "DISTINCT", hint: "Используйте DISTINCT перед названием столбца.", result: [["BTC"], ["ETH"], ["USDT"]] },
-  { id: "large-transfers", title: "Крупные переводы", category: "WHERE", level: "Лёгкая", minutes: 10, description: "Найдите завершённые переводы больше 100 000 ₽.", starter: "SELECT id, amount, status\nFROM transfers\nWHERE -- добавьте условия;", token: "100000", hint: "Соедините два условия оператором AND.", result: [["1842", "145 000", "completed"], ["1911", "230 000", "completed"]] },
-  { id: "monthly-turnover", title: "Оборот по месяцам", category: "GROUP BY", level: "Средняя", minutes: 16, description: "Посчитайте сумму операций для каждого месяца.", starter: "SELECT month, SUM(amount) AS turnover\nFROM transactions\n-- сгруппируйте результат", token: "GROUP BY", hint: "Группировка должна использовать поле month.", result: [["Июнь", "4 820 000"], ["Июль", "5 310 000"]] },
-  { id: "client-balance", title: "Клиенты и балансы", category: "JOIN", level: "Средняя", minutes: 18, description: "Соедините клиентов с их кошельками и покажите баланс.", starter: "SELECT c.name, w.balance\nFROM clients c\n-- соедините wallets w", token: "JOIN", hint: "Свяжите таблицы по client_id.", result: [["Алина", "82 400"], ["Максим", "51 900"]] },
-  { id: "clients-without-wallet", title: "Клиенты без кошелька", category: "JOIN", level: "Средняя", minutes: 20, description: "Найдите клиентов, которым ещё не создан кошелёк.", starter: "SELECT c.id, c.name\nFROM clients c\n-- сохраните строки без совпадения", token: "LEFT JOIN", hint: "LEFT JOIN сохранит всех клиентов; затем проверьте NULL.", result: [["203", "Роман"]] },
-  { id: "risk-segments", title: "Риск-сегменты", category: "CASE", level: "Средняя", minutes: 17, description: "Разделите операции на low, medium и high risk.", starter: "SELECT id, amount,\n  -- добавьте CASE\nFROM transactions;", token: "CASE", hint: "Используйте CASE WHEN ... THEN ... END.", result: [["381", "low"], ["382", "high"]] },
-  { id: "top-merchants", title: "Топ мерчантов", category: "HAVING", level: "Сложная", minutes: 24, description: "Найдите мерчантов с оборотом выше миллиона и минимум 20 операциями.", starter: "SELECT merchant_id, SUM(amount), COUNT(*)\nFROM payments\nGROUP BY merchant_id\n-- отфильтруйте группы", token: "HAVING", hint: "Условия для агрегатов пишутся после GROUP BY в HAVING.", result: [["M-17", "2 430 000", "41"], ["M-28", "1 180 000", "24"]] },
-  { id: "retention-cohorts", title: "Когорты удержания", category: "CTE", level: "Сложная", minutes: 30, description: "Соберите основу когортного отчёта через несколько шагов.", starter: "-- сначала определите когорту регистрации\nSELECT * FROM clients;", token: "WITH", hint: "Начните запрос с WITH cohorts AS (...).", result: [["2026-06", "62%"], ["2026-07", "71%"]] },
-];
-
-export const getSqlChallenge = (id) => sqlChallenges.find((item) => item.id === id) || sqlChallenges[0];
 
 function SqlContextNav({ navigate, active }) {
   return <nav className="course-context-nav sql-context" aria-label="Разделы курса SQL"><button onClick={() => navigate("/")}><ArrowLeft size={16}/> Все направления</button><div><button className={active === "course" ? "active" : ""} onClick={() => navigate("/sql")}>Курс SQL</button><button className={active === "practice" ? "active" : ""} onClick={() => navigate("/sql/practice")}>Практика</button></div></nav>;
@@ -41,11 +32,77 @@ export function SqlTrainer({ navigate }) {
   const [query, setQuery] = useState(""); const [level, setLevel] = useState("Все"); const [category, setCategory] = useState("Все");
   const categories = ["Все", ...new Set(sqlChallenges.map((item) => item.category))];
   const filtered = useMemo(() => sqlChallenges.filter((item) => (level === "Все" || item.level === level) && (category === "Все" || item.category === category) && item.title.toLowerCase().includes(query.toLowerCase())), [query, level, category]);
-  return <main className="go-practice-shell sql-practice-shell"><SqlContextNav navigate={navigate} active="practice"/><div className="go-trainer container"><header className="go-trainer-header"><div><p className="academy-kicker">ПРАКТИКА · SQL</p><h1>SQL-тренажёр</h1><p>Решайте задачи на данных условного криптобанка и сразу проверяйте результат.</p></div><div className="trainer-progress-note"><CheckCircle size={20}/><span><b>Практика курса</b><small>Каждая задача связана с темой и будущим итоговым отчётом.</small></span></div></header><section className="go-trainer-filters"><div className="trainer-filter-row"><div className="trainer-levels">{["Все", "Лёгкая", "Средняя", "Сложная"].map((item) => <button className={level === item ? "active" : ""} onClick={() => setLevel(item)} key={item}>{item}</button>)}</div><label><MagnifyingGlass size={18}/><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Поиск SQL-задачи"/></label></div><div className="trainer-categories"><SlidersHorizontal size={17}/>{categories.map((item) => <button onClick={() => setCategory(item)} className={category === item ? "active" : ""} key={item}>{item}</button>)}</div></section><section className="go-task-list">{filtered.map((item, index) => <button onClick={() => navigate(`/sql/practice/${item.id}`)} key={item.id}><span className={`academy-dot level-${item.level}`}/><b>{String(index + 1).padStart(2, "0")}. {item.title}</b><em>{item.category}</em><small>{item.level} · {item.minutes} мин</small><ArrowRight size={18}/></button>)}</section></div></main>;
+  return <main className="go-practice-shell sql-practice-shell"><SqlContextNav navigate={navigate} active="practice"/><div className="go-trainer container"><header className="go-trainer-header"><div><p className="academy-kicker">ПРАКТИКА · SQL</p><h1>SQL-тренажёр</h1><p>Пишите настоящие запросы против живой базы криптобанка — движок выполняет SQL прямо в браузере.</p></div><div className="trainer-progress-note"><CheckCircle size={20}/><span><b>Практика курса</b><small>Каждая задача связана с темой и будущим итоговым отчётом.</small></span></div></header><section className="go-trainer-filters"><div className="trainer-filter-row"><div className="trainer-levels">{["Все", "Лёгкая", "Средняя", "Сложная"].map((item) => <button className={level === item ? "active" : ""} onClick={() => setLevel(item)} key={item}>{item}</button>)}</div><label><MagnifyingGlass size={18}/><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Поиск SQL-задачи"/></label></div><div className="trainer-categories"><SlidersHorizontal size={17}/>{categories.map((item) => <button onClick={() => setCategory(item)} className={category === item ? "active" : ""} key={item}>{item}</button>)}</div></section><section className="go-task-list">{filtered.map((item, index) => <button onClick={() => navigate(`/sql/practice/${item.id}`)} key={item.id}><span className={`academy-dot level-${item.level}`}/><b>{String(index + 1).padStart(2, "0")}. {item.title}</b><em>{item.category}</em><small>{item.level} · {item.minutes} мин</small><ArrowRight size={18}/></button>)}</section></div></main>;
+}
+
+function ResultTable({ columns, rows, emptyLabel }) {
+  if (columns.length === 0) return <p>{emptyLabel}</p>;
+  return <table><thead><tr>{columns.map((column) => <th key={column}>{column}</th>)}</tr></thead><tbody>{rows.map((row, i) => <tr key={i}>{row.map((cell, j) => <td key={j}>{cell === null ? "NULL" : String(cell)}</td>)}</tr>)}</tbody></table>;
 }
 
 export function SqlTask({ challengeId, navigate }) {
-  const challenge = getSqlChallenge(challengeId); const [code, setCode] = useState(challenge.starter); const [state, setState] = useState("idle");
-  const run = () => setState(code.toUpperCase().includes(challenge.token.toUpperCase()) ? "success" : "error");
-  return <main className="sql-task-shell"><header><button onClick={() => navigate("/sql/practice")}><ArrowLeft size={17}/> Все задачи</button><span>SQL · PostgreSQL</span><button onClick={() => navigate("/sql")}>Программа курса</button></header><div className="sql-task-grid"><section className="sql-task-brief"><p className="academy-kicker">{challenge.level.toUpperCase()} · {challenge.minutes} МИН</p><h1>{challenge.title}</h1><p>{challenge.description}</p><div className="sql-schema"><small>СХЕМА БАЗЫ</small><b>clients</b><span>id · name · status · registered_at</span><b>transactions</b><span>id · client_id · amount · currency · created_at</span><b>wallets</b><span>id · client_id · balance</span></div><button onClick={() => setState("hint")}>Показать подсказку</button>{state === "hint" && <aside>{challenge.hint}</aside>}</section><section className="sql-editor"><div className="sql-editor-top"><b>query.sql</b><span>Учебная база Bit Tech</span></div><textarea value={code} onChange={(event) => { setCode(event.target.value); setState("idle"); }} spellCheck="false" aria-label="Редактор SQL-запроса"/><div className="sql-runbar"><button onClick={() => setCode(challenge.starter)}>Сбросить</button><button onClick={run}><Play size={15} weight="fill"/> Выполнить запрос</button></div><div className={`sql-result ${state}`}><header><b>Результат</b><span>{state === "success" ? `${challenge.result.length} строки` : "Предпросмотр"}</span></header>{state === "success" ? <table><tbody>{challenge.result.map((row, i) => <tr key={i}>{row.map((cell) => <td key={cell}>{cell}</td>)}</tr>)}</tbody></table> : <p>{state === "error" ? `Запрос пока не решает задачу. ${challenge.hint}` : "Выполните запрос, чтобы увидеть данные."}</p>}</div></section></div></main>;
+  const challenge = getSqlChallenge(challengeId);
+  const [code, setCode] = useState(challenge.starter);
+  const [db, setDb] = useState(null);
+  const [dbError, setDbError] = useState("");
+  const [tab, setTab] = useState("result");
+  const [run, setRun] = useState({ status: "idle", columns: [], rows: [], message: "" });
+  const [showHint, setShowHint] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    createSeededDatabase()
+      .then((instance) => { if (!cancelled) setDb(instance); })
+      .catch((error) => { if (!cancelled) setDbError(error.message || "Не удалось запустить SQL-движок"); });
+    return () => { cancelled = true; };
+  }, []);
+
+  const execute = () => {
+    if (!db) return;
+    try {
+      const result = runQuery(db, code);
+      setRun({ status: "ran", ...result, message: "" });
+      setTab("result");
+    } catch (error) {
+      setRun({ status: "syntax-error", columns: [], rows: [], message: error.message });
+      setTab("result");
+    }
+  };
+
+  const submit = () => {
+    if (!db) return;
+    try {
+      const userResult = runQuery(db, code);
+      const referenceResult = runQuery(db, challenge.referenceQuery);
+      const ok = compareResults(userResult, referenceResult, challenge.ordered);
+      setRun({ status: ok ? "success" : "mismatch", ...userResult, message: "" });
+      setTab("result");
+    } catch (error) {
+      setRun({ status: "syntax-error", columns: [], rows: [], message: error.message });
+      setTab("result");
+    }
+  };
+
+  const activeTable = sqlSchemaTables.includes(tab) ? tab : null;
+  const tablePreview = useMemo(() => {
+    if (!db || !activeTable) return null;
+    try {
+      return runQuery(db, `SELECT * FROM ${activeTable} LIMIT 20;`);
+    } catch {
+      return null;
+    }
+  }, [db, activeTable]);
+
+  return <main className="sql-task-shell"><header><button onClick={() => navigate("/sql/practice")}><ArrowLeft size={17}/> Все задачи</button><span>SQL · SQLite в браузере</span><button onClick={() => navigate("/sql")}>Программа курса</button></header><div className="sql-task-grid"><section className="sql-task-brief"><p className="academy-kicker">{challenge.level.toUpperCase()} · {challenge.minutes} МИН</p><h1>{challenge.title}</h1><p>{challenge.description}</p><div className="sql-schema"><small>СХЕМА БАЗЫ</small>{sqlSchemaTables.map((table) => <div key={table}><b>{table}</b><span>{sqlSchemaColumns[table].join(" · ")}</span></div>)}</div><button onClick={() => setShowHint((value) => !value)}>{showHint ? "Скрыть подсказку" : "Показать подсказку"}</button>{showHint && <aside>{challenge.hint}</aside>}</section><section className="sql-editor"><div className="sql-editor-top"><b>query.sql</b><span>{db ? "SQLite · готово" : dbError ? "Ошибка движка" : "Загрузка движка…"}</span></div><textarea value={code} onChange={(event) => setCode(event.target.value)} spellCheck="false" aria-label="Редактор SQL-запроса"/><div className="sql-runbar"><button onClick={() => setCode(challenge.starter)}>Сбросить</button><button className="secondary" onClick={execute} disabled={!db}><Play size={15} weight="fill"/> Выполнить</button><button className="primary" onClick={submit} disabled={!db}>Отправить <ArrowRight size={16}/></button></div><div className="sql-result-tabs"><button className={tab === "result" ? "active" : ""} onClick={() => setTab("result")}>Результат</button>{sqlSchemaTables.map((table) => <button className={tab === table ? "active" : ""} onClick={() => setTab(table)} key={table}>{table}</button>)}</div><div className={`sql-result ${run.status === "success" ? "success" : run.status === "mismatch" ? "error" : run.status === "syntax-error" ? "error" : ""}`}>
+    {tab !== "result"
+      ? <><header><b>{tab}</b><span>{tablePreview ? `${tablePreview.rows.length} строк(и)` : "предпросмотр"}</span></header><ResultTable columns={tablePreview?.columns || []} rows={tablePreview?.rows || []} emptyLabel="Нет данных для предпросмотра."/></>
+      : <>
+          <header><b>Результат</b><span>{run.status === "idle" ? "Предпросмотр" : run.status === "syntax-error" ? "Ошибка запроса" : `${run.rows.length} строки`}</span></header>
+          {run.status === "idle" && <p>{dbError || "Выполните запрос, чтобы увидеть данные."}</p>}
+          {run.status === "syntax-error" && <p className="sql-error-text">{run.message}</p>}
+          {(run.status === "ran" || run.status === "success" || run.status === "mismatch") && <ResultTable columns={run.columns} rows={run.rows} emptyLabel="Запрос выполнен, но ничего не вернул."/>}
+        </>}
+    {run.status === "success" && <div className="sql-verdict success"><CheckCircle size={18}/> Верно — результат совпал с эталонным.</div>}
+    {run.status === "mismatch" && <div className="sql-verdict error"><XCircle size={18}/> Запрос выполнился, но результат пока не совпадает. {challenge.hint}</div>}
+  </div></section></div></main>;
 }
