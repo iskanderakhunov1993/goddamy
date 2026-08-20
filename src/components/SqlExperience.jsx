@@ -8,6 +8,7 @@ import { CourseCabinet } from "./CourseCabinet.jsx";
 import { getSqlChallenge, sqlChallenges } from "../content/sqlChallenges.js";
 import { sqlSchemaColumns, sqlSchemaTables } from "../content/sqlSchema.js";
 import { compareResults, createSeededDatabase, runQuery } from "../lib/sqlEngine.js";
+import { recordPractice } from "../lib/activity.js";
 
 export { getSqlChallenge, sqlChallenges };
 
@@ -59,6 +60,7 @@ export function SqlTask({ challengeId, navigate }) {
 
   const execute = () => {
     if (!db) return;
+    recordPractice("sql");
     try {
       const result = runQuery(db, code);
       setRun({ status: "ran", ...result, message: "" });
@@ -71,6 +73,7 @@ export function SqlTask({ challengeId, navigate }) {
 
   const submit = () => {
     if (!db) return;
+    recordPractice("sql");
     try {
       const userResult = runQuery(db, code);
       const referenceResult = runQuery(db, challenge.referenceQuery);

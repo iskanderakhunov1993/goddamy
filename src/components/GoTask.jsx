@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle, Play, XCircle } from "@phosphor-icons/react";
 import { getGoChallenge } from "../content/goChallenges.js";
 import { checkSolution, runGoProgram, assembleSource } from "../lib/goPlayground.js";
+import { recordPractice } from "../lib/activity.js";
 import "../styles-sql.css";
 
 export function GoTask({ challengeId, navigate }) {
@@ -15,6 +16,7 @@ export function GoTask({ challengeId, navigate }) {
   const execute = async () => {
     setBusy(true);
     setTab("result");
+    recordPractice("go");
     try {
       const result = await runGoProgram(assembleSource(code, challenge.harness));
       setRun({ status: result.status === "ok" ? "ran" : result.status, stdout: result.stdout, message: result.message });
@@ -28,6 +30,7 @@ export function GoTask({ challengeId, navigate }) {
   const submit = async () => {
     setBusy(true);
     setTab("result");
+    recordPractice("go");
     try {
       const result = await checkSolution(challenge, code);
       setRun({

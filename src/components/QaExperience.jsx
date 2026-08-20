@@ -3,6 +3,7 @@ import {
   ArrowLeft, ArrowRight, CheckCircle, MagnifyingGlass, SlidersHorizontal, XCircle,
 } from "@phosphor-icons/react";
 import { getQaChallenge, qaChallenges } from "../content/qaChallenges.js";
+import { recordPractice } from "../lib/activity.js";
 import "../styles-qa.css";
 
 export { getQaChallenge, qaChallenges };
@@ -90,6 +91,7 @@ function ChoiceOrChecklist({ challenge, state, setState }) {
     }
   };
   const check = () => {
+    recordPractice("qa");
     const correctSet = isChecklist ? challenge.correct : [challenge.options[challenge.correct]];
     const ok = correctSet.length === selected.length && correctSet.every((item) => selected.includes(item));
     setState({ ...state, status: ok ? "success" : "error" });
@@ -131,6 +133,7 @@ function BugReportForm({ challenge, state, setState }) {
   const values = state.values;
   const setField = (id, value) => setState({ ...state, values: { ...values, [id]: value }, status: "idle" });
   const check = () => {
+    recordPractice("qa");
     const complete = challenge.fields.every((field) => (values[field.id] || "").trim().length > 0) && Boolean(values.severity);
     setState({ ...state, status: complete ? "success" : "error" });
   };
