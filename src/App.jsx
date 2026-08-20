@@ -11,6 +11,7 @@ import { AcademyHub, PublicGoLanding, getGoChallenge, GoTrainer } from "./compon
 import { SqlCoursePage, SqlTask, SqlTrainer } from "./components/SqlExperience.jsx";
 import { PythonCoursePage, PythonTask, PythonTrainer } from "./components/PythonExperience.jsx";
 import { BusinessPracticeComing, ProductCoursePage, QaCoursePage } from "./components/BusinessCourses.jsx";
+import { QaTask, QaTrainer } from "./components/QaExperience.jsx";
 
 const modules = [
   { n: "00", title: "Старт", text: "Как устроен курс, среда разработки и первая программа.", lessons: ["Добро пожаловать в Go", "Установка Go и редактора", "Первая программа"] },
@@ -238,6 +239,7 @@ export function App() {
   const taskMatch = route.match(/^\/(?:task|go\/practice)(?:\/([^/]+))?$/);
   const sqlTaskMatch = route.match(/^\/sql\/practice\/([^/]+)$/);
   const pythonTaskMatch = route.match(/^\/python\/practice\/([^/]+)$/);
+  const qaTaskMatch = route.match(/^\/qa\/practice\/([^/]+)$/);
   let content;
   if (route === "/") content = <Home setPage={navigate}/>;
   else if (route === "/academy") content = <AcademyHub navigate={navigate}/>;
@@ -251,7 +253,8 @@ export function App() {
   else if (route === "/product") content = <ProductCoursePage navigate={navigate}/>;
   else if (route === "/product/practice") content = <BusinessPracticeComing navigate={navigate} course="product"/>;
   else if (route === "/qa") content = <QaCoursePage navigate={navigate}/>;
-  else if (route === "/qa/practice") content = <BusinessPracticeComing navigate={navigate} course="qa"/>;
+  else if (route === "/qa/practice") content = <QaTrainer navigate={navigate}/>;
+  else if (qaTaskMatch) content = <QaTask challengeId={qaTaskMatch[1]} navigate={navigate}/>;
   else if (route === "/go/task-tracker") content = <ProjectPage navigate={navigate}/>;
   else if (route === "/go/task-tracker/setup") content = <SetupPage navigate={navigate}/>;
   else if (sprintMatch) content = <SprintPage number={Number(sprintMatch[1])} navigate={navigate}/>;
@@ -264,7 +267,7 @@ export function App() {
   else if (route === "/trainer" || route === "/go/practice") content = <Trainer setPage={navigate}/>;
   else if (taskMatch) content = <Task challengeId={taskMatch[1]}/>;
   else content = <CoursePage navigate={navigate}/>;
-  const immersive = Boolean(taskMatch) || Boolean(sqlTaskMatch) || Boolean(pythonTaskMatch) || route === "/trainer" || route === "/go/practice" || route === "/sql" || route === "/sql/practice" || route === "/python" || route === "/python/practice" || route === "/product" || route === "/product/practice" || route === "/qa" || route === "/qa/practice" || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
+  const immersive = Boolean(taskMatch) || Boolean(sqlTaskMatch) || Boolean(pythonTaskMatch) || Boolean(qaTaskMatch) || route === "/trainer" || route === "/go/practice" || route === "/sql" || route === "/sql/practice" || route === "/python" || route === "/python/practice" || route === "/product" || route === "/product/practice" || route === "/qa" || route === "/qa/practice" || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
   return <>{!immersive && <Header setPage={navigate}/>} {content}{!immersive && <Footer setPage={navigate}/>}</>;
 }
 

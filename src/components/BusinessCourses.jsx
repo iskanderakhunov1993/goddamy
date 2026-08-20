@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, Briefcase, ClipboardText, Kanban, ShieldCheck, UserFocus } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight, Briefcase, ClipboardText, Kanban, UserFocus } from "@phosphor-icons/react";
 import { CourseCabinet } from "./CourseCabinet.jsx";
 import "../styles-business-courses.css";
 
@@ -25,12 +25,11 @@ export function ProductCoursePage({ navigate }) {
 }
 
 export function QaCoursePage({ navigate }) {
-  return <CourseCabinet navigate={navigate} course={{ slug: "qa", label: "QA", kicker: "КАЧЕСТВО · BIT TECH", title: "QA Engineer", description: "От анализа требований до проверки API и понятной рекомендации перед релизом.", modules: qaModules, phases: ["СТАРТ", "ДИЗАЙН", "ДЕФЕКТЫ", "API", "РЕЛИЗ", "ПРОЕКТ"], role: "Текущая роль: junior QA engineer.", nextStep: "Откройте задачу команды и составьте первый чек-лист проверок.", practicePath: "/qa/practice", firstPath: "/qa/practice", startLabel: "Начать обучение" }}/>;
+  return <CourseCabinet navigate={navigate} course={{ slug: "qa", label: "QA", kicker: "КАЧЕСТВО · BIT TECH", title: "QA Engineer", description: "От анализа требований до проверки API и понятной рекомендации перед релизом.", modules: qaModules, phases: ["СТАРТ", "ДИЗАЙН", "ДЕФЕКТЫ", "API", "РЕЛИЗ", "ПРОЕКТ"], role: "Текущая роль: junior QA engineer.", nextStep: "Откройте задачу команды и составьте первый чек-лист проверок.", practicePath: "/qa/practice", firstPath: "/qa/practice/priority-vs-severity", startLabel: "Начать обучение" }}/>;
 }
 
 const practiceCopy = {
   product: { icon: <Briefcase size={33}/>, kicker: "ПРАКТИКА · PRODUCT", title: "Продуктовые кейсы готовятся", text: "Здесь появятся брифы Bit Tech: интервью, метрики, приоритизация и защита решений." },
-  qa: { icon: <ShieldCheck size={33}/>, kicker: "ПРАКТИКА · QA", title: "QA-тренажёр готовится", text: "Здесь появятся сценарии на тест-дизайн, баг-репорты, API и релизную проверку." },
 };
 
 export function BusinessPracticeComing({ navigate, course }) {
