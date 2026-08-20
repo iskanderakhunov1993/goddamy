@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import {
   ArrowLeft, ArrowRight, Check, Circle,
-  List, Play, Sparkle, UserCircle, X
+  List, UserCircle, X
 } from "@phosphor-icons/react";
 import {
   CertificatesPage, CoursePage, ProfilePage, ProjectPage, RetrospectivePage, SetupPage, SprintPage, StoryLesson
 } from "./components/LearningPages.jsx";
 import { CourseEditor } from "./components/CourseEditor.jsx";
-import { AcademyHub, PublicGoLanding, getGoChallenge, GoTrainer } from "./components/AcademyExperience.jsx";
+import { AcademyHub, PublicGoLanding, GoTrainer } from "./components/AcademyExperience.jsx";
+import { GoTask } from "./components/GoTask.jsx";
 import { SqlCoursePage, SqlTask, SqlTrainer } from "./components/SqlExperience.jsx";
 import { PythonCoursePage, PythonTask, PythonTrainer } from "./components/PythonExperience.jsx";
 import { BusinessPracticeComing, ProductCoursePage, QaCoursePage } from "./components/BusinessCourses.jsx";
@@ -162,27 +163,6 @@ function Trainer({ setPage }) {
   */
 }
 
-function Task({ challengeId }) {
-  const challenge = getGoChallenge(challengeId);
-  const starter = challenge.starter;
-  const [code, setCode] = useState(starter);
-  const [output, setOutput] = useState("Нажмите «Запустить», чтобы проверить код");
-  const run = () => setOutput(code.includes(challenge.successToken) ? "✓ Базовый сценарий — OK\n✓ Граничный сценарий — OK\n✓ Ошибка обработана — OK\n\n3 проверки пройдено · 0.08 сек." : `✕ Проверка пока не прошла\n\nПодсказка: ${challenge.hint}`);
-  return <main className="workspace">
-    <section className="problem">
-      <div className="crumb">Курс Go / Практика / {challenge.category}</div><span className="badge">{challenge.level.toUpperCase()}</span><h1>{challenge.title}</h1><p>{challenge.description}</p>
-      <h3>Рабочий контекст</h3><pre>Bit Tech · {challenge.minutes} минут · самостоятельная проверка</pre>
-      <h3>Условия</h3><ul><li>Не меняйте публичный контракт функции</li><li>Обработайте хотя бы один граничный сценарий</li><li>Сделайте решение читаемым для ревью</li></ul>
-      <button className="hint" onClick={()=>setOutput(`Подсказка: ${challenge.hint}`)}><Sparkle size={17}/> Попросить подсказку</button>
-    </section>
-    <section className="coding">
-      <div className="code-tabs"><b>main.go</b><span>Go 1.25</span></div><div className="code-area"><div className="lines">{code.split("\n").map((_,i)=><span key={i}>{i+1}</span>)}</div><textarea aria-label="Редактор кода" value={code} onChange={e=>setCode(e.target.value)} spellCheck="false"/></div>
-      <div className="runbar"><button onClick={()=>setCode(starter)}>Сбросить</button><span></span><button className="secondary" onClick={run}><Play size={15} weight="fill"/> Запустить</button><button className="primary" onClick={run}>Отправить <ArrowRight size={16}/></button></div>
-      <div className="output"><div><b>Результат</b><span>Тесты</span></div><pre>{output}</pre></div>
-    </section>
-  </main>;
-}
-
 export function App() {
   const legacyRoute = () => {
     const hash = location.hash.replace("#", "");
@@ -265,7 +245,7 @@ export function App() {
   else if (lessonMatch) content = <StoryLesson sectionId={lessonMatch[1]} topicId={lessonMatch[2]} lessonId={lessonMatch[3]} navigate={navigate}/>;
   else if (route === "/lesson") content = <StoryLesson navigate={navigate}/>;
   else if (route === "/trainer" || route === "/go/practice") content = <Trainer setPage={navigate}/>;
-  else if (taskMatch) content = <Task challengeId={taskMatch[1]}/>;
+  else if (taskMatch) content = <GoTask challengeId={taskMatch[1]} navigate={navigate} key={taskMatch[1]}/>;
   else content = <CoursePage navigate={navigate}/>;
   const immersive = Boolean(taskMatch) || Boolean(sqlTaskMatch) || Boolean(pythonTaskMatch) || Boolean(qaTaskMatch) || route === "/trainer" || route === "/go/practice" || route === "/sql" || route === "/sql/practice" || route === "/python" || route === "/python/practice" || route === "/product" || route === "/product/practice" || route === "/qa" || route === "/qa/practice" || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
   return <>{!immersive && <Header setPage={navigate}/>} {content}{!immersive && <Footer setPage={navigate}/>}</>;

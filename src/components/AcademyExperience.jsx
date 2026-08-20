@@ -5,21 +5,10 @@ import {
   Stack, TerminalWindow, FilePy,
 } from "@phosphor-icons/react";
 import { courseCurriculum } from "../content/courseCurriculum.js";
+import { getGoChallenge, goChallenges } from "../content/goChallenges.js";
 import "../styles-academy.css";
 
-export const goChallenges = [
-  { id: "sum-even", title: "Сумма чётных чисел", category: "Слайсы", level: "Лёгкая", minutes: 8, description: "Напишите функцию, которая складывает только чётные значения слайса.", starter: "package main\n\nfunc SumEven(nums []int) int {\n\t// ваш код\n\treturn 0\n}", successToken: "sum +=", hint: "Используйте range и проверку n % 2 == 0." },
-  { id: "word-frequency", title: "Частотный словарь", category: "Map", level: "Лёгкая", minutes: 12, description: "Посчитайте, сколько раз каждое слово встретилось в сообщении пользователя.", starter: "package main\n\nfunc WordFrequency(words []string) map[string]int {\n\tresult := make(map[string]int)\n\t// ваш код\n\treturn result\n}", successToken: "result[", hint: "Map удобно использовать как счётчик: увеличивайте значение по ключу." },
-  { id: "task-status", title: "Статус задачи по ID", category: "Структуры", level: "Лёгкая", minutes: 14, description: "Найдите задачу в слайсе структур и измените её статус.", starter: "package main\n\ntype Task struct { ID int; Status string }\n\nfunc SetStatus(tasks []Task, id int, status string) error {\n\t// ваш код\n\treturn nil\n}", successToken: "tasks[i]", hint: "Итерируйтесь по индексу, если хотите изменить элемент слайса." },
-  { id: "expense-total", title: "Отчёт по категориям", category: "Map", level: "Средняя", minutes: 18, description: "Соберите суммы расходов по категориям для еженедельного отчёта.", starter: "package main\n\ntype Expense struct { Category string; Amount int }\n\nfunc Totals(items []Expense) map[string]int {\n\t// ваш код\n\treturn nil\n}", successToken: "totals[", hint: "Сначала создайте map, затем накапливайте сумму по Category." },
-  { id: "safe-parse", title: "Безопасный разбор команды", category: "Ошибки", level: "Средняя", minutes: 16, description: "Проверьте пользовательскую команду и верните понятную ошибку вместо panic.", starter: "package main\n\nfunc ParseCommand(input string) (string, error) {\n\t// ваш код\n\treturn \"\", nil\n}", successToken: "errors.New", hint: "Опишите невалидный сценарий через errors.New или fmt.Errorf." },
-  { id: "json-backup", title: "JSON-резервная копия", category: "JSON", level: "Средняя", minutes: 20, description: "Сериализуйте список задач и корректно сообщите о повреждённом файле.", starter: "package main\n\nfunc LoadTasks(data []byte) ([]string, error) {\n\t// ваш код\n\treturn nil, nil\n}", successToken: "json.Unmarshal", hint: "Используйте encoding/json и возвращайте ошибку вызывающему коду." },
-  { id: "http-status", title: "HTTP-ответ для API", category: "HTTP", level: "Средняя", minutes: 18, description: "Верните JSON-ответ и правильный статус для создания расхода.", starter: "package main\n\nfunc CreateExpense(w http.ResponseWriter, r *http.Request) {\n\t// ваш код\n}", successToken: "http.StatusCreated", hint: "Для созданного ресурса используйте 201 Created." },
-  { id: "worker-pool", title: "Мини worker pool", category: "Конкурентность", level: "Сложная", minutes: 28, description: "Распределите обработку ссылок между несколькими воркерами.", starter: "package main\n\nfunc Process(jobs []string, workers int) []string {\n\t// ваш код\n\treturn nil\n}", successToken: "go func", hint: "Начните с канала jobs и одной горутины-воркера." },
-  { id: "request-timeout", title: "Таймаут внешнего запроса", category: "Context", level: "Сложная", minutes: 24, description: "Добавьте deadline к операции, чтобы сервис не зависал на внешнем API.", starter: "package main\n\nfunc Fetch(ctx context.Context, url string) error {\n\t// ваш код\n\treturn nil\n}", successToken: "context.WithTimeout", hint: "Создайте дочерний контекст и не забудьте вызвать cancel." },
-];
-
-export const getGoChallenge = (id) => goChallenges.find((item) => item.id === id) || goChallenges[0];
+export { getGoChallenge, goChallenges };
 
 const audience = [
   ["Начинающим", "Получите понятную основу Go и рабочие инструменты без лишней теории."],
