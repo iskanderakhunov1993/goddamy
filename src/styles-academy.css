@@ -822,15 +822,18 @@
 .course-context-nav div button {
   border:0;
   background:transparent;
-  color:#181a25;
+  color:#c7c9d6;
   font-weight:700;font-size:13px;
   cursor: pointer;
+}
+.course-context-nav div button.active {
+  color:#fff;
 }
 .course-context-nav > button {
   display: flex;
   align-items: center;
   gap: 8px;
-  color:#374458;
+  color:#c7c9d6;
 }
 .course-context-nav > button svg {
   transform: rotate(180deg);
