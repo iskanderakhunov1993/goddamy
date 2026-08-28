@@ -7,6 +7,7 @@ import {
   CertificatesPage, CoursePage, ProfilePage, ProjectPage, RetrospectivePage, SetupPage, SprintPage, StoryLesson, SubscriptionPage
 } from "./components/LearningPages.jsx";
 import { CourseEditor } from "./components/CourseEditor.jsx";
+import { EditorAuthGate } from "./components/EditorAuthGate.jsx";
 import { AcademyHub, PublicGoLanding, GoTrainer } from "./components/AcademyExperience.jsx";
 import { GoTask } from "./components/GoTask.jsx";
 import { SqlCoursePage, SqlTask, SqlTrainer } from "./components/SqlExperience.jsx";
@@ -243,7 +244,7 @@ export function App() {
   else if (route === "/profile") content = <ProfilePage navigate={navigate}/>;
   else if (route === "/certificates") content = <CertificatesPage navigate={navigate}/>;
   else if (route === "/subscription") content = <SubscriptionPage navigate={navigate}/>;
-  else if (route === "/course-editor") content = <CourseEditor navigate={navigate}/>;
+  else if (route === "/course-editor") content = <EditorAuthGate><CourseEditor navigate={navigate}/></EditorAuthGate>;
   else if (lessonMatch) content = <StoryLesson sectionId={lessonMatch[1]} topicId={lessonMatch[2]} lessonId={lessonMatch[3]} navigate={navigate}/>;
   else if (route === "/lesson") content = <StoryLesson navigate={navigate}/>;
   else if (route === "/trainer" || route === "/go/practice") content = <Trainer setPage={navigate}/>;
