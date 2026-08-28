@@ -4,17 +4,16 @@ import "../styles-lesson-blocks.css";
 import {
   ArrowLeft, ArrowRight, Check, CheckCircle, Circle, Code,
   GithubLogo, Lightbulb, RocketLaunch, Target, BookOpen, House,
-  List, X, CaretRight, UserCircle, PencilSimple, Trophy, Flame,
-  Certificate, Briefcase, GitBranch, CalendarBlank, LinkSimple, MapPin, LockSimple, Cube, ChartBar
+  List, X, CaretRight, UserCircle, PencilSimple, Flame,
+  Certificate, Briefcase, Cube
 } from "@phosphor-icons/react";
 import { project, setupTasks, sprints, stages, storyBeats } from "../content/goCourse.js";
 import { courseCurriculum } from "../content/courseCurriculum.js";
 import { courseLessonPath, findLesson, flattenCourse, loadCourseDraft } from "../content/courseDraft.js";
 import { LessonBlocks } from "./LessonBlocks.jsx";
+import { ModuleGlyph } from "./CourseCabinet.jsx";
 import { getActivitySummary } from "../lib/activity.js";
 import "../styles-profile.css";
-
-const weekdayLabels = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 
 export function ProgressBar({ value, label = "Общий прогресс" }) {
   return <div className="learning-progress" aria-label={`${label}: ${value}%`}>
@@ -134,44 +133,40 @@ export function CoursePage({ navigate }) {
   const [course] = useState(loadCourseDraft);
   const dashboardStages = createDashboardStages(course);
   const courseLessons = flattenCourse(course);
-  const topicCount = course.reduce((sum, item) => sum + item.topics.length, 0);
   const [outlineSection, setOutlineSection] = useState(null);
   const closeOutline = () => setOutlineSection(null);
   const [activity] = useState(getActivitySummary);
   return <main className="course-dashboard">
     <aside className="dashboard-rail" aria-label="Навигация кабинета"><button className="dashboard-logo" onClick={() => navigate("/")}><span>GO</span>DEMY</button><nav><button aria-label="Главная" onClick={() => navigate("/")}><House size={20}/></button><button className="active" aria-label="Мой курс" onClick={() => navigate("/go")}><BookOpen size={20}/></button><button aria-label="Практика курса Go" onClick={() => navigate("/go/practice")}><Code size={20}/></button><button aria-label="Программа курса" onClick={() => setOutlineSection("root")}><List size={20}/></button><button aria-label="Редактор курса" onClick={() => navigate("/course-editor")}><PencilSimple size={20}/></button></nav><button aria-label="Профиль" onClick={() => navigate("/profile")}><UserCircle size={21}/></button></aside>
     <div className="dashboard-content">
-      <section className="course-hero">
-        <div className="course-hero-copy">
-          <small>СТАЖИРОВКА · BIT TECH</small>
-          <h1>Go Backend Internship</h1>
-          <p>Три проверяемых проекта: от первого commit до backend-сервиса в Docker.</p>
-          <div className="course-hero-actions">
-            <button className="btn-primary" disabled={!courseLessons.length} onClick={() => courseLessons[0] && navigate(courseLessonPath(courseLessons[0]))}>Начать стажировку <ArrowRight size={18}/></button>
-            <button className="btn-ghost" onClick={() => navigate("/go/practice")}><Code size={17}/> Практика Go</button>
-          </div>
+      <section className="go-info-card">
+        <button className="go-info-link" onClick={() => setOutlineSection("root")}>О курсе ↗</button>
+        <h1>Go Backend Internship</h1>
+        <div className="go-progress-row">
+          <div className="go-progress-track"><span style={{ width: "0%" }}/></div>
+          <button className="go-continue-btn" disabled={!courseLessons.length} onClick={() => courseLessons[0] && navigate(courseLessonPath(courseLessons[0]))}>Начать бесплатно</button>
         </div>
-        <div className="course-includes">
-          <b>Курс включает</b>
-          <ul>
-            <li><BookOpen size={16}/> {courseLessons.length} уроков · {topicCount} тем</li>
-            <li><Cube size={16}/> 3 проверяемых проекта</li>
-            <li><Certificate size={16}/> Сертификат по итогам</li>
-          </ul>
-        </div>
+        <span className="go-progress-caption">Прогресс курса · 0 / {courseLessons.length} уроков</span>
       </section>
-      <div className="course-prog"><span className="course-prog-pill">0%</span><div className="course-prog-track"><span style={{ width: "0%" }}/></div><span className="course-prog-label">0 / {courseLessons.length} уроков</span></div>
-      <section className="dashboard-goal"><div className="goal-icon"><Flame size={20}/></div><div><b>{activity.currentStreak > 0 ? `Сейчас у тебя ${activity.currentStreak} ${activity.currentStreak === 1 ? "день" : activity.currentStreak < 5 ? "дня" : "дней"} практики подряд` : "Рабочий ритм: выбери 2 учебных вечера в неделю"}</b><p>Стрики мягкие: пауза не обнуляет прогресс, а Рома помогает вернуться с малого шага.</p></div><button onClick={() => navigate("/profile")}>Открыть кабинет</button></section>
+      <section className="go-goal-card">
+        <div className="go-goal-icon"><Flame size={22}/></div>
+        <div><b>{activity.currentStreak > 0 ? `Сейчас у тебя ${activity.currentStreak} ${activity.currentStreak === 1 ? "день" : activity.currentStreak < 5 ? "дня" : "дней"} практики подряд` : "Давайте поставим цель"}</b><p>{activity.currentStreak > 0 ? "Стрики мягкие: пауза не обнуляет прогресс." : "Выбери 2 учебных вечера в неделю — так проще не бросить."}</p></div>
+        <button className="go-goal-btn" onClick={() => navigate("/profile")}>Открыть кабинет</button>
+      </section>
       <section className="dashboard-program">
         <h2 className="course-syllabus-heading">Программа курса</h2>
-        <div className="module-grid">{dashboardStages.map((stage, index) => <button className={`module-card ${stage.state}`} key={stage.id} onClick={() => setOutlineSection(stage.id)}>
-          <span className={`module-card-tag ${stage.state === "locked" ? "locked" : index === 0 ? "now" : "open"}`}>{stage.state === "locked" ? "Скоро" : index === 0 ? "Сейчас" : "Доступно"}</span>
-          <div className="module-card-body">
+        <div className="go-syllabus-grid">{dashboardStages.map((stage, index) => {
+          const status = stage.state === "locked" ? "upcoming" : index === 0 ? "current" : "full";
+          const statusLabel = stage.state === "locked" ? "Предстоит" : index === 0 ? "Текущий курс" : "Доступен";
+          return <button className="go-module-card" key={stage.id} onClick={() => setOutlineSection(stage.id)}>
+            <ModuleGlyph course="go" index={index}/>
             <h3>{stage.title}</h3>
-            <p>{stage.summary}</p>
-            <div className="module-card-footer"><span><ChartBar size={14}/> {stage.phase}</span><span>{stage.topics} тем · {stage.lessons} уроков</span></div>
-          </div>
-        </button>)}</div>
+            <div className="go-module-status">
+              <span>{statusLabel}</span>
+              <div className={`go-module-bar ${status}`}><i/></div>
+            </div>
+          </button>;
+        })}</div>
       </section>
     </div>
     {outlineSection && <CourseOutline course={course} initialSectionId={outlineSection === "root" ? null : outlineSection} onClose={closeOutline} navigate={navigate}/>}
@@ -192,37 +187,45 @@ export function ProfilePage({ navigate }) {
   const [activity] = useState(getActivitySummary);
   return <main className="profile-shell">
     <div className="profile-content">
-      <div className="profile-header"><div><small>BIT TECH · ЛИЧНЫЙ КАБИНЕТ</small><h1>Профиль стажёра</h1><p>Прогресс, портфолио и подтверждения твоей практики.</p></div></div>
-      <div className="profile-layout">
-        <aside className="profile-card"><img src="/characters/avatar-protagonist-neutral-v1.png" alt="Аватар стажёра"/><div><small>PRE-JUNIOR · BIT TECH</small><h2>{profile.name}</h2></div><button className="profile-edit" onClick={() => setEditing((value) => !value)}><PencilSimple size={16}/>{editing ? "Готово" : "Редактировать профиль"}</button><p className="profile-joined"><CalendarBlank size={16}/> В программе с августа 2026</p>{editing ? <form onSubmit={(event) => { event.preventDefault(); setEditing(false); }}><label>Имя<input value={profile.name} onChange={(event) => changeProfile("name", event.target.value)} maxLength={40}/></label><label>О себе<textarea value={profile.about} onChange={(event) => changeProfile("about", event.target.value)} maxLength={280}/></label><label>Город<input value={profile.city} onChange={(event) => changeProfile("city", event.target.value)} maxLength={60}/></label><label>GitHub<input value={profile.github} onChange={(event) => changeProfile("github", event.target.value)} placeholder="https://github.com/username"/></label><button className="profile-save">Сохранить</button></form> : <><p className="profile-about">{profile.about}</p><p className="profile-location"><MapPin size={16}/>{profile.city}</p>{profile.github && <a href={profile.github} target="_blank" rel="noreferrer"><LinkSimple size={16}/> GitHub</a>}</>}<div className="profile-level"><b>Intern <ArrowRight size={15}/> Junior</b><i><span style={{ width: "0%" }}/></i><small>0 / 100 XP · рост через выполненные задачи</small></div></aside>
-        <div className="profile-main">
-          <section className="profile-progress">
-            <div className="profile-panel-heading"><div><h2>Прогресс по обучению</h2><p>Начни онбординг — первый урок откроет рабочий ритм.</p></div><button onClick={() => navigate("/go")}>К программе <ArrowRight size={16}/></button></div>
-            <div className="progress-course">
-              <div className="progress-course-top"><b>Go Backend Internship</b><span>{completedLessons} / {lessonCount} уроков</span></div>
-              <div className="progress-course-bar"><i style={{ width: `${percent}%` }}/></div>
-              <span className="progress-course-percent">{percent}%</span>
-            </div>
-            <div className={certReady ? "cert-unlock ready" : "cert-unlock"}>
-              {certReady ? <Certificate size={19}/> : <LockSimple size={19}/>}
-              <div><b>Сертификат курса</b><p>{courseComplete ? "Курс пройден. Оформите подписку, чтобы скачать сертификат." : "Откроется после 100% курса и активной подписки."}</p></div>
-              <button disabled={!certReady} onClick={() => certReady && navigate("/certificates")}>Скачать сертификат</button>
-            </div>
-            <div className="profile-stats"><div><Flame size={25}/><span><b>{activity.currentStreak}</b><small>Текущая серия · дней подряд</small></span></div><div><Trophy size={25}/><span><b>{activity.bestStreak}</b><small>Личный рекорд</small></span></div><div><GitBranch size={25}/><span><b>0 / 3</b><small>Проверено проектов</small></span></div></div>
-            <div className="profile-week"><b>Последние 7 дней</b><div>{activity.last7Days.map((day, index) => <span key={day.key} className={day.active ? "active" : day.isFuture ? "future" : ""}><Flame size={20} weight={day.active ? "fill" : "regular"}/><small>{weekdayLabels[index]}</small></span>)}</div></div>
+      <div className="profile-mini-layout">
+        <aside className="profile-mini">
+          <img className="profile-mini-avatar" src="/characters/avatar-protagonist-neutral-v1.png" alt="Аватар стажёра"/>
+          <h2 className="profile-mini-name">{profile.name}</h2>
+          <p className="profile-mini-role">PRE-JUNIOR · BIT TECH</p>
+          <button className="profile-mini-edit" onClick={() => setEditing((value) => !value)}>{editing ? "Готово" : "Редактировать профиль"}</button>
+          {editing ? <form onSubmit={(event) => { event.preventDefault(); setEditing(false); }}>
+            <label>Имя<input value={profile.name} onChange={(event) => changeProfile("name", event.target.value)} maxLength={40}/></label>
+            <label>О себе<textarea value={profile.about} onChange={(event) => changeProfile("about", event.target.value)} maxLength={280}/></label>
+            <label>Город<input value={profile.city} onChange={(event) => changeProfile("city", event.target.value)} maxLength={60}/></label>
+            <label>GitHub<input value={profile.github} onChange={(event) => changeProfile("github", event.target.value)} placeholder="https://github.com/username"/></label>
+            <button className="profile-mini-save">Сохранить</button>
+          </form> : <>
+            <p className="profile-mini-meta">Последняя активность: сегодня</p>
+            <p className="profile-mini-meta">В программе с августа 2026</p>
+          </>}
+        </aside>
+        <div className="profile-mini-main">
+          <section className="profile-mini-section">
+            <h3>Прогресс по обучению</h3>
+            <button className="profile-mini-row" onClick={() => navigate("/go")}>
+              <div><span className="profile-mini-row-label">Курс</span><b>Go Backend Internship</b></div>
+              <div className="profile-mini-row-right"><b>{percent}%</b><i className="profile-mini-row-bar"><span style={{ width: `${percent}%` }}/></i><ArrowRight size={16}/></div>
+            </button>
           </section>
-          <section className="profile-progress">
-            <div className="profile-panel-heading"><div><h2>Достижения (0 / 6)</h2><p>Открываются по мере прохождения курса.</p></div></div>
-            <div className="badge-grid">
-              <div><GithubLogo size={18}/><span><b>Первый commit</b><small>Первое изменение в Git</small></span></div>
-              <div><Code size={18}/><span><b>Чистая сборка</b><small>go build и go vet без ошибок</small></span></div>
-              <div><CheckCircle size={18}/><span><b>Защитник тестов</b><small>Логика покрыта тестами</small></span></div>
-              <div><Cube size={18}/><span><b>Три проекта</b><small>Все три проекта сданы</small></span></div>
-              <div><Target size={18}/><span><b>Ревью пройдено</b><small>Код прошёл проверку</small></span></div>
-              <div><Certificate size={18}/><span><b>Сертификат</b><small>Курс завершён на 100%</small></span></div>
-            </div>
+          <section className="profile-mini-section">
+            <h3>Сертификат</h3>
+            {certReady
+              ? <button className="profile-mini-link" onClick={() => navigate("/certificates")}>Скачать сертификат <ArrowRight size={14}/></button>
+              : <p className="profile-mini-hint">{courseComplete ? <>Курс пройден. <button className="inline" onClick={() => navigate("/subscription")}>Оформите подписку</button>, чтобы скачать сертификат.</> : <><button className="inline" onClick={() => navigate("/subscription")}>Оформите подписку</button> — сертификат откроется после 100% курса.</>}</p>}
           </section>
-          <section className="profile-activity"><div className="profile-panel-heading"><div><h2>Активность за 12 месяцев</h2><p>Мягкий ритм: пропуск не обнуляет историю практики, только текущую серию.</p></div><span>Всего дней практики: {activity.totalDays}</span></div><div className="activity-grid">{activity.weeks.map((week) => <i key={week.key} className={week.active ? "active" : ""} aria-label={week.active ? "Была практика на этой неделе" : "Нет активности"}/>)}</div></section>
+          <section className="profile-mini-section">
+            <h3>Серия дней</h3>
+            <p className="profile-mini-hint">{activity.currentStreak > 0 ? <>Сейчас <b>{activity.currentStreak}</b> {activity.currentStreak === 1 ? "день" : activity.currentStreak < 5 ? "дня" : "дней"} подряд · личный рекорд {activity.bestStreak}.</> : "Пройдите первый урок, чтобы начать считать дни подряд."}</p>
+          </section>
+          <section className="profile-mini-section">
+            <h3>Достижения (0 / 6)</h3>
+            <p className="profile-mini-hint">Открываются по мере прохождения курса.</p>
+          </section>
         </div>
       </div>
     </div>

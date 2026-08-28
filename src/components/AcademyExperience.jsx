@@ -33,10 +33,8 @@ export function PublicGoLanding({ navigate }) {
     <section className="universal-hero container">
       <div className="universal-hero-grid">
         <div className="universal-hero-copy">
-          <span className="hero-free-badge">Бесплатно</span>
           <h1><span className="hero-box white">Осваивайте</span><span className="hero-box yellow">/IT-профессию</span></h1>
-          <p className="hero-pitch">Не трать 4 года на универ или 150 000 ₽ как на курсах.</p>
-          <p>90% времени — реальные задачи. Никакой воды и прокрастинации: каждый курс — это твои настоящие проекты.</p>
+          <p>Короткая теория, тренажёр с проверкой и три собственных проекта. Go, SQL, Python, Product и QA — по одной подписке.</p>
           <div className="universal-hero-actions"><button onClick={() => navigate("/go")}>Войти в команду <ArrowRight size={20}/></button><button onClick={() => navigate("/#courses")}>Выбрать направление</button></div>
           <div className="universal-subscription-note"><Stack size={20}/><span>Все курсы по одной подписке</span></div>
         </div>

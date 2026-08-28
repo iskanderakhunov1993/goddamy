@@ -20,6 +20,11 @@ export function ModuleArtwork({ course = "go", index = 0, number = null }) {
   return <div className="stage-art module-art" aria-hidden="true"><Primary className="module-art-primary" size={44} weight="regular"/><span>{number || String(index + 1).padStart(2, "0")}</span></div>;
 }
 
+export function ModuleGlyph({ course = "go", index = 0 }) {
+  const Icon = (artworkSets[course] || artworkSets.go)[index % 6];
+  return <Icon className="go-module-icon" size={58} weight="light" aria-hidden="true"/>;
+}
+
 export function CourseCabinet({ navigate, course }) {
   const [selectedModule, setSelectedModule] = useState(null);
   const topicCount = course.modules.reduce((sum, module) => sum + module.topics.length, 0);

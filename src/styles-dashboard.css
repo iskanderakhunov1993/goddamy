@@ -164,7 +164,7 @@ body { min-width: 0; }
   border:1px solid #dfe0e4 !important;
   border-radius:8px !important;
   color:#3e4551;
-  font: 500 12px inherit;
+  font-weight:500;font-size:12px;
 }
 .lesson-feedback:hover { background:#e2e3e6 !important; }
 .lesson-pager { display: flex; align-items: center; gap: 10px; margin-left: auto; }
@@ -176,7 +176,7 @@ body { min-width: 0; }
   border:1px solid #dfe0e4;
   border-radius:10px;
   background:#e3e5e8;
-  font: 600 14px inherit;
+  font-weight:600;font-size:14px;
 }
 
 @media (max-width: 720px) {
@@ -222,7 +222,7 @@ body { min-width: 0; }
   background:#dedfe3;
   padding: 13px 17px;
   color:#1c1b74;
-  font: 600 14px inherit;
+  font-weight:600;font-size:14px;
   cursor: pointer;
 }
 .dashboard-practice:hover { background:#dedfe3; }
@@ -278,4 +278,48 @@ body { min-width: 0; }
   .dashboard-stage { min-height: 275px; }
   .module-art { height: 112px; }
   .module-art-primary { width: 36px; height: 36px; }
+}
+
+/* Go course page — minimal card style */
+.go-info-card { display: flex; flex-direction: column; border-radius: 14px; background: #fff; padding: 26px 28px; margin-bottom: 14px; }
+.go-info-link { align-self: flex-start; font-size: 13px; color: var(--muted); text-decoration: none; }
+.go-info-link:hover { color: var(--ink); }
+.go-info-card h1 { margin: 8px 0 20px; font-size: 30px; font-weight: 800; letter-spacing: -.01em; }
+.go-progress-row { display: flex; align-items: center; gap: 20px; }
+.go-progress-track { flex: 1; height: 10px; background: #e5e6ea; border-radius: 99px; overflow: hidden; }
+.go-progress-track > span { display: block; height: 100%; background: #22c55e; border-radius: inherit; }
+.go-continue-btn { flex: none; border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 13px 22px; font-weight: 700; font-size: 14px; color: var(--ink); cursor: pointer; }
+.go-continue-btn:hover { border-color: var(--ink); }
+.go-progress-caption { margin-top: 9px; font-size: 12.5px; color: var(--muted); }
+
+.go-goal-card { display: flex; align-items: center; gap: 16px; border-radius: 14px; background: #fff; padding: 18px 24px; margin-bottom: 30px; }
+.go-goal-icon { flex: none; width: 52px; height: 52px; border-radius: 50%; background: #f1f2f7; display: grid; place-items: center; color: #4b3aeb; }
+.go-goal-card b { font-size: 15px; font-weight: 700; }
+.go-goal-card p { margin: 3px 0 0; font-size: 13px; color: var(--muted); }
+.go-goal-btn { flex: none; margin-left: auto; border: 0; background: #f1f2f7; border-radius: 10px; padding: 13px 20px; font-weight: 700; font-size: 13px; color: var(--ink); cursor: pointer; white-space: nowrap; }
+.go-goal-btn:hover { background: #e5e6ea; }
+
+.go-syllabus-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.go-module-card { display: flex; flex-direction: column; min-height: 260px; border: 0; border-radius: 14px; background: #fff; padding: 24px; text-align: left; cursor: pointer; }
+.go-module-icon { color: #5ec8d8; margin-bottom: auto; }
+.go-module-card h3 { margin: 20px 0 0; font-size: 18px; font-weight: 700; letter-spacing: -.01em; }
+.go-module-status { margin-top: 20px; }
+.go-module-status > span { display: block; margin-bottom: 8px; font-size: 12.5px; color: var(--muted); }
+.go-module-bar { height: 2px; background: #e5e6ea; }
+.go-module-bar > i { display: block; height: 100%; background: var(--ink); }
+.go-module-bar.full > i { width: 100%; }
+.go-module-bar.current > i { width: 18%; }
+.go-module-bar.upcoming { background: transparent; }
+.go-module-bar.upcoming > i { display: none; }
+
+@media (max-width: 900px) {
+  .go-syllabus-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .go-info-card, .go-goal-card { padding: 20px; }
+  .go-progress-row { flex-direction: column; align-items: stretch; gap: 12px; }
+  .go-continue-btn { width: 100%; }
+  .go-goal-card { flex-wrap: wrap; }
+  .go-goal-btn { width: 100%; margin-left: 0; }
+  .go-syllabus-grid { grid-template-columns: 1fr; }
 }
