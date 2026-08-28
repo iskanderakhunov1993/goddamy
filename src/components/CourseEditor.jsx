@@ -163,12 +163,12 @@ export function CourseEditor({ navigate }) {
 
         {selection.level === "module" && activeModule && <EditorPanel eyebrow="МОДУЛЬ" title={activeModule.title} onDelete={deleteSelected}>
           <EditorField label="Название модуля"><input value={activeModule.title} onChange={(event) => updateModule({ title: event.target.value })}/></EditorField>
-          <EntityList title="Темы модуля" buttonLabel="Добавить тему" onAdd={addTopic} empty="В модуле пока нет тем.">{activeModule.topics.map((topic, index) => <button key={topic.id} onClick={() => setSelection({ level: "topic", moduleId: activeModule.id, topicId: topic.id, lessonId: null })}><span>{String(index + 1).padStart(2, "0")}</span><b>{topic.title}</b><small>{topic.lessons.length} уроков</small></button>)}</EntityList>
+          <EntityList title="Темы модуля" buttonLabel="Добавить тему" onAdd={addTopic} empty="В модуле пока нет тем." items={activeModule.topics} onSelect={(topic) => setSelection({ level: "topic", moduleId: activeModule.id, topicId: topic.id, lessonId: null })} onReorder={(next) => updateModule({ topics: next })} renderContent={(topic, index) => <><span>{String(index + 1).padStart(2, "0")}</span><b>{topic.title}</b><small>{topic.lessons.length} уроков</small></>}/>
         </EditorPanel>}
 
         {selection.level === "topic" && activeModule && activeTopic && <EditorPanel eyebrow={activeModule.title} title={activeTopic.title} onDelete={deleteSelected} onBack={() => setSelection({ level: "module", moduleId: activeModule.id, topicId: null, lessonId: null })}>
           <EditorField label="Название темы"><input value={activeTopic.title} onChange={(event) => updateTopic({ title: event.target.value })}/></EditorField>
-          <EntityList title="Уроки темы" buttonLabel="Добавить урок" onAdd={addLesson} empty="В теме пока нет уроков.">{activeTopic.lessons.map((lesson, index) => <button key={lesson.id} onClick={() => setSelection({ level: "lesson", moduleId: activeModule.id, topicId: activeTopic.id, lessonId: lesson.id })}><span>{String(index + 1).padStart(2, "0")}</span><b>{lesson.title}</b><small>Урок</small></button>)}</EntityList>
+          <EntityList title="Уроки темы" buttonLabel="Добавить урок" onAdd={addLesson} empty="В теме пока нет уроков." items={activeTopic.lessons} onSelect={(lesson) => setSelection({ level: "lesson", moduleId: activeModule.id, topicId: activeTopic.id, lessonId: lesson.id })} onReorder={(next) => updateTopic({ lessons: next })} renderContent={(lesson, index) => <><span>{String(index + 1).padStart(2, "0")}</span><b>{lesson.title}</b><small>Урок</small></>}/>
         </EditorPanel>}
 
         {selection.level === "lesson" && activeModule && activeTopic && activeLesson && <EditorPanel eyebrow={`${activeModule.title} · ${activeTopic.title}`} title={activeLesson.title} onDelete={deleteSelected} onBack={() => setSelection({ level: "topic", moduleId: activeModule.id, topicId: activeTopic.id, lessonId: null })}>
@@ -254,7 +254,41 @@ function EditorField({ label, hint = null, children }) {
   return <label className="editor-field"><span>{label}{hint && <small>{hint}</small>}</span>{children}</label>;
 }
 
-function EntityList({ title, buttonLabel, onAdd, empty, children }) {
-  const hasItems = Array.isArray(children) ? children.length > 0 : Boolean(children);
-  return <section className="editor-entities"><header><h2>{title}</h2><button onClick={onAdd}><Plus size={17}/> {buttonLabel}</button></header>{hasItems ? <div>{children}</div> : <p>{empty}</p>}</section>;
+function EntityList({ title, buttonLabel, onAdd, empty, items = [], onSelect, onReorder, renderContent }) {
+  const [dragIndex, setDragIndex] = useState(null);
+  const hasItems = items.length > 0;
+  const moveItem = (index, direction) => {
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= items.length) return;
+    const next = [...items];
+    const [moved] = next.splice(index, 1);
+    next.splice(targetIndex, 0, moved);
+    onReorder(next);
+  };
+  return <section className="editor-entities">
+    <header><h2>{title}</h2><button onClick={onAdd}><Plus size={17}/> {buttonLabel}</button></header>
+    {hasItems ? <div>{items.map((item, index) => <div
+      className={`editor-entity-row ${dragIndex === index ? "is-dragging" : ""}`}
+      key={item.id}
+      draggable
+      onDragStart={() => setDragIndex(index)}
+      onDragEnd={() => setDragIndex(null)}
+      onDragOver={(event) => event.preventDefault()}
+      onDrop={() => {
+        if (dragIndex === null || dragIndex === index) return;
+        const next = [...items];
+        const [moved] = next.splice(dragIndex, 1);
+        next.splice(index, 0, moved);
+        onReorder(next);
+        setDragIndex(null);
+      }}
+    >
+      <span className="editor-entity-handle" title="Перетащите, чтобы изменить порядок">⋮⋮</span>
+      <button className="editor-entity-main" onClick={() => onSelect(item)}>{renderContent(item, index)}</button>
+      <span className="editor-entity-move">
+        <button type="button" disabled={index === 0} onClick={() => moveItem(index, -1)} aria-label="Поднять выше"><ArrowUp size={14}/></button>
+        <button type="button" disabled={index === items.length - 1} onClick={() => moveItem(index, 1)} aria-label="Опустить ниже"><ArrowDown size={14}/></button>
+      </span>
+    </div>)}</div> : <p>{empty}</p>}
+  </section>;
 }
