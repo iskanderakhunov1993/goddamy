@@ -13,6 +13,7 @@ import { courseLessonPath, findLesson, flattenCourse, loadCourseDraft } from "..
 import { LessonBlocks } from "./LessonBlocks.jsx";
 import { ModuleGlyph } from "./CourseCabinet.jsx";
 import { getActivitySummary } from "../lib/activity.js";
+import { enrollCourse, getEnrolledCourses } from "../lib/enrollment.js";
 import "../styles-profile.css";
 
 export function ProgressBar({ value, label = "Общий прогресс" }) {
@@ -144,7 +145,7 @@ export function CoursePage({ navigate }) {
         <h1>Go Backend Internship</h1>
         <div className="go-progress-row">
           <div className="go-progress-track"><span style={{ width: "0%" }}/></div>
-          <button className="go-continue-btn" disabled={!courseLessons.length} onClick={() => courseLessons[0] && navigate(courseLessonPath(courseLessons[0]))}>Начать бесплатно</button>
+          <button className="go-continue-btn" disabled={!courseLessons.length} onClick={() => { if (courseLessons[0]) { enrollCourse("go"); navigate(courseLessonPath(courseLessons[0])); } }}>Начать бесплатно</button>
         </div>
         <span className="go-progress-caption">Прогресс курса · 0 / {courseLessons.length} уроков</span>
       </section>
@@ -176,13 +177,28 @@ export function CoursePage({ navigate }) {
   </main>;
 }
 
+const PROFILE_COURSE_CATALOG = {
+  go: { title: "Go Backend Internship", path: "/go" },
+  sql: { title: "SQL для работы с данными", path: "/sql", lessonCount: 140 },
+  python: { title: "Python", path: "/python", lessonCount: 120 },
+  product: { title: "Product Management", path: "/product", lessonCount: 90 },
+  qa: { title: "QA", path: "/qa", lessonCount: 90 },
+};
+
 export function ProfilePage({ navigate }) {
   const [course] = useState(loadCourseDraft);
-  const lessonCount = flattenCourse(course).length;
-  const completedLessons = 0;
-  const percent = lessonCount ? Math.round((completedLessons / lessonCount) * 100) : 0;
+  const goLessonCount = flattenCourse(course).length;
+  const [enrolledSlugs] = useState(getEnrolledCourses);
+  const enrolledCourses = enrolledSlugs.map((slug) => {
+    const entry = PROFILE_COURSE_CATALOG[slug];
+    if (!entry) return null;
+    const lessonCount = slug === "go" ? goLessonCount : entry.lessonCount;
+    const completedLessons = 0;
+    const percent = lessonCount ? Math.round((completedLessons / lessonCount) * 100) : 0;
+    return { slug, title: entry.title, path: entry.path, lessonCount, percent };
+  }).filter(Boolean);
   const hasSubscription = false;
-  const courseComplete = percent >= 100;
+  const courseComplete = enrolledCourses.length > 0 && enrolledCourses.every((item) => item.percent >= 100);
   const certReady = courseComplete && hasSubscription;
   const [editing, setEditing] = useState(false);
   const [profile, setProfile] = useState({ name: "Стажёр Bit Tech", about: "Учусь собирать backend-сервисы на Go через реальные задачи команды.", city: "Москва, Россия", github: "" });
@@ -210,10 +226,10 @@ export function ProfilePage({ navigate }) {
         <div className="profile-mini-main">
           <section className="profile-mini-section">
             <h3>Прогресс по обучению</h3>
-            <button className="profile-mini-row" onClick={() => navigate("/go")}>
-              <div><span className="profile-mini-row-label">Курс</span><b>Go Backend Internship</b></div>
-              <div className="profile-mini-row-right"><b>{percent}%</b><i className="profile-mini-row-bar"><span style={{ width: `${percent}%` }}/></i><ArrowRight size={16}/></div>
-            </button>
+            {enrolledCourses.length ? enrolledCourses.map((item) => <button className="profile-mini-row" key={item.slug} onClick={() => navigate(item.path)}>
+              <div><span className="profile-mini-row-label">Курс</span><b>{item.title}</b></div>
+              <div className="profile-mini-row-right"><b>{item.percent}%</b><i className="profile-mini-row-bar"><span style={{ width: `${item.percent}%` }}/></i><ArrowRight size={16}/></div>
+            </button>) : <p className="profile-mini-hint">Вы ещё не начали ни один курс. <button className="inline" onClick={() => navigate("/#courses")}>Выбрать курс</button> и начать бесплатно.</p>}
           </section>
           <section className="profile-mini-section">
             <h3>Сертификат</h3>

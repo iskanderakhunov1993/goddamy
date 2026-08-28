@@ -6,6 +6,7 @@ import {
   PresentationChart, RocketLaunch, ShareNetwork, ShieldCheck,
   Table, TerminalWindow, UserCircle, X,
 } from "@phosphor-icons/react";
+import { enrollCourse } from "../lib/enrollment.js";
 
 const artworkSets = {
   go: [TerminalWindow, BracketsCurly, ListBullets, Database, ShareNetwork, RocketLaunch],
@@ -43,7 +44,7 @@ export function CourseCabinet({ navigate, course }) {
           <h1>{course.title}</h1>
           <p>{course.description}</p>
           <div className="course-hero-actions">
-            <button className="btn-primary" onClick={() => navigate(course.firstPath)}>{course.startLabel} <ArrowRight size={18}/></button>
+            <button className="btn-primary" onClick={() => { enrollCourse(course.slug); navigate(course.firstPath); }}>{course.startLabel} <ArrowRight size={18}/></button>
             <button className="btn-ghost" onClick={() => navigate(course.practicePath)}><Code size={17}/> Практика {course.label}</button>
           </div>
         </div>
