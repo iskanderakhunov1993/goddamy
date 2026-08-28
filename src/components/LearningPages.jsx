@@ -158,9 +158,12 @@ export function CoursePage({ navigate }) {
         <div className="go-syllabus-grid">{dashboardStages.map((stage, index) => {
           const status = stage.state === "locked" ? "upcoming" : index === 0 ? "current" : "full";
           const statusLabel = stage.state === "locked" ? "Предстоит" : index === 0 ? "Текущий курс" : "Доступен";
+          const minutes = stage.lessons * 10;
+          const timeLabel = minutes >= 60 ? `≈ ${Math.round(minutes / 60)} ч` : `≈ ${minutes} мин`;
           return <button className="go-module-card" key={stage.id} onClick={() => setOutlineSection(stage.id)}>
             <ModuleGlyph course="go" index={index}/>
             <h3>{stage.title}</h3>
+            <span className="go-module-meta">{stage.topics} тем · {timeLabel}</span>
             <div className="go-module-status">
               <span>{statusLabel}</span>
               <div className={`go-module-bar ${status}`}><i/></div>
