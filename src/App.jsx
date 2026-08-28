@@ -35,8 +35,8 @@ function Header({ setPage }) {
       <Logo onHome={() => nav("home")} />
       <nav>
         <button onClick={() => nav("/#courses")}>Курсы</button>
-        <button className="hide-mobile" onClick={() => nav("/certificates")}>Сертификаты</button>
-        <button className="hide-mobile" onClick={() => nav("/subscription")}>Подписка</button>
+        <button className="hide-mobile" onClick={() => nav("/#certificate")}>Сертификаты</button>
+        <button className="hide-mobile" onClick={() => nav("/#subscription")}>Подписка</button>
       </nav>
       <div className="header-actions">
         <button className="hide-mobile" aria-label="Профиль" onClick={() => nav("/profile")}><UserCircle size={20}/></button>
@@ -45,8 +45,8 @@ function Header({ setPage }) {
       </div>
       {menuOpen && <nav className="mobile-nav-panel" aria-label="Мобильная навигация">
         <button onClick={() => { nav("/#courses"); setMenuOpen(false); }}>Курсы</button>
-        <button onClick={() => { nav("/certificates"); setMenuOpen(false); }}>Сертификаты</button>
-        <button onClick={() => { nav("/subscription"); setMenuOpen(false); }}>Подписка</button>
+        <button onClick={() => { nav("/#certificate"); setMenuOpen(false); }}>Сертификаты</button>
+        <button onClick={() => { nav("/#subscription"); setMenuOpen(false); }}>Подписка</button>
         <button onClick={() => { nav("/go"); setMenuOpen(false); }}>Начать</button>
       </nav>}
     </header>
