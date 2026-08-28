@@ -1,6 +1,7 @@
 function safeExternalUrl(value, allowImage = false) {
   if (typeof value !== "string") return "";
   if (allowImage && value.startsWith("data:image/")) return value;
+  if (allowImage && /^\/[^/]/.test(value)) return value;
   try {
     const parsed = new URL(value);
     return ["http:", "https:"].includes(parsed.protocol) ? parsed.href : "";
