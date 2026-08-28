@@ -4,7 +4,7 @@ import {
   List, UserCircle, X
 } from "@phosphor-icons/react";
 import {
-  CertificatesPage, CoursePage, ProfilePage, ProjectPage, RetrospectivePage, SetupPage, SprintPage, StoryLesson
+  CertificatesPage, CoursePage, ProfilePage, ProjectPage, RetrospectivePage, SetupPage, SprintPage, StoryLesson, SubscriptionPage
 } from "./components/LearningPages.jsx";
 import { CourseEditor } from "./components/CourseEditor.jsx";
 import { AcademyHub, PublicGoLanding, GoTrainer } from "./components/AcademyExperience.jsx";
@@ -36,7 +36,7 @@ function Header({ setPage }) {
       <nav>
         <button onClick={() => nav("/#courses")}>Курсы</button>
         <button className="hide-mobile" onClick={() => nav("/certificates")}>Сертификаты</button>
-        <button className="hide-mobile" onClick={() => nav("/#subscription")}>Подписка</button>
+        <button className="hide-mobile" onClick={() => nav("/subscription")}>Подписка</button>
       </nav>
       <div className="header-actions">
         <button className="hide-mobile" aria-label="Профиль" onClick={() => nav("/profile")}><UserCircle size={20}/></button>
@@ -46,7 +46,7 @@ function Header({ setPage }) {
       {menuOpen && <nav className="mobile-nav-panel" aria-label="Мобильная навигация">
         <button onClick={() => { nav("/#courses"); setMenuOpen(false); }}>Курсы</button>
         <button onClick={() => { nav("/certificates"); setMenuOpen(false); }}>Сертификаты</button>
-        <button onClick={() => { nav("/#subscription"); setMenuOpen(false); }}>Подписка</button>
+        <button onClick={() => { nav("/subscription"); setMenuOpen(false); }}>Подписка</button>
         <button onClick={() => { nav("/go"); setMenuOpen(false); }}>Начать</button>
       </nav>}
     </header>
@@ -194,6 +194,7 @@ export function App() {
       "/go/task-tracker/retrospective": "Ретроспектива проекта — Godemy",
       "/profile": "Прогресс обучения — Godemy",
       "/certificates": "Сертификаты Godemy",
+      "/subscription": "Подписка Godemy",
       "/course-editor": "Редактор курса — Godemy",
     };
     const sprint = route.match(/^\/go\/task-tracker\/sprint\/([1-4])$/);
@@ -241,6 +242,7 @@ export function App() {
   else if (route === "/go/task-tracker/retrospective") content = <RetrospectivePage navigate={navigate}/>;
   else if (route === "/profile") content = <ProfilePage navigate={navigate}/>;
   else if (route === "/certificates") content = <CertificatesPage navigate={navigate}/>;
+  else if (route === "/subscription") content = <SubscriptionPage navigate={navigate}/>;
   else if (route === "/course-editor") content = <CourseEditor navigate={navigate}/>;
   else if (lessonMatch) content = <StoryLesson sectionId={lessonMatch[1]} topicId={lessonMatch[2]} lessonId={lessonMatch[3]} navigate={navigate}/>;
   else if (route === "/lesson") content = <StoryLesson navigate={navigate}/>;

@@ -2,8 +2,10 @@ import { useMemo, useState } from "react";
 import {
   ArrowRight, BookOpen, BracketsCurly, CheckCircle, Code,
   GitBranch, MagnifyingGlass, RocketLaunch, ShieldCheck, SlidersHorizontal,
-  Stack, TerminalWindow, FilePy,
+  Stack, FilePy, Database, ChartLineUp, Cube,
 } from "@phosphor-icons/react";
+
+const GoLogoTile = () => <span className="tech-logo-tile">Go</span>;
 import { courseCurriculum } from "../content/courseCurriculum.js";
 import { getGoChallenge, goChallenges } from "../content/goChallenges.js";
 import "../styles-academy.css";
@@ -17,35 +19,48 @@ const audience = [
 ];
 
 export function PublicGoLanding({ navigate }) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const tracks = [
-    { title: "Go Backend", status: "Доступен сейчас", description: "Создайте три backend-проекта и пройдите путь от первой строки до релиза.", icon: <Code size={52}/>, action: () => navigate("/go"), visual: <TerminalWindow size={72}/> },
-    { title: "SQL", status: "Доступен сейчас", description: "Научитесь получать данные, строить отчёты и принимать решения на их основе.", icon: <Stack size={52}/>, action: () => navigate("/sql"), visual: <BracketsCurly size={72}/> },
-    { title: "Python", status: "Доступен сейчас", description: "Автоматизируйте рабочие задачи и соберите сервис обработки данных.", icon: <FilePy size={52}/>, action: () => navigate("/python"), visual: <Code size={72}/> },
-    { title: "Product Management", status: "Доступен сейчас", description: "Научитесь исследовать проблему, выбирать метрики и вести продуктовую задачу к релизу.", icon: <GitBranch size={52}/>, action: () => navigate("/product"), visual: <Stack size={72}/> },
-    { title: "QA", status: "Доступен сейчас", description: "Проверяйте требования, API и релизы, чтобы команда выпускала надёжный продукт.", icon: <ShieldCheck size={52}/>, action: () => navigate("/qa"), visual: <CheckCircle size={72}/> },
-    { title: "Docker", status: "Скоро", description: "Упакуйте приложение в контейнер и разверните его в любой среде.", icon: <RocketLaunch size={52}/>, visual: <Stack size={72}/> },
+    { title: "Go Backend", status: "Доступен сейчас", description: "Создайте три backend-проекта и пройдите путь от первой строки до релиза.", icon: <GoLogoTile/>, level: "Для начинающих", meta: "150 уроков", action: () => navigate("/go") },
+    { title: "SQL", status: "Доступен сейчас", description: "Научитесь получать данные, строить отчёты и принимать решения на их основе.", icon: <Database size={20}/>, level: "Для начинающих", meta: "140 уроков", action: () => navigate("/sql") },
+    { title: "Python", status: "Доступен сейчас", description: "Автоматизируйте рабочие задачи и соберите сервис обработки данных.", icon: <FilePy size={20}/>, level: "Для начинающих", meta: "120 уроков", action: () => navigate("/python") },
+    { title: "Product Management", status: "Доступен сейчас", description: "Научитесь исследовать проблему, выбирать метрики и вести продуктовую задачу к релизу.", icon: <ChartLineUp size={20}/>, level: "Для начинающих", meta: "90 уроков", action: () => navigate("/product") },
+    { title: "QA", status: "Доступен сейчас", description: "Проверяйте требования, API и релизы, чтобы команда выпускала надёжный продукт.", icon: <ShieldCheck size={20}/>, level: "Для начинающих", meta: "90 уроков", action: () => navigate("/qa") },
+    { title: "Docker", status: "Скоро", description: "Упакуйте приложение в контейнер и разверните его в любой среде.", icon: <Cube size={20}/>, level: "—", meta: "Программа готовится" },
   ];
   return <main className="universal-landing">
     <section className="universal-hero container">
-      <div className="universal-hero-copy">
-        <h1>Осваивайте IT через реальные задачи</h1>
-        <p>Короткая теория, настоящая практика и сертификат за подтверждённый результат.</p>
-        <div className="universal-hero-actions"><button onClick={() => navigate("/go")}>Войти в команду <ArrowRight size={20}/></button><button onClick={() => navigate("/#courses")}>Выбрать направление</button></div>
-        <div className="universal-subscription-note"><Stack size={20}/><span>Все курсы по одной подписке</span></div>
+      <div className="universal-hero-grid">
+        <div className="universal-hero-copy">
+          <span className="hero-free-badge">Бесплатно</span>
+          <h1><span className="hero-box white">Осваивайте</span><span className="hero-box yellow">/IT-профессию</span></h1>
+          <p className="hero-pitch">Не трать 4 года на универ или 150 000 ₽ как на курсах.</p>
+          <p>90% времени — реальные задачи. Никакой воды и прокрастинации: каждый курс — это твои настоящие проекты.</p>
+          <div className="universal-hero-actions"><button onClick={() => navigate("/go")}>Войти в команду <ArrowRight size={20}/></button><button onClick={() => navigate("/#courses")}>Выбрать направление</button></div>
+          <div className="universal-subscription-note"><Stack size={20}/><span>Все курсы по одной подписке</span></div>
+        </div>
+        <form className="universal-signup" onSubmit={(event) => { event.preventDefault(); navigate("/go"); }}>
+          <b>Создайте аккаунт</b>
+          <input placeholder="Имя" value={name} onChange={(event) => setName(event.target.value)}/>
+          <input placeholder="you@example.com" type="email" value={email} onChange={(event) => setEmail(event.target.value)}/>
+          <button type="submit">Начать <ArrowRight size={16}/></button>
+        </form>
       </div>
-      <div className="universal-hero-art"><img src="/characters/godemy-universal-team-hero.png" alt="Команда Godemy совместно решает учебную задачу"/></div>
     </section>
 
     <section className="universal-courses container" id="courses">
       <p className="academy-kicker">НАПРАВЛЕНИЯ</p><h2>Каждый курс —<br/>рабочая история</h2>
-      <div className="universal-course-list">{tracks.map((track) => <button key={track.title} disabled={!track.action} onClick={track.action} className={track.action ? "available" : "coming"}>
-        <div className="universal-track-icon">{track.icon}</div><div className="universal-track-copy"><small>{track.status}</small><h3>{track.title}</h3><p>{track.description}</p>{track.action && <span>Подробнее <ArrowRight size={15}/></span>}</div><div className="universal-track-visual">{track.visual}</div><div className="universal-track-result"><ShieldCheck size={28}/><span><b>Сертификат</b><small>Подтвердите навыки<br/>и добавьте в портфолио</small></span></div>
-      </button>)}</div>
+      <ul className="universal-course-pills">{tracks.map((track) => <li key={track.title}><button onClick={() => track.action ? track.action() : navigate("/#courses")}>{track.title}</button></li>)}</ul>
+      <ul className="universal-course-list">{tracks.map((track) => <li key={track.title}><button disabled={!track.action} onClick={track.action} className={track.action ? "available" : "coming"}>
+        <div className="universal-track-icon">{track.icon}</div>
+        <div className="universal-track-copy"><small>{track.status}</small><h3>{track.title}</h3><p>{track.description}</p><div className="universal-track-meta"><span>{track.level}</span><span>{track.meta}</span></div></div>
+      </button></li>)}</ul>
     </section>
 
     <section className="universal-practice" id="practice"><div className="container"><div><p className="academy-kicker">ТОЛЬКО ВАЖНОЕ</p><h2>Не смотрите, как работают другие. Делайте сами.</h2></div><ol><li><b>Короткая теория</b><p>Только знания, нужные для следующей задачи.</p></li><li><b>Практика с проверкой</b><p>Тренажёр сразу показывает, что получилось.</p></li><li><b>Проект и сертификат</b><p>Результат можно открыть и показать другим.</p></li></ol></div></section>
 
-    <section className="universal-subscription container" id="subscription"><div><p className="academy-kicker">ОДНА ПОДПИСКА</p><h2>Учитесь в своём темпе, а не по расписанию потока</h2><p>Подписка открывает каждый курс вместе с его практикой, проектами и сертификатами. Можно начать с Go и позже добавить новые навыки.</p></div><div className="universal-subscription-card"><CheckCircle size={31}/><h3>Всё обучение в одном доступе</h3><ul><li>Практические IT-курсы</li><li>Свой тренажёр внутри каждого курса</li><li>Проекты для портфолио</li><li>Проверяемые сертификаты</li></ul><button onClick={() => navigate("/go")}>Попробовать Godemy <ArrowRight size={18}/></button><small>Условия подписки появятся перед оплатой</small></div></section>
+    <section className="universal-subscription container" id="subscription"><div><p className="academy-kicker">ОДНА ПОДПИСКА</p><h2>Учитесь в своём темпе, а не по расписанию потока</h2><p>Подписка открывает каждый курс вместе с его практикой, проектами и сертификатами. Можно начать с Go и позже добавить новые навыки.</p></div><div className="universal-subscription-card"><CheckCircle size={31}/><h3>Всё обучение в одном доступе</h3><ul><li>Практические IT-курсы</li><li>Свой тренажёр внутри каждого курса</li><li>Проекты для портфолио</li><li>Проверяемые сертификаты</li></ul><button onClick={() => navigate("/subscription")}>Попробовать Godemy <ArrowRight size={18}/></button><small>Условия подписки появятся перед оплатой</small></div></section>
 
     <section className="universal-certificate container"><ShieldCheck size={54}/><div><p className="academy-kicker">СЕРТИФИКАТЫ</p><h2>Не за просмотр. За подтверждённый результат.</h2><p>Сертификат появляется в профиле после обязательных задач и проектов. Его можно открыть по ссылке и добавить в портфолио.</p></div><button onClick={() => navigate("/certificates")}>Посмотреть сертификаты <ArrowRight size={18}/></button></section>
   </main>;

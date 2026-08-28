@@ -1,21 +1,36 @@
+import { lessonContent } from "./lessonContent/index.js";
+
 const uid = (section, topic, index) => `${section}-${topic}-${index + 1}`;
 
-const lesson = (section, topic, index, title, context) => ({
-  id: uid(section.id, topic.id, index),
-  title,
-  summary: context.summary || `Разберём «${title}» и сразу свяжем тему с работой над продуктом Bit Tech.`,
-  objectives: [
-    `Объяснить, зачем в проекте нужен подход «${title}»`,
-    "Применить идею в своей ветке и проверить результат",
-    "Зафиксировать следующий рабочий шаг в GitHub",
-  ],
-  blocks: [
-    { id: `${uid(section.id, topic.id, index)}-brief`, type: "callout", tone: "info", title: `${context.person || "Рома"} · ${context.role || "команда Bit Tech"}`, text: context.message || "В работе важен не идеальный ответ с первого раза, а понятный следующий шаг и проверяемый результат." },
-    { id: `${uid(section.id, topic.id, index)}-why`, type: "heading", level: 2, text: "Зачем это нужно в работе" },
-    { id: `${uid(section.id, topic.id, index)}-copy`, type: "paragraph", text: `${context.summary || `Тема «${title}»`} нужна, чтобы уверенно двигаться по проекту. Сначала разберите принцип на маленьком примере, затем перенесите его в свой репозиторий. Не копируйте решение: фиксируйте гипотезу, запускайте проверку и улучшайте результат.` },
-    { id: `${uid(section.id, topic.id, index)}-task`, type: "task", title: "Мини-шаг в репозитории", text: `Сделайте небольшой проверяемый шаг по теме «${title}». После выполнения сохраните результат отдельным осмысленным commit.`, checklist: ["Сформулировал, что изменяю", "Проверил командой или тестом", "Сделал commit по соглашению"] },
-  ],
-});
+const lesson = (section, topic, index, title, context) => {
+  const id = uid(section.id, topic.id, index);
+  const custom = lessonContent[id];
+  if (custom) {
+    return {
+      id,
+      title,
+      summary: custom.summary,
+      objectives: custom.objectives,
+      blocks: custom.blocks.map((block, blockIndex) => ({ id: `${id}-b${blockIndex}`, ...block })),
+    };
+  }
+  return {
+    id,
+    title,
+    summary: context.summary || `Разберём «${title}» и сразу свяжем тему с работой над продуктом Bit Tech.`,
+    objectives: [
+      `Объяснить, зачем в проекте нужен подход «${title}»`,
+      "Применить идею в своей ветке и проверить результат",
+      "Зафиксировать следующий рабочий шаг в GitHub",
+    ],
+    blocks: [
+      { id: `${id}-brief`, type: "callout", tone: "info", title: `${context.person || "Рома"} · ${context.role || "команда Bit Tech"}`, text: context.message || "В работе важен не идеальный ответ с первого раза, а понятный следующий шаг и проверяемый результат." },
+      { id: `${id}-why`, type: "heading", level: 2, text: "Зачем это нужно в работе" },
+      { id: `${id}-copy`, type: "paragraph", text: `${context.summary || `Тема «${title}»`} нужна, чтобы уверенно двигаться по проекту. Сначала разберите принцип на маленьком примере, затем перенесите его в свой репозиторий. Не копируйте решение: фиксируйте гипотезу, запускайте проверку и улучшайте результат.` },
+      { id: `${id}-task`, type: "task", title: "Мини-шаг в репозитории", text: `Сделайте небольшой проверяемый шаг по теме «${title}». После выполнения сохраните результат отдельным осмысленным commit.`, checklist: ["Сформулировал, что изменяю", "Проверил командой или тестом", "Сделал commit по соглашению"] },
+    ],
+  };
+};
 
 const makeTopic = (section, id, title, lessons, context) => ({
   id,
@@ -48,7 +63,7 @@ export const courseExperience = {
 };
 
 export const courseCurriculum = [
-  makeModule("internship-start", "Старт стажировки · Инструменты", "ОНБОРДИНГ", "Настрой рабочее место и сделай первый push в Bit Tech.", { person: "Оля", role: "HR Bit Tech", message: "Ты в экспериментальной pre-junior стажировке. Договоримся так: маленькие шаги, честные проверки и вопросы до того, как они станут проблемой." }, [
+  makeModule("internship-start", "Старт стажировки", "ОНБОРДИНГ", "Настрой рабочее место и сделай первый push в Bit Tech.", { person: "Оля", role: "HR Bit Tech", message: "Ты в экспериментальной pre-junior стажировке. Договоримся так: маленькие шаги, честные проверки и вопросы до того, как они станут проблемой." }, [
     ["bit-tech", "Добро пожаловать в Bit Tech", ["Экспериментальная стажировка", "Команда и роли", "Как устроен рабочий день", "Карта курса и три проекта", "Первый чек-ин с Ромой"]],
     ["terminal", "Терминал и рабочая папка", ["Терминал без страха", "Файлы, папки и пути", "Команды cd, ls, mkdir и cat", "Переменные окружения", "curl и чтение логов"]],
     ["go-vscode", "Go и VS Code", ["Установка Go", "Настройка VS Code", "go env и версия языка", "Первый go mod init", "Запуск и сборка программы"]],

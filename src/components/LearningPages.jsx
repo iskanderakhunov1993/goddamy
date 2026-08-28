@@ -5,13 +5,12 @@ import {
   ArrowLeft, ArrowRight, Check, CheckCircle, Circle, Code,
   GithubLogo, Lightbulb, RocketLaunch, Target, BookOpen, House,
   List, X, CaretRight, UserCircle, PencilSimple, Trophy, Flame,
-  Certificate, Briefcase, GitBranch, CalendarBlank, Eye, LinkSimple, MapPin
+  Certificate, Briefcase, GitBranch, CalendarBlank, LinkSimple, MapPin, LockSimple, Cube
 } from "@phosphor-icons/react";
 import { project, setupTasks, sprints, stages, storyBeats } from "../content/goCourse.js";
-import { courseCurriculum, courseExperience } from "../content/courseCurriculum.js";
+import { courseCurriculum } from "../content/courseCurriculum.js";
 import { courseLessonPath, findLesson, flattenCourse, loadCourseDraft } from "../content/courseDraft.js";
 import { LessonBlocks } from "./LessonBlocks.jsx";
-import { ModuleArtwork } from "./CourseCabinet.jsx";
 import { getActivitySummary } from "../lib/activity.js";
 import "../styles-profile.css";
 
@@ -138,10 +137,31 @@ export function CoursePage({ navigate }) {
   return <main className="course-dashboard">
     <aside className="dashboard-rail" aria-label="Навигация кабинета"><button className="dashboard-logo" onClick={() => navigate("/")}><span>GO</span>DEMY</button><nav><button aria-label="Главная" onClick={() => navigate("/")}><House size={20}/></button><button className="active" aria-label="Мой курс" onClick={() => navigate("/go")}><BookOpen size={20}/></button><button aria-label="Практика курса Go" onClick={() => navigate("/go/practice")}><Code size={20}/></button><button aria-label="Программа курса" onClick={() => setOutlineSection("root")}><List size={20}/></button><button aria-label="Редактор курса" onClick={() => navigate("/course-editor")}><PencilSimple size={20}/></button></nav><button aria-label="Профиль" onClick={() => navigate("/profile")}><UserCircle size={21}/></button></aside>
     <div className="dashboard-content">
-      <section className="dashboard-course-card"><div><small>СТАЖИРОВКА · BIT TECH</small><h1>Go Backend Internship</h1><p>Три проверяемых проекта: от первого commit до backend-сервиса в Docker.</p><div className="dashboard-progress"><span style={{ width: "0%" }}/></div><em>0% · {course.length} модулей · {topicCount} тем · {courseLessons.length} уроков</em></div><div className="dashboard-course-actions"><button className="dashboard-continue" disabled={!courseLessons.length} onClick={() => courseLessons[0] && navigate(courseLessonPath(courseLessons[0]))}>Начать стажировку <ArrowRight size={18}/></button><button className="dashboard-practice" onClick={() => navigate("/go/practice")}><Code size={18}/> Практика Go</button></div></section>
+      <section className="course-hero">
+        <div className="course-hero-copy">
+          <small>СТАЖИРОВКА · BIT TECH</small>
+          <h1>Go Backend Internship</h1>
+          <p>Три проверяемых проекта: от первого commit до backend-сервиса в Docker.</p>
+          <div className="course-hero-actions">
+            <button className="btn-primary" disabled={!courseLessons.length} onClick={() => courseLessons[0] && navigate(courseLessonPath(courseLessons[0]))}>Начать стажировку <ArrowRight size={18}/></button>
+            <button className="btn-ghost" onClick={() => navigate("/go/practice")}><Code size={17}/> Практика Go</button>
+          </div>
+        </div>
+        <div className="course-includes">
+          <b>Курс включает</b>
+          <ul>
+            <li><BookOpen size={16}/> {courseLessons.length} уроков · {topicCount} тем</li>
+            <li><Cube size={16}/> 3 проверяемых проекта</li>
+            <li><Certificate size={16}/> Сертификат по итогам</li>
+          </ul>
+        </div>
+      </section>
+      <div className="course-prog"><span className="course-prog-pill">0%</span><div className="course-prog-track"><span style={{ width: "0%" }}/></div><span className="course-prog-label">0 / {courseLessons.length} уроков</span></div>
       <section className="dashboard-goal"><div className="goal-icon"><Flame size={20}/></div><div><b>{activity.currentStreak > 0 ? `Сейчас у тебя ${activity.currentStreak} ${activity.currentStreak === 1 ? "день" : activity.currentStreak < 5 ? "дня" : "дней"} практики подряд` : "Рабочий ритм: выбери 2 учебных вечера в неделю"}</b><p>Стрики мягкие: пауза не обнуляет прогресс, а Рома помогает вернуться с малого шага.</p></div><button onClick={() => navigate("/profile")}>Открыть кабинет</button></section>
-      <section className="dashboard-note"><Briefcase size={19}/><p><b>Текущая роль: кандидат на pre-junior стажировку.</b> Пройди онбординг, сделай первый push и открой проект Task Tracker.</p></section>
-      <section className="dashboard-program"><div className="dashboard-grid">{dashboardStages.map((stage, index) => <button className={`dashboard-stage ${stage.state}`} key={stage.id} onClick={() => setOutlineSection(stage.id)}><ModuleArtwork course="go" index={index}/><h3>{stage.title}</h3><p>{stage.meta}</p><i><span className={stage.state === "done" ? "filled" : ""}/></i></button>)}</div></section>
+      <section className="dashboard-program">
+        <h2 className="course-syllabus-heading">Программа курса</h2>
+        <div className="course-syllabus">{dashboardStages.map((stage, index) => <button className="syllabus-mod" key={stage.id} onClick={() => setOutlineSection(stage.id)}><span className={`syllabus-num ${stage.state === "locked" ? "lock" : ""}`}>{index + 1}</span><div><b>{stage.title}</b><small>{stage.meta}</small></div></button>)}</div>
+      </section>
     </div>
     {outlineSection && <CourseOutline course={course} initialSectionId={outlineSection === "root" ? null : outlineSection} onClose={closeOutline} navigate={navigate}/>}
   </main>;
@@ -150,21 +170,48 @@ export function CoursePage({ navigate }) {
 export function ProfilePage({ navigate }) {
   const [course] = useState(loadCourseDraft);
   const lessonCount = flattenCourse(course).length;
+  const completedLessons = 0;
+  const percent = lessonCount ? Math.round((completedLessons / lessonCount) * 100) : 0;
+  const hasSubscription = false;
+  const courseComplete = percent >= 100;
+  const certReady = courseComplete && hasSubscription;
   const [editing, setEditing] = useState(false);
-  const [isPublic, setIsPublic] = useState(false);
   const [profile, setProfile] = useState({ name: "Стажёр Bit Tech", about: "Учусь собирать backend-сервисы на Go через реальные задачи команды.", city: "Москва, Россия", github: "" });
   const changeProfile = (key, value) => setProfile((current) => ({ ...current, [key]: value }));
   const [activity] = useState(getActivitySummary);
   return <main className="profile-shell">
     <div className="profile-content">
-      <div className="profile-header"><div><small>BIT TECH · ЛИЧНЫЙ КАБИНЕТ</small><h1>Профиль стажёра</h1><p>Прогресс, портфолио и подтверждения твоей практики.</p></div><button onClick={() => navigate("/certificates")}>Сертификаты <Certificate size={17}/></button></div>
+      <div className="profile-header"><div><small>BIT TECH · ЛИЧНЫЙ КАБИНЕТ</small><h1>Профиль стажёра</h1><p>Прогресс, портфолио и подтверждения твоей практики.</p></div></div>
       <div className="profile-layout">
         <aside className="profile-card"><img src="/characters/avatar-protagonist-neutral-v1.png" alt="Аватар стажёра"/><div><small>PRE-JUNIOR · BIT TECH</small><h2>{profile.name}</h2></div><button className="profile-edit" onClick={() => setEditing((value) => !value)}><PencilSimple size={16}/>{editing ? "Готово" : "Редактировать профиль"}</button><p className="profile-joined"><CalendarBlank size={16}/> В программе с августа 2026</p>{editing ? <form onSubmit={(event) => { event.preventDefault(); setEditing(false); }}><label>Имя<input value={profile.name} onChange={(event) => changeProfile("name", event.target.value)} maxLength={40}/></label><label>О себе<textarea value={profile.about} onChange={(event) => changeProfile("about", event.target.value)} maxLength={280}/></label><label>Город<input value={profile.city} onChange={(event) => changeProfile("city", event.target.value)} maxLength={60}/></label><label>GitHub<input value={profile.github} onChange={(event) => changeProfile("github", event.target.value)} placeholder="https://github.com/username"/></label><button className="profile-save">Сохранить</button></form> : <><p className="profile-about">{profile.about}</p><p className="profile-location"><MapPin size={16}/>{profile.city}</p>{profile.github && <a href={profile.github} target="_blank" rel="noreferrer"><LinkSimple size={16}/> GitHub</a>}</>}<div className="profile-level"><b>Intern <ArrowRight size={15}/> Junior</b><i><span style={{ width: "0%" }}/></i><small>0 / 100 XP · рост через выполненные задачи</small></div></aside>
         <div className="profile-main">
-          <section className="profile-public"><div><Eye size={20}/><span><b>Профиль публичный</b><small>После включения ссылку на профиль можно будет добавить в портфолио.</small></span></div><button aria-pressed={isPublic} className={isPublic ? "toggle on" : "toggle"} onClick={() => setIsPublic((value) => !value)}><i/></button></section>
-          <section className="profile-progress"><div className="profile-panel-heading"><div><h2>Прогресс по обучению</h2><p>Начни онбординг — первый урок откроет рабочий ритм.</p></div><button onClick={() => navigate("/go")}>К программе <ArrowRight size={16}/></button></div>{[{ title: "Go Backend Internship", value: `0 / ${lessonCount} уроков`, progress: 0 }, ...courseExperience.projects.map((project) => ({ title: project.title, value: "0 / 1 проект", progress: 0 }))].map((item) => <article key={item.title}><div><b>{item.title}</b><span>{item.value}</span></div><i><em style={{ width: `${item.progress}%` }}/></i></article>)}<div className="profile-stats"><div><Flame size={25}/><span><b>{activity.currentStreak}</b><small>Текущая серия · дней подряд</small></span></div><div><Trophy size={25}/><span><b>{activity.bestStreak}</b><small>Личный рекорд</small></span></div><div><GitBranch size={25}/><span><b>0 / 3</b><small>Проверено проектов</small></span></div></div><div className="profile-week"><b>Последние 7 дней</b><div>{activity.last7Days.map((day, index) => <span key={day.key} className={day.active ? "active" : day.isFuture ? "future" : ""}><Flame size={20} weight={day.active ? "fill" : "regular"}/><small>{weekdayLabels[index]}</small></span>)}</div></div></section>
+          <section className="profile-progress">
+            <div className="profile-panel-heading"><div><h2>Прогресс по обучению</h2><p>Начни онбординг — первый урок откроет рабочий ритм.</p></div><button onClick={() => navigate("/go")}>К программе <ArrowRight size={16}/></button></div>
+            <div className="progress-course">
+              <div className="progress-course-top"><b>Go Backend Internship</b><span>{completedLessons} / {lessonCount} уроков</span></div>
+              <div className="progress-course-bar"><i style={{ width: `${percent}%` }}/></div>
+              <span className="progress-course-percent">{percent}%</span>
+            </div>
+            <div className={certReady ? "cert-unlock ready" : "cert-unlock"}>
+              {certReady ? <Certificate size={19}/> : <LockSimple size={19}/>}
+              <div><b>Сертификат курса</b><p>{courseComplete ? "Курс пройден. Оформите подписку, чтобы скачать сертификат." : "Откроется после 100% курса и активной подписки."}</p></div>
+              <button disabled={!certReady} onClick={() => certReady && navigate("/certificates")}>Скачать сертификат</button>
+            </div>
+            <div className="profile-stats"><div><Flame size={25}/><span><b>{activity.currentStreak}</b><small>Текущая серия · дней подряд</small></span></div><div><Trophy size={25}/><span><b>{activity.bestStreak}</b><small>Личный рекорд</small></span></div><div><GitBranch size={25}/><span><b>0 / 3</b><small>Проверено проектов</small></span></div></div>
+            <div className="profile-week"><b>Последние 7 дней</b><div>{activity.last7Days.map((day, index) => <span key={day.key} className={day.active ? "active" : day.isFuture ? "future" : ""}><Flame size={20} weight={day.active ? "fill" : "regular"}/><small>{weekdayLabels[index]}</small></span>)}</div></div>
+          </section>
+          <section className="profile-progress">
+            <div className="profile-panel-heading"><div><h2>Достижения (0 / 6)</h2><p>Открываются по мере прохождения курса.</p></div></div>
+            <div className="badge-grid">
+              <div><GithubLogo size={18}/><span><b>Первый commit</b><small>Первое изменение в Git</small></span></div>
+              <div><Code size={18}/><span><b>Чистая сборка</b><small>go build и go vet без ошибок</small></span></div>
+              <div><CheckCircle size={18}/><span><b>Защитник тестов</b><small>Логика покрыта тестами</small></span></div>
+              <div><Cube size={18}/><span><b>Три проекта</b><small>Все три проекта сданы</small></span></div>
+              <div><Target size={18}/><span><b>Ревью пройдено</b><small>Код прошёл проверку</small></span></div>
+              <div><Certificate size={18}/><span><b>Сертификат</b><small>Курс завершён на 100%</small></span></div>
+            </div>
+          </section>
           <section className="profile-activity"><div className="profile-panel-heading"><div><h2>Активность за 12 месяцев</h2><p>Мягкий ритм: пропуск не обнуляет историю практики, только текущую серию.</p></div><span>Всего дней практики: {activity.totalDays}</span></div><div className="activity-grid">{activity.weeks.map((week) => <i key={week.key} className={week.active ? "active" : ""} aria-label={week.active ? "Была практика на этой неделе" : "Нет активности"}/>)}</div></section>
-          <section className="profile-cert-preview"><Certificate size={28}/><div><small>СЕРТИФИКАТЫ GODEMY</small><h2>Подтверждай не время на платформе, а результат.</h2><p>Сертификат станет доступен после трёх проверенных проектов, финальной ретроспективы и GitHub-артефактов.</p></div><button onClick={() => navigate("/certificates")}>Все сертификаты <ArrowRight size={17}/></button></section>
         </div>
       </div>
     </div>
@@ -180,6 +227,39 @@ export function CertificatesPage({ navigate }) {
     { title: "Scrum", status: "Скоро", progress: "Курс готовится", description: "Подтвердит понимание ролей, событий и артефактов Scrum через симуляцию командных спринтов.", action: "Программа скоро", path: null },
   ];
   return <main className="certificates-shell"><section className="certificates-content"><div className="certificates-header"><small>GODEMY · ДОСТИЖЕНИЯ</small><h1>Сертификаты за курсы</h1><p>Сертификат выдаётся после завершения полноценного курса и итоговой проверки. Тренажёры и отдельные проекты помогают учиться, но не создают отдельный сертификат.</p></div><div className="certificate-grid">{certificates.map((item) => <article key={item.title}><div className="certificate-lock"><Certificate size={26}/><span>{item.status}</span></div><h2>{item.title}</h2><p>{item.description}</p><div className="certificate-progress"><b>{item.progress}</b><i><span style={{ width: "0%" }}/></i></div><button disabled={!item.path} onClick={() => item.path && navigate(item.path)}>{item.action} {item.path && <ArrowRight size={17}/>}</button></article>)}</div><section className="certificate-how"><h2>Как получить сертификат</h2><ol><li>Заверши обязательные модули и практические задания курса.</li><li>Выполни итоговую работу и пройди проверку по критериям.</li><li>После подтверждения результата сертификат появится в профиле.</li></ol><button onClick={() => navigate("/profile")}>К профилю <ArrowLeft size={17}/></button></section></section></main>;
+}
+
+export function SubscriptionPage({ navigate }) {
+  const [period, setPeriod] = useState("month");
+  const price = period === "month" ? "1 990 ₽" : "1 250 ₽";
+  const periodLabel = period === "month" ? "Ежемесячно" : "Ежегодно (−37%)";
+  const [confirmed, setConfirmed] = useState(false);
+  return <main className="profile-shell"><div className="profile-content checkout-content">
+    <div className="profile-header"><div><small>GODEMY · ПОДПИСКА</small><h1>Один тариф, полный доступ ко всем курсам</h1></div></div>
+    <div className="checkout-grid">
+      <div className="plan-box">
+        <div className="checkout-toggle">
+          <button className={period === "month" ? "active" : ""} onClick={() => setPeriod("month")}>Ежемесячно</button>
+          <button className={period === "year" ? "active" : ""} onClick={() => setPeriod("year")}>Ежегодно −37%</button>
+        </div>
+        <div className="checkout-price"><b>{price}</b><span>/ месяц</span></div>
+        <ul className="checkout-features">
+          <li><Check size={17}/> Все практические IT-курсы</li>
+          <li><Check size={17}/> Тренажёр с проверкой в каждом курсе</li>
+          <li><Check size={17}/> Проверяемые сертификаты</li>
+        </ul>
+      </div>
+      <div className="summary-box">
+        <div className="summary-row"><span>Godemy Unlimited</span><span>{price}</span></div>
+        <div className="summary-row"><span>Период</span><span>{periodLabel}</span></div>
+        <div className="summary-total"><span>Сегодня</span><span>{price}</span></div>
+        {confirmed
+          ? <p className="checkout-confirm">Подписка активирована. Сертификаты откроются после 100% прохождения курса.</p>
+          : <button className="btn-primary checkout-submit" onClick={() => setConfirmed(true)}>Оформить подписку</button>}
+        <small className="checkout-disclaimer">Демо-режим: оплата не списывается, это учебный проект.</small>
+      </div>
+    </div>
+  </div></main>;
 }
 
 export function StoryLesson({ sectionId = "intro", topicId = "welcome", lessonId = "welcome", navigate }) {
