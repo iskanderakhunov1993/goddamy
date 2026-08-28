@@ -55,7 +55,17 @@ export function CourseCabinet({ navigate, course }) {
       <section className="dashboard-note"><Briefcase size={19}/><p><b>{course.role}</b> {course.nextStep}</p></section>
       <section className="dashboard-program">
         <h2 className="course-syllabus-heading">Программа курса</h2>
-        <div className="course-syllabus">{course.modules.map((module, index) => <button className="syllabus-mod" key={module.n} onClick={() => setSelectedModule(module.n)}><span className={`syllabus-num ${index < 2 ? "" : "lock"}`}>{index + 1}</span><div><b>{module.title}</b><small>{course.phases[index] || "МОДУЛЬ"} · {module.topics.length} тем · {module.topics.length * 5} уроков</small></div></button>)}</div>
+        <div className="module-grid">{course.modules.map((module, index) => {
+          const locked = index >= 2;
+          return <button className={`module-card ${locked ? "locked" : ""}`} key={module.n} onClick={() => setSelectedModule(module.n)}>
+            <span className={`module-card-tag ${locked ? "locked" : index === 0 ? "now" : "open"}`}>{locked ? "Скоро" : index === 0 ? "Сейчас" : "Доступно"}</span>
+            <div className="module-card-body">
+              <h3>{module.title}</h3>
+              <p>{module.text}</p>
+              <div className="module-card-footer"><span><ChartBar size={14}/> {course.phases[index] || "МОДУЛЬ"}</span><span>{module.topics.length} тем · {module.topics.length * 5} уроков</span></div>
+            </div>
+          </button>;
+        })}</div>
       </section>
     </div>
     {selected && <div className="course-modal-backdrop" role="presentation" onMouseDown={() => setSelectedModule(null)}><section className="course-modal" role="dialog" aria-modal="true" aria-labelledby="cabinet-module-title" onMouseDown={(event) => event.stopPropagation()}><button className="modal-close" onClick={() => setSelectedModule(null)} aria-label="Закрыть"><X size={26}/></button><div className="modal-crumb"><span>Курс {course.label}</span><ArrowRight size={13}/><span>Модуль {selected.n}</span></div><h2 id="cabinet-module-title">{selected.title}</h2><p>{selected.text}</p><div className="outline-list">{selected.topics.map((topic, index) => <button key={topic} onClick={() => navigate(index === 0 ? course.firstPath : course.practicePath)}><span>{String(index + 1).padStart(2, "0")}</span><b>{topic}</b><em>5 уроков</em><ArrowRight size={17}/></button>)}</div></section></div>}

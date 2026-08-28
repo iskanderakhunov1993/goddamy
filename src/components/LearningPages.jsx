@@ -5,7 +5,7 @@ import {
   ArrowLeft, ArrowRight, Check, CheckCircle, Circle, Code,
   GithubLogo, Lightbulb, RocketLaunch, Target, BookOpen, House,
   List, X, CaretRight, UserCircle, PencilSimple, Trophy, Flame,
-  Certificate, Briefcase, GitBranch, CalendarBlank, LinkSimple, MapPin, LockSimple, Cube
+  Certificate, Briefcase, GitBranch, CalendarBlank, LinkSimple, MapPin, LockSimple, Cube, ChartBar
 } from "@phosphor-icons/react";
 import { project, setupTasks, sprints, stages, storyBeats } from "../content/goCourse.js";
 import { courseCurriculum } from "../content/courseCurriculum.js";
@@ -90,6 +90,10 @@ function Checklist({ items, title = "Чек-лист" }) {
 const createDashboardStages = (course) => course.map((courseModule, index) => ({
   id: courseModule.id,
   title: courseModule.title,
+  summary: courseModule.summary,
+  phase: courseModule.phase || "МОДУЛЬ",
+  topics: courseModule.topics.length,
+  lessons: courseModule.topics.reduce((total, courseTopic) => total + courseTopic.lessons.length, 0),
   meta: `${courseModule.phase || "МОДУЛЬ"} · ${courseModule.topics.length} тем · ${courseModule.topics.reduce((total, courseTopic) => total + courseTopic.lessons.length, 0)} уроков`,
   state: index < 2 ? "active" : "locked",
 }));
@@ -160,7 +164,14 @@ export function CoursePage({ navigate }) {
       <section className="dashboard-goal"><div className="goal-icon"><Flame size={20}/></div><div><b>{activity.currentStreak > 0 ? `Сейчас у тебя ${activity.currentStreak} ${activity.currentStreak === 1 ? "день" : activity.currentStreak < 5 ? "дня" : "дней"} практики подряд` : "Рабочий ритм: выбери 2 учебных вечера в неделю"}</b><p>Стрики мягкие: пауза не обнуляет прогресс, а Рома помогает вернуться с малого шага.</p></div><button onClick={() => navigate("/profile")}>Открыть кабинет</button></section>
       <section className="dashboard-program">
         <h2 className="course-syllabus-heading">Программа курса</h2>
-        <div className="course-syllabus">{dashboardStages.map((stage, index) => <button className="syllabus-mod" key={stage.id} onClick={() => setOutlineSection(stage.id)}><span className={`syllabus-num ${stage.state === "locked" ? "lock" : ""}`}>{index + 1}</span><div><b>{stage.title}</b><small>{stage.meta}</small></div></button>)}</div>
+        <div className="module-grid">{dashboardStages.map((stage, index) => <button className={`module-card ${stage.state}`} key={stage.id} onClick={() => setOutlineSection(stage.id)}>
+          <span className={`module-card-tag ${stage.state === "locked" ? "locked" : index === 0 ? "now" : "open"}`}>{stage.state === "locked" ? "Скоро" : index === 0 ? "Сейчас" : "Доступно"}</span>
+          <div className="module-card-body">
+            <h3>{stage.title}</h3>
+            <p>{stage.summary}</p>
+            <div className="module-card-footer"><span><ChartBar size={14}/> {stage.phase}</span><span>{stage.topics} тем · {stage.lessons} уроков</span></div>
+          </div>
+        </button>)}</div>
       </section>
     </div>
     {outlineSection && <CourseOutline course={course} initialSectionId={outlineSection === "root" ? null : outlineSection} onClose={closeOutline} navigate={navigate}/>}
