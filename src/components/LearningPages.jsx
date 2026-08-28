@@ -306,12 +306,8 @@ export function StoryLesson({ sectionId = "intro", topicId = "welcome", lessonId
   const previous = flatLessons[currentIndex - 1];
   const next = flatLessons[currentIndex + 1];
   const lessonIndex = current.topic.lessons.findIndex((item) => item.id === current.id);
-  const [selected, setSelected] = useState([]);
-  const [submitted, setSubmitted] = useState(false);
-  const toggle = (item) => setSelected((items) => items.includes(item) ? items.filter((value) => value !== item) : [...items, item]);
   const objectives = current.objectives?.length ? current.objectives : ["Понять основную идею урока", "Связать её с задачей проекта", "Проверить себя на небольшом примере"];
   const lessonBlocks = Array.isArray(current.blocks) ? current.blocks : [];
-  const choices = ["Основная идея понятна", "Могу объяснить её своими словами", "Готов применить подход в проекте"];
   const openLesson = (item) => navigate(item ? courseLessonPath(item) : "/go/task-tracker");
 
   return <main className="story-lesson-shell">
@@ -350,14 +346,6 @@ export function StoryLesson({ sectionId = "intro", topicId = "welcome", lessonId
         <p>Не копируйте предметную область в Task Tracker. Важно увидеть общий способ рассуждения и самостоятельно перенести его на задачи.</p>
       </section></>}
 
-      <section className="story-task lesson-checkpoint">
-        <small>САМОПРОВЕРКА</small>
-        <h2>Можно переходить дальше?</h2>
-        <p>Отметьте только то, что уже можете сделать.</p>
-        {choices.map((choice) => <label key={choice}><input type="checkbox" checked={selected.includes(choice)} onChange={() => toggle(choice)}/><span><Check size={15}/></span>{choice}</label>)}
-        <button className="primary" disabled={selected.length !== choices.length} onClick={() => setSubmitted(true)}>{submitted ? "Урок завершён" : "Завершить урок"} <Check size={17}/></button>
-        {submitted && <p className="story-success">Прогресс отмечен. Следующий урок уже доступен.</p>}
-      </section>
       <footer className="lesson-footer">
         <button className="lesson-feedback">Полезно</button><button className="lesson-feedback">Непонятно</button>
         <div className="lesson-pager">{previous && <button onClick={() => openLesson(previous)}><ArrowLeft size={17}/> Назад</button>}<button className="story-next" onClick={() => openLesson(next)}>{next ? "К следующему уроку" : "К проекту"} <ArrowRight size={17}/></button></div>
