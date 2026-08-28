@@ -147,7 +147,10 @@ export function CoursePage({ navigate }) {
           <div className="go-progress-track"><span style={{ width: "0%" }}/></div>
           <button className="go-continue-btn" disabled={!courseLessons.length} onClick={() => { if (courseLessons[0]) { enrollCourse("go"); navigate(courseLessonPath(courseLessons[0])); } }}>Начать бесплатно</button>
         </div>
-        <span className="go-progress-caption">Прогресс курса · 0 / {courseLessons.length} уроков</span>
+        <div className="go-info-footer">
+          <span className="go-progress-caption">Прогресс курса · 0 / {courseLessons.length} уроков</span>
+          <button className="go-practice-link" onClick={() => navigate("/go/practice")}><Code size={15}/> Практика Go</button>
+        </div>
       </section>
       <section className="go-goal-card">
         <div className="go-goal-icon"><Flame size={22}/></div>

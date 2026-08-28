@@ -290,7 +290,10 @@ body { min-width: 0; }
 .go-progress-track > span { display: block; height: 100%; background: #22c55e; border-radius: inherit; }
 .go-continue-btn { flex: none; border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 13px 22px; font-weight: 700; font-size: 14px; color: var(--ink); cursor: pointer; }
 .go-continue-btn:hover { border-color: var(--ink); }
-.go-progress-caption { margin-top: 9px; font-size: 12.5px; color: var(--muted); }
+.go-info-footer { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 9px; }
+.go-progress-caption { font-size: 12.5px; color: var(--muted); }
+.go-practice-link { display: flex; align-items: center; gap: 6px; flex: none; border: 0; background: transparent; padding: 0; color: #4b3aeb; font-weight: 700; font-size: 12.5px; cursor: pointer; }
+.go-practice-link:hover { text-decoration: underline; }
 
 .go-goal-card { display: flex; align-items: center; gap: 16px; border-radius: 14px; background: #fff; padding: 18px 24px; margin-bottom: 30px; }
 .go-goal-icon { flex: none; width: 52px; height: 52px; border-radius: 50%; background: #f1f2f7; display: grid; place-items: center; color: #4b3aeb; }
