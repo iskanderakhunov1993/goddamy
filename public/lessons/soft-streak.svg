@@ -1,0 +1,28 @@
+<svg width="800" height="280" viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="280" fill="#eef1fb"/>
+  <text x="60" y="50" fill="#141522" font-family="sans-serif" font-size="15" font-weight="700">Последние 12 дней</text>
+
+  <g font-family="sans-serif" font-size="11" fill="#5b6072">
+    <!-- 12 day cells: active, active, active, gap, active, active, gap(reset), active... -->
+    <!-- day 1 -->
+    <rect x="60" y="70" width="46" height="46" rx="10" fill="#4b3aeb"/>
+    <rect x="116" y="70" width="46" height="46" rx="10" fill="#4b3aeb"/>
+    <rect x="172" y="70" width="46" height="46" rx="10" fill="#4b3aeb"/>
+    <rect x="228" y="70" width="46" height="46" rx="10" fill="#ffffff" stroke="#dfe1ee" stroke-width="2" stroke-dasharray="4 4"/>
+    <rect x="284" y="70" width="46" height="46" rx="10" fill="#4b3aeb"/>
+    <rect x="340" y="70" width="46" height="46" rx="10" fill="#4b3aeb"/>
+    <rect x="396" y="70" width="46" height="46" rx="10" fill="#ffffff" stroke="#dfe1ee" stroke-width="2" stroke-dasharray="4 4"/>
+    <rect x="452" y="70" width="46" height="46" rx="10" fill="#ffffff" stroke="#dfe1ee" stroke-width="2" stroke-dasharray="4 4"/>
+    <rect x="508" y="70" width="46" height="46" rx="10" fill="#ffd300"/>
+    <rect x="564" y="70" width="46" height="46" rx="10" fill="#ffd300"/>
+    <rect x="620" y="70" width="46" height="46" rx="10" fill="#ffd300"/>
+    <rect x="676" y="70" width="46" height="46" rx="10" fill="#ffd300"/>
+  </g>
+
+  <text x="228" y="140" fill="#8f92aa" font-family="sans-serif" font-size="11">пропуск</text>
+  <text x="500" y="140" fill="#141522" font-family="sans-serif" font-size="11" font-weight="700">серия 4 дня</text>
+
+  <rect x="60" y="175" width="662" height="60" rx="14" fill="#ffffff" stroke="#dfe1ee" stroke-width="2"/>
+  <text x="84" y="200" fill="#141522" font-family="sans-serif" font-size="13" font-weight="700">Пропуск обнуляет только текущую серию</text>
+  <text x="84" y="220" fill="#5b6072" font-family="sans-serif" font-size="12">Пройденные уроки и прогресс по курсу остаются на месте — навсегда.</text>
+</svg>

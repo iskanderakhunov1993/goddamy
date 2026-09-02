@@ -1,0 +1,36 @@
+<svg width="800" height="360" viewBox="0 0 800 360" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="360" fill="#0a0a23"/>
+  <g opacity="0.5">
+    <circle cx="700" cy="50" r="1.5" fill="#3a3f5c"/>
+    <circle cx="740" cy="50" r="1.5" fill="#3a3f5c"/>
+    <circle cx="700" cy="80" r="1.5" fill="#3a3f5c"/>
+    <circle cx="740" cy="80" r="1.5" fill="#3a3f5c"/>
+  </g>
+
+  <rect x="60" y="60" width="330" height="240" rx="16" fill="#181933" stroke="#3a3f5c" stroke-width="1.5"/>
+  <text x="86" y="96" fill="#8f92aa" font-family="monospace" font-size="11" letter-spacing="1">ТВОЁ РЕШЕНИЕ</text>
+  <text x="86" y="126" fill="#ffd300" font-family="monospace" font-size="13">func Sum(nums []int) int {</text>
+  <text x="102" y="150" fill="#c7c9d6" font-family="monospace" font-size="13">total := 0</text>
+  <text x="102" y="174" fill="#c7c9d6" font-family="monospace" font-size="13">for _, n := range nums {</text>
+  <text x="118" y="198" fill="#c7c9d6" font-family="monospace" font-size="13">total += n</text>
+  <text x="102" y="222" fill="#c7c9d6" font-family="monospace" font-size="13">}</text>
+  <text x="86" y="246" fill="#c7c9d6" font-family="monospace" font-size="13">return total</text>
+  <text x="86" y="270" fill="#ffd300" font-family="monospace" font-size="13">}</text>
+
+  <path d="M410 130 L 460 130" stroke="#4b3aeb" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M452 123 l8 7 l-8 7" stroke="#4b3aeb" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="405" y="112" fill="#8f92aa" font-family="monospace" font-size="10">запустить</text>
+
+  <rect x="470" y="60" width="270" height="110" rx="14" fill="#0e2f1a" stroke="#1f9d55" stroke-width="1.5"/>
+  <circle cx="500" cy="95" r="14" fill="#1f9d55"/>
+  <path d="M492 95 l5 5 l11 -13" stroke="#0e2f1a" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="524" y="90" fill="#ffffff" font-family="sans-serif" font-size="13" font-weight="700">Тесты пройдены</text>
+  <text x="524" y="110" fill="#86e7b1" font-family="monospace" font-size="11">3 / 3 passed · 0.12s</text>
+  <text x="500" y="150" fill="#86e7b1" font-family="sans-serif" font-size="12">Можно двигаться дальше →</text>
+
+  <rect x="470" y="190" width="270" height="110" rx="14" fill="#181933" stroke="#3a3f5c" stroke-width="1.5"/>
+  <text x="494" y="222" fill="#ffd300" font-family="monospace" font-size="11" letter-spacing="1">ПОДСКАЗКА</text>
+  <text x="494" y="248" fill="#c7c9d6" font-family="sans-serif" font-size="12">Если тест не прошёл — рядом</text>
+  <text x="494" y="266" fill="#c7c9d6" font-family="sans-serif" font-size="12">объяснение, что именно не так</text>
+  <text x="494" y="284" fill="#c7c9d6" font-family="sans-serif" font-size="12">и куда посмотреть.</text>
+</svg>
