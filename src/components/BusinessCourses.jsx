@@ -21,11 +21,11 @@ export const qaModules = [
 ];
 
 export function ProductCoursePage({ navigate }) {
-  return <CourseCabinet navigate={navigate} course={{ slug: "product", label: "Product", kicker: "ПРОДУКТОВАЯ РАБОТА", title: "Product Management", description: "От пользовательской проблемы до решения, которое команда сможет выпустить и измерить.", modules: productModules, phases: ["СТАРТ", "ИССЛЕДОВАНИЕ", "МЕТРИКИ", "ПЛАН", "DELIVERY", "ПРОЕКТ"], role: "Текущая роль: junior product manager.", nextStep: "Разберите первый продуктовый бриф и оформите понятную гипотезу.", practicePath: "/product/practice", firstPath: "/product/practice", startLabel: "Начать обучение" }}/>;
+  return <CourseCabinet navigate={navigate} course={{ slug: "product", label: "Product", kicker: "ПРОДУКТОВАЯ РАБОТА", title: "Product Management", description: "От пользовательской проблемы до решения, которое команда сможет выпустить и измерить.", modules: productModules, phases: ["СТАРТ", "ИССЛЕДОВАНИЕ", "МЕТРИКИ", "ПЛАН", "DELIVERY", "ПРОЕКТ"], practiceSummary: "Практика готовится", practiceHint: "Практика по этому направлению пока тоже готовится.", practicePath: "/product/practice", firstPath: "/product/practice", startLabel: null }}/>;
 }
 
 export function QaCoursePage({ navigate }) {
-  return <CourseCabinet navigate={navigate} course={{ slug: "qa", label: "QA", kicker: "КАЧЕСТВО ПРОДУКТА", title: "QA Engineer", description: "От анализа требований до проверки API и понятной рекомендации перед релизом.", modules: qaModules, phases: ["СТАРТ", "ДИЗАЙН", "ДЕФЕКТЫ", "API", "РЕЛИЗ", "ПРОЕКТ"], role: "Текущая роль: junior QA engineer.", nextStep: "Откройте задачу команды и составьте первый чек-лист проверок.", practicePath: "/qa/practice", firstPath: "/qa/practice/priority-vs-severity", startLabel: "Начать обучение" }}/>;
+  return <CourseCabinet navigate={navigate} course={{ slug: "qa", label: "QA", kicker: "КАЧЕСТВО ПРОДУКТА", title: "QA Engineer", description: "От анализа требований до проверки API и понятной рекомендации перед релизом.", modules: qaModules, phases: ["СТАРТ", "ДИЗАЙН", "ДЕФЕКТЫ", "API", "РЕЛИЗ", "ПРОЕКТ"], practiceSummary: "Тренажёр QA с проверкой ответа", practiceHint: "Зато тренажёр QA уже работает и покрывает эти темы: кейсы по приоритизации, тест-дизайну, баг-репортам и API.", practicePath: "/qa/practice", firstPath: "/qa/practice", startLabel: "Открыть тренажёр QA" }}/>;
 }
 
 const practiceCopy = {

@@ -19,6 +19,7 @@ import { activateSubscription, hasActiveSubscription } from "../lib/subscription
 import { loadProfile, saveProfile } from "../lib/profile.js";
 import { achievementDefs, getUnlockedAchievements } from "../lib/achievements.js";
 import { downloadCertificate } from "../lib/certificate.js";
+import { lessonsLabel, topicsLabel } from "../lib/plural.js";
 import "../styles-profile.css";
 
 export function ProgressBar({ value, label = "Общий прогресс" }) {
@@ -99,7 +100,7 @@ const createDashboardStages = (course) => course.map((courseModule, index) => ({
   phase: courseModule.phase || "МОДУЛЬ",
   topics: courseModule.topics.length,
   lessons: courseModule.topics.reduce((total, courseTopic) => total + courseTopic.lessons.length, 0),
-  meta: `${courseModule.phase || "МОДУЛЬ"} · ${courseModule.topics.length} тем · ${courseModule.topics.reduce((total, courseTopic) => total + courseTopic.lessons.length, 0)} уроков`,
+  meta: `${courseModule.phase || "МОДУЛЬ"} · ${topicsLabel(courseModule.topics.length)} · ${lessonsLabel(courseModule.topics.reduce((total, courseTopic) => total + courseTopic.lessons.length, 0))}`,
   state: index < 2 ? "active" : "locked",
 }));
 
@@ -176,7 +177,7 @@ export function CoursePage({ navigate }) {
           return <button className="go-module-card" key={stage.id} onClick={() => setOutlineSection(stage.id)}>
             <ModuleGlyph course="go" index={index}/>
             <h3>{stage.title}</h3>
-            <span className="go-module-meta">{stage.topics} тем · {timeLabel}</span>
+            <span className="go-module-meta">{topicsLabel(stage.topics)} · {timeLabel}</span>
             <div className="go-module-status">
               <span>{statusLabel}</span>
               <div className={`go-module-bar ${status}`}><i/></div>
@@ -189,12 +190,10 @@ export function CoursePage({ navigate }) {
   </main>;
 }
 
+// Только курсы с написанными уроками: прогресс считается по пройденным урокам,
+// поэтому курс без уроков показывал бы вечные 0%.
 const PROFILE_COURSE_CATALOG = {
   go: { title: "Go Backend Internship", path: "/go" },
-  sql: { title: "SQL для работы с данными", path: "/sql", lessonCount: 140 },
-  python: { title: "Python", path: "/python", lessonCount: 120 },
-  product: { title: "Product Management", path: "/product", lessonCount: 90 },
-  qa: { title: "QA", path: "/qa", lessonCount: 90 },
 };
 
 export function ProfilePage({ navigate }) {
@@ -204,7 +203,7 @@ export function ProfilePage({ navigate }) {
   const enrolledCourses = enrolledSlugs.map((slug) => {
     const entry = PROFILE_COURSE_CATALOG[slug];
     if (!entry) return null;
-    const lessonCount = slug === "go" ? goLessonCount : entry.lessonCount;
+    const lessonCount = goLessonCount;
     const completedLessons = getCompletedCount(slug);
     const percent = lessonCount ? Math.min(100, Math.round((completedLessons / lessonCount) * 100)) : 0;
     return { slug, title: entry.title, path: entry.path, lessonCount, completedLessons, percent };

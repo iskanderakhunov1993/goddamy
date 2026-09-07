@@ -1,13 +1,12 @@
 import { useState } from "react";
+import { modulesLabel, topicsLabel } from "../lib/plural.js";
 import {
   ArrowRight, ArrowsClockwise, ArrowsDownUp, BookOpen, BracketsCurly,
-  Briefcase, Certificate, ChartBar, ChartLineUp, CheckCircle, Code, Cube, Database, FileCode,
+  Briefcase, ChartBar, ChartLineUp, CheckCircle, Code, Cube, Database, FileCode,
   Funnel, Function, GitBranch, House, List, ListBullets,
   PresentationChart, RocketLaunch, ShareNetwork, ShieldCheck,
   Table, TerminalWindow, UserCircle, X,
 } from "@phosphor-icons/react";
-import { enrollCourse } from "../lib/enrollment.js";
-import { getCompletedCount } from "../lib/progress.js";
 
 const artworkSets = {
   go: [TerminalWindow, BracketsCurly, ListBullets, Database, ShareNetwork, RocketLaunch],
@@ -30,10 +29,7 @@ export function ModuleGlyph({ course = "go", index = 0 }) {
 export function CourseCabinet({ navigate, course }) {
   const [selectedModule, setSelectedModule] = useState(null);
   const topicCount = course.modules.reduce((sum, module) => sum + module.topics.length, 0);
-  const lessonCount = topicCount * 5;
   const selected = course.modules.find((module) => module.n === selectedModule);
-  const completedCount = getCompletedCount(course.slug);
-  const percent = lessonCount ? Math.min(100, Math.round((completedCount / lessonCount) * 100)) : 0;
   return <main className={`course-dashboard course-dashboard-${course.slug}`}>
     <aside className="dashboard-rail" aria-label={`Навигация курса ${course.label}`}>
       <button className="dashboard-logo" onClick={() => navigate("/")}><span>GO</span>DEMY</button>
@@ -46,37 +42,34 @@ export function CourseCabinet({ navigate, course }) {
           <small>{course.kicker}</small>
           <h1>{course.title}</h1>
           <p>{course.description}</p>
-          <div className="course-hero-actions">
-            <button className="btn-primary" onClick={() => { enrollCourse(course.slug); navigate(course.firstPath); }}>{course.startLabel} <ArrowRight size={18}/></button>
-            <button className="btn-ghost" onClick={() => navigate(course.practicePath)}><Code size={17}/> Практика {course.label}</button>
-          </div>
+          {course.startLabel && <div className="course-hero-actions">
+            <button className="btn-primary" onClick={() => navigate(course.firstPath)}>{course.startLabel} <ArrowRight size={18}/></button>
+          </div>}
         </div>
         <div className="course-includes">
-          <b>Курс включает</b>
+          <b>Что уже доступно</b>
           <ul>
-            <li><BookOpen size={16}/> {lessonCount} уроков · {topicCount} тем</li>
-            <li><Cube size={16}/> {course.modules.length} модулей программы</li>
-            <li><Certificate size={16}/> Сертификат по итогам</li>
+            <li><Code size={16}/> {course.practiceSummary}</li>
+            <li><Cube size={16}/> Программа: {modulesLabel(course.modules.length)} · {topicsLabel(topicCount)}</li>
+            <li><BookOpen size={16}/> Уроки курса в разработке</li>
           </ul>
         </div>
       </section>
-      <div className="course-prog"><span className="course-prog-pill">{percent}%</span><div className="course-prog-track"><span style={{ width: `${percent}%` }}/></div><span className="course-prog-label">{completedCount} / {lessonCount} уроков</span></div>
-      <section className="dashboard-note"><Briefcase size={19}/><p><b>{course.role}</b> {course.nextStep}</p></section>
+      <section className="course-draft-note"><BookOpen size={19}/><p><b>Курс ещё пишется.</b> Ниже — план программы, уроков по нему пока нет. {course.practiceHint}</p></section>
       <section className="dashboard-program">
         <h2 className="course-syllabus-heading">Программа курса</h2>
-        <div className="module-grid">{course.modules.map((module, index) => {
-          const locked = index >= 2;
-          return <button className={`module-card ${locked ? "locked" : ""}`} key={module.n} onClick={() => setSelectedModule(module.n)}>
-            <span className={`module-card-tag ${locked ? "locked" : index === 0 ? "now" : "open"}`}>{locked ? "Скоро" : index === 0 ? "Сейчас" : "Доступно"}</span>
+        <div className="module-grid">{course.modules.map((module, index) =>
+          <button className="module-card" key={module.n} onClick={() => setSelectedModule(module.n)}>
+            <span className="module-card-tag locked">В плане</span>
             <div className="module-card-body">
               <h3>{module.title}</h3>
               <p>{module.text}</p>
-              <div className="module-card-footer"><span><ChartBar size={14}/> {course.phases[index] || "МОДУЛЬ"}</span><span>{module.topics.length} тем · {module.topics.length * 5} уроков</span></div>
+              <div className="module-card-footer"><span><ChartBar size={14}/> {course.phases[index] || "МОДУЛЬ"}</span><span>{topicsLabel(module.topics.length)}</span></div>
             </div>
-          </button>;
-        })}</div>
+          </button>,
+        )}</div>
       </section>
     </div>
-    {selected && <div className="course-modal-backdrop" role="presentation" onMouseDown={() => setSelectedModule(null)}><section className="course-modal" role="dialog" aria-modal="true" aria-labelledby="cabinet-module-title" onMouseDown={(event) => event.stopPropagation()}><button className="modal-close" onClick={() => setSelectedModule(null)} aria-label="Закрыть"><X size={26}/></button><div className="modal-crumb"><span>Курс {course.label}</span><ArrowRight size={13}/><span>Модуль {selected.n}</span></div><h2 id="cabinet-module-title">{selected.title}</h2><p>{selected.text}</p><div className="outline-list">{selected.topics.map((topic, index) => <button key={topic} onClick={() => navigate(index === 0 ? course.firstPath : course.practicePath)}><span>{String(index + 1).padStart(2, "0")}</span><b>{topic}</b><em>5 уроков</em><ArrowRight size={17}/></button>)}</div></section></div>}
+    {selected && <div className="course-modal-backdrop" role="presentation" onMouseDown={() => setSelectedModule(null)}><section className="course-modal" role="dialog" aria-modal="true" aria-labelledby="cabinet-module-title" onMouseDown={(event) => event.stopPropagation()}><button className="modal-close" onClick={() => setSelectedModule(null)} aria-label="Закрыть"><X size={26}/></button><div className="modal-crumb"><span>Курс {course.label}</span><ArrowRight size={13}/><span>Модуль {selected.n}</span></div><h2 id="cabinet-module-title">{selected.title}</h2><p>{selected.text}</p><ul className="outline-plan">{selected.topics.map((topic, index) => <li key={topic}><span>{String(index + 1).padStart(2, "0")}</span><b>{topic}</b></li>)}</ul><p className="outline-plan-note">Уроки по этим темам ещё не написаны.</p></section></div>}
   </main>;
 }

@@ -108,6 +108,12 @@ export const flatLessons = courseCurriculum.flatMap((section) =>
   section.topics.flatMap((courseTopic) => courseTopic.lessons.map((item) => ({ ...item, topic: courseTopic, section }))),
 );
 
+export const courseStats = {
+  modules: courseCurriculum.length,
+  topics: courseCurriculum.reduce((sum, section) => sum + section.topics.length, 0),
+  lessons: flatLessons.length,
+};
+
 export function getLesson(sectionId, topicId, lessonId) {
   return flatLessons.find((item) => item.section.id === sectionId && item.topic.id === topicId && item.id === lessonId) || flatLessons[0];
 }

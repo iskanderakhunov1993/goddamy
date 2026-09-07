@@ -34,7 +34,7 @@ function PythonContextNav({ navigate, active }) {
 }
 
 export function PythonCoursePage({ navigate }) {
-  return <CourseCabinet navigate={navigate} course={{ slug: "python", label: "Python", kicker: "АВТОМАТИЗАЦИЯ РАБОЧИХ ЗАДАЧ", title: "Python для рабочих задач", description: "От первой функции до сервиса подготовки отчётов и проекта в GitHub.", modules: pythonModules, phases: ["СТАРТ", "ЛОГИКА", "ДАННЫЕ", "ИНСТРУМЕНТЫ", "АРХИТЕКТУРА", "ПРОЕКТ"], role: "Текущая роль: стажёр по автоматизации.", nextStep: "Освойте базовый синтаксис, закрепите его в практике и соберите CLI-сервис.", practicePath: "/python/practice", firstPath: "/python/practice/clean-name", startLabel: "Начать обучение" }}/>;
+  return <CourseCabinet navigate={navigate} course={{ slug: "python", label: "Python", kicker: "АВТОМАТИЗАЦИЯ РАБОЧИХ ЗАДАЧ", title: "Python для рабочих задач", description: "От первой функции до сервиса подготовки отчётов и проекта в GitHub.", modules: pythonModules, phases: ["СТАРТ", "ЛОГИКА", "ДАННЫЕ", "ИНСТРУМЕНТЫ", "АРХИТЕКТУРА", "ПРОЕКТ"], practiceSummary: "Тренажёр Python с запуском кода", practiceHint: "Зато тренажёр Python уже работает и покрывает эти темы: код запускается в браузере, решение проверяется автоматически.", practicePath: "/python/practice", firstPath: "/python/practice", startLabel: "Открыть тренажёр Python" }}/>;
 }
 
 export function PythonTrainer({ navigate }) {

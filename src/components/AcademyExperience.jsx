@@ -6,6 +6,8 @@ import {
 } from "@phosphor-icons/react";
 
 const GoLogoTile = () => <span className="tech-logo-tile">Go</span>;
+import { courseStats } from "../content/courseCurriculum.js";
+import { lessonsLabel, modulesLabel, topicsLabel } from "../lib/plural.js";
 import { getGoChallenge, goChallenges } from "../content/goChallenges.js";
 import { saveProfileName } from "../lib/profile.js";
 import "../styles-academy.css";
@@ -15,11 +17,11 @@ export { getGoChallenge, goChallenges };
 export function PublicGoLanding({ navigate }) {
   const [name, setName] = useState("");
   const tracks = [
-    { title: "Go Backend", status: "Доступен сейчас", description: "Создайте три backend-проекта и пройдите путь от первой строки до релиза.", icon: <GoLogoTile/>, level: "Для начинающих", meta: "150 уроков", action: () => navigate("/go") },
-    { title: "SQL", status: "Доступен сейчас", description: "Научитесь получать данные, строить отчёты и принимать решения на их основе.", icon: <Database size={20}/>, level: "Для начинающих", meta: "140 уроков", action: () => navigate("/sql") },
-    { title: "Python", status: "Доступен сейчас", description: "Автоматизируйте рабочие задачи и соберите сервис обработки данных.", icon: <FilePy size={20}/>, level: "Для начинающих", meta: "120 уроков", action: () => navigate("/python") },
-    { title: "Product Management", status: "Доступен сейчас", description: "Научитесь исследовать проблему, выбирать метрики и вести продуктовую задачу к релизу.", icon: <ChartLineUp size={20}/>, level: "Для начинающих", meta: "90 уроков", action: () => navigate("/product") },
-    { title: "QA", status: "Доступен сейчас", description: "Проверяйте требования, API и релизы, чтобы команда выпускала надёжный продукт.", icon: <ShieldCheck size={20}/>, level: "Для начинающих", meta: "90 уроков", action: () => navigate("/qa") },
+    { title: "Go Backend", status: "Курс доступен", description: "Создайте три backend-проекта и пройдите путь от первой строки до релиза.", icon: <GoLogoTile/>, level: "Для начинающих", meta: lessonsLabel(courseStats.lessons), action: () => navigate("/go") },
+    { title: "SQL", status: "Тренажёр доступен", description: "Решайте задачи на реальной базе: выборки, фильтры, агрегация и отчёты. Уроки курса в разработке.", icon: <Database size={20}/>, level: "Для начинающих", meta: "Уроки готовятся", action: () => navigate("/sql") },
+    { title: "Python", status: "Тренажёр доступен", description: "Решайте задачи с запуском кода: строки, коллекции, файлы и обработка данных. Уроки курса в разработке.", icon: <FilePy size={20}/>, level: "Для начинающих", meta: "Уроки готовятся", action: () => navigate("/python") },
+    { title: "QA", status: "Тренажёр доступен", description: "Разбирайте кейсы с проверкой ответа: приоритизация, тест-дизайн, баг-репорты и API. Уроки курса в разработке.", icon: <ShieldCheck size={20}/>, level: "Для начинающих", meta: "Уроки готовятся", action: () => navigate("/qa") },
+    { title: "Product Management", status: "Скоро", description: "Исследование проблемы, метрики и путь продуктовой задачи к релизу.", icon: <ChartLineUp size={20}/>, level: "—", meta: "Программа готовится", action: () => navigate("/product") },
     { title: "Docker", status: "Скоро", description: "Упакуйте приложение в контейнер и разверните его в любой среде.", icon: <Cube size={20}/>, level: "—", meta: "Программа готовится" },
   ];
   return <main className="universal-landing">
@@ -27,7 +29,7 @@ export function PublicGoLanding({ navigate }) {
       <div className="universal-hero-grid">
         <div className="universal-hero-copy">
           <h1><span className="hero-box white">Осваивайте</span><span className="hero-box yellow">/IT-профессию</span></h1>
-          <p>Короткая теория, тренажёр с проверкой и три собственных проекта. Go, SQL, Python, Product и QA — по одной подписке.</p>
+          <p>Короткая теория, тренажёр с проверкой и три собственных проекта. Полный курс — Go Backend; тренажёры SQL, Python и QA открыты уже сейчас.</p>
           <div className="universal-hero-actions"><button onClick={() => navigate("/go")}>Войти в команду <ArrowRight size={20}/></button><button onClick={() => navigate("/#courses")}>Выбрать направление</button></div>
           <div className="universal-subscription-note"><Stack size={20}/><span>Все курсы по одной подписке</span></div>
         </div>
@@ -59,7 +61,7 @@ export function PublicGoLanding({ navigate }) {
 export function AcademyHub({ navigate }) {
   return <main className="academy-hub">
     <section className="academy-hub-hero container"><button className="academy-hub-back" onClick={() => navigate("/")}>← Все направления</button><p className="academy-kicker">КУРС · GO BACKEND</p><h1>Что будем делать сегодня?</h1><p>Продолжи программу курса или закрепи тему в практике Go.</p></section>
-    <section className="academy-hub-paths container"><button className="hub-course" onClick={() => navigate("/go")}><BookOpen size={30}/><small>ПРОГРАММА КУРСА</small><h2>Go Backend Internship</h2><p>6 модулей · 30 тем · 150 уроков · 3 проекта</p><footer><span>Продолжить курс</span><ArrowRight size={20}/></footer></button><button className="hub-trainer" onClick={() => navigate("/go/practice")}><Code size={30}/><small>ПРАКТИКА ЭТОГО КУРСА</small><h2>Тренажёр Go-задач</h2><p>Слайсы, map, структуры, JSON, HTTP и конкурентность</p><footer><span>Выбрать задачу</span><ArrowRight size={20}/></footer></button></section>
+    <section className="academy-hub-paths container"><button className="hub-course" onClick={() => navigate("/go")}><BookOpen size={30}/><small>ПРОГРАММА КУРСА</small><h2>Go Backend Internship</h2><p>{modulesLabel(courseStats.modules)} · {topicsLabel(courseStats.topics)} · {lessonsLabel(courseStats.lessons)} · 3 проекта</p><footer><span>Продолжить курс</span><ArrowRight size={20}/></footer></button><button className="hub-trainer" onClick={() => navigate("/go/practice")}><Code size={30}/><small>ПРАКТИКА ЭТОГО КУРСА</small><h2>Тренажёр Go-задач</h2><p>Слайсы, map, структуры, JSON, HTTP и конкурентность</p><footer><span>Выбрать задачу</span><ArrowRight size={20}/></footer></button></section>
     <section className="academy-hub-status container"><div><p className="academy-kicker">ТВОЙ СТАРТ</p><h2>Настрой рабочее окружение</h2><p>Настрой Go, Git и рабочий репозиторий. После первого push откроется Task Tracker.</p><button onClick={() => navigate("/go/lesson/internship-start/welcome/internship-start-welcome-1")}>Открыть первый урок <ArrowRight size={17}/></button></div><div className="hub-task-list"><small>ПРАКТИКА КУРСА GO</small>{goChallenges.slice(0,3).map((item) => <button onClick={() => navigate(`/go/practice/${item.id}`)} key={item.id}><span className={`academy-dot level-${item.level}`}/><b>{item.title}</b><em>{item.minutes} мин</em><ArrowRight size={16}/></button>)}</div></section>
   </main>;
 }
