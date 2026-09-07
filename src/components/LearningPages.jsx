@@ -17,6 +17,8 @@ import { enrollCourse, getEnrolledCourses } from "../lib/enrollment.js";
 import { getCompletedCount, getCompletedLessonIds, isLessonComplete, markLessonComplete } from "../lib/progress.js";
 import { activateSubscription, hasActiveSubscription } from "../lib/subscription.js";
 import { loadProfile, saveProfile, saveProfileName } from "../lib/profile.js";
+import { achievementDefs, getUnlockedAchievements } from "../lib/achievements.js";
+import { downloadCertificate } from "../lib/certificate.js";
 import "../styles-profile.css";
 
 export function ProgressBar({ value, label = "Общий прогресс" }) {
@@ -210,6 +212,8 @@ export function ProfilePage({ navigate }) {
   const hasSubscription = hasActiveSubscription();
   const courseComplete = enrolledCourses.length > 0 && enrolledCourses.every((item) => item.percent >= 100);
   const certReady = courseComplete && hasSubscription;
+  const bestCourse = enrolledCourses.reduce((best, item) => (!best || item.percent > best.percent ? item : best), null);
+  const unlockedAchievements = bestCourse ? getUnlockedAchievements(bestCourse.percent, bestCourse.completedLessons) : [];
   const [editing, setEditing] = useState(false);
   const [profile, setProfile] = useState(loadProfile);
   const changeProfile = (key, value) => setProfile((current) => ({ ...current, [key]: value }));
@@ -244,7 +248,7 @@ export function ProfilePage({ navigate }) {
           <section className="profile-mini-section">
             <h3>Сертификат</h3>
             {certReady
-              ? <button className="profile-mini-link" onClick={() => navigate("/certificates")}>Скачать сертификат <ArrowRight size={14}/></button>
+              ? <button className="profile-mini-link" onClick={() => downloadCertificate({ name: profile.name, courseTitle: bestCourse.title })}>Скачать сертификат <ArrowRight size={14}/></button>
               : <p className="profile-mini-hint">{hasSubscription
                 ? "Подписка активна. Сертификат откроется после 100% прохождения курса."
                 : courseComplete
@@ -256,8 +260,13 @@ export function ProfilePage({ navigate }) {
             <p className="profile-mini-hint">{activity.currentStreak > 0 ? <>Сейчас <b>{activity.currentStreak}</b> {activity.currentStreak === 1 ? "день" : activity.currentStreak < 5 ? "дня" : "дней"} подряд · личный рекорд {activity.bestStreak}.</> : "Пройдите первый урок, чтобы начать считать дни подряд."}</p>
           </section>
           <section className="profile-mini-section">
-            <h3>Достижения (0 / 6)</h3>
-            <p className="profile-mini-hint">Открываются по мере прохождения курса.</p>
+            <h3>Достижения ({unlockedAchievements.length} / {achievementDefs.length})</h3>
+            {bestCourse
+              ? <ul className="profile-achievements">{achievementDefs.map((item) => {
+                  const unlocked = unlockedAchievements.some((entry) => entry.id === item.id);
+                  return <li key={item.id} className={unlocked ? "unlocked" : ""}><b>{item.title}</b><span>{item.description}</span></li>;
+                })}</ul>
+              : <p className="profile-mini-hint">Открываются по мере прохождения курса.</p>}
           </section>
         </div>
       </div>
@@ -266,14 +275,22 @@ export function ProfilePage({ navigate }) {
 }
 
 export function CertificatesPage({ navigate }) {
+  const [course] = useState(loadCourseDraft);
+  const goLessonCount = flattenCourse(course).length;
+  const goCompleted = getCompletedCount("go");
+  const goPercent = goLessonCount ? Math.min(100, Math.round((goCompleted / goLessonCount) * 100)) : 0;
+  const hasSubscription = hasActiveSubscription();
+  const [profile] = useState(loadProfile);
   const certificates = [
-    { title: "Go Junior Developer", status: "В процессе", progress: "0 из 6 модулей", description: "Подтверждает прохождение курса Go Backend: три проекта, тесты, GitHub-артефакты и финальная ретроспектива.", action: "Открыть курс", path: "/go" },
-    { title: "Python Junior Developer", status: "В процессе", progress: "0 из 6 модулей", description: "Подтверждает владение Python, коллекциями, файлами, классами, тестами и выполнение итогового проекта.", action: "Открыть курс", path: "/python" },
-    { title: "SQL Junior Developer", status: "В процессе", progress: "0 из 6 модулей", description: "Подтверждает умение получать, объединять и анализировать данные, а также решать прикладные задачи с помощью SQL.", action: "Открыть курс", path: "/sql" },
-    { title: "Agile", status: "Скоро", progress: "Курс готовится", description: "Подтвердит понимание итеративной разработки, работы с ценностью, обратной связью и изменениями.", action: "Программа скоро", path: null },
-    { title: "Scrum", status: "Скоро", progress: "Курс готовится", description: "Подтвердит понимание ролей, событий и артефактов Scrum через симуляцию командных спринтов.", action: "Программа скоро", path: null },
+    { title: "Go Junior Developer", status: goPercent >= 100 ? "Завершён" : "В процессе", progress: `${goCompleted} из ${goLessonCount} уроков`, percent: goPercent, description: "Подтверждает прохождение курса Go Backend: три проекта, тесты, GitHub-артефакты и финальная ретроспектива.", action: "Открыть курс", path: "/go", ready: goPercent >= 100 && hasSubscription },
+    { title: "Python Junior Developer", status: "Скоро", progress: "Курс готовится", percent: 0, description: "Уроки курса пока не написаны — программа в разработке.", action: "Программа скоро", path: null, ready: false },
+    { title: "SQL Junior Developer", status: "Скоро", progress: "Курс готовится", percent: 0, description: "Уроки курса пока не написаны — программа в разработке.", action: "Программа скоро", path: null, ready: false },
+    { title: "Agile", status: "Скоро", progress: "Курс готовится", percent: 0, description: "Подтвердит понимание итеративной разработки, работы с ценностью, обратной связью и изменениями.", action: "Программа скоро", path: null, ready: false },
+    { title: "Scrum", status: "Скоро", progress: "Курс готовится", percent: 0, description: "Подтвердит понимание ролей, событий и артефактов Scrum через симуляцию командных спринтов.", action: "Программа скоро", path: null, ready: false },
   ];
-  return <main className="certificates-shell"><section className="certificates-content"><div className="certificates-header"><small>GODEMY · ДОСТИЖЕНИЯ</small><h1>Сертификаты за курсы</h1><p>Сертификат выдаётся после завершения полноценного курса и итоговой проверки. Тренажёры и отдельные проекты помогают учиться, но не создают отдельный сертификат.</p></div><div className="certificate-grid">{certificates.map((item) => <article key={item.title}><div className="certificate-lock"><Certificate size={26}/><span>{item.status}</span></div><h2>{item.title}</h2><p>{item.description}</p><div className="certificate-progress"><b>{item.progress}</b><i><span style={{ width: "0%" }}/></i></div><button disabled={!item.path} onClick={() => item.path && navigate(item.path)}>{item.action} {item.path && <ArrowRight size={17}/>}</button></article>)}</div><section className="certificate-how"><h2>Как получить сертификат</h2><ol><li>Заверши обязательные модули и практические задания курса.</li><li>Выполни итоговую работу и пройди проверку по критериям.</li><li>После подтверждения результата сертификат появится в профиле.</li></ol><button onClick={() => navigate("/profile")}>К профилю <ArrowLeft size={17}/></button></section></section></main>;
+  return <main className="certificates-shell"><section className="certificates-content"><div className="certificates-header"><small>GODEMY · ДОСТИЖЕНИЯ</small><h1>Сертификаты за курсы</h1><p>Сертификат выдаётся после завершения полноценного курса, подписки и итоговой проверки. Тренажёры и отдельные проекты помогают учиться, но не создают отдельный сертификат.</p></div><div className="certificate-grid">{certificates.map((item) => <article key={item.title}><div className="certificate-lock"><Certificate size={26}/><span>{item.status}</span></div><h2>{item.title}</h2><p>{item.description}</p><div className="certificate-progress"><b>{item.progress}</b><i><span style={{ width: `${item.percent}%` }}/></i></div>{item.ready
+    ? <button onClick={() => downloadCertificate({ name: profile.name, courseTitle: item.title })}>Скачать сертификат <ArrowRight size={17}/></button>
+    : <button disabled={!item.path} onClick={() => item.path && navigate(item.path)}>{item.action} {item.path && <ArrowRight size={17}/>}</button>}</article>)}</div><section className="certificate-how"><h2>Как получить сертификат</h2><ol><li>Заверши обязательные модули и практические задания курса.</li><li>Оформи подписку Godemy.</li><li>Сертификат в формате PNG станет доступен для скачивания здесь и в профиле.</li></ol><button onClick={() => navigate("/profile")}>К профилю <ArrowLeft size={17}/></button></section></section></main>;
 }
 
 export function SubscriptionPage({ navigate }) {

@@ -51,6 +51,14 @@
 .profile-mini-row-bar>span{display:block;height:100%;background:#4b3aeb;border-radius:inherit}
 .profile-mini-link{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:10px 16px;color:var(--ink);font-weight:700;font-size:13px;cursor:pointer}
 .profile-mini-link:hover{border-color:#4b3aeb;color:#4b3aeb}
+.profile-achievements{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.profile-achievements li{display:flex;flex-direction:column;gap:2px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;opacity:.45}
+.profile-achievements li.unlocked{opacity:1;border-color:#f4c92e;background:#fffbea}
+.profile-achievements li b{font-size:14px}
+.profile-achievements li span{color:var(--muted);font-size:13px}
+.legal-body h3{margin:26px 0 8px;font-size:16px}
+.legal-body p{margin:0 0 14px;color:var(--muted);line-height:1.7;font-size:14.5px}
+.legal-body a{color:#4b3aeb}
 @media(max-width:760px){.profile-mini-layout{grid-template-columns:1fr}}
 .progress-course{margin-top:24px;padding:20px;border:1px solid #c8cad0;background:#e3e4e7}.progress-course-top{display:flex;justify-content:space-between;align-items:baseline;gap:14px}.progress-course-top b{font-size:16px}.progress-course-top span{color:#454b65;font-size:12px}.progress-course-bar{height:9px;margin:14px 0 10px;border-radius:99px;background:#c8cad0;overflow:hidden}.progress-course-bar i{display:block;height:100%;border-radius:inherit;background:#4b3aeb}.progress-course-percent{font:700 13px Roboto Mono;color:#4b3aeb}
 .cert-unlock{display:flex;align-items:center;gap:16px;margin-top:16px;padding:18px 20px;border:1px solid #c8cad0;background:#e3e4e7;color:#454b65}.cert-unlock>svg{flex:none;color:#575e7e}.cert-unlock div{flex:1;min-width:0}.cert-unlock b{display:block;color:#0c0d13;font-size:14px}.cert-unlock p{margin:3px 0 0;font-size:12px;line-height:1.5}.cert-unlock button{flex:none;border:1px solid #c8cad0;border-radius:10px;background:transparent;padding:10px 16px;color:#575e7e;font-weight:700;font-size:12.5px;cursor:not-allowed}.cert-unlock.ready{border-color:#4b3aeb}.cert-unlock.ready>svg{color:#4b3aeb}.cert-unlock.ready button{border-color:#4b3aeb;background:#4b3aeb;color:#fff;cursor:pointer}

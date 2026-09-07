@@ -1,3 +1,5 @@
+import { getQuizAnswer, saveQuizAnswer } from "../lib/quizAnswers.js";
+
 function safeExternalUrl(value, allowImage = false) {
   if (typeof value !== "string") return "";
   if (allowImage && value.startsWith("data:image/")) return value;
@@ -46,12 +48,13 @@ function InlineText({ text = "" }) {
 }
 
 function QuizBlock({ block }) {
-  const [selected, setSelected] = useState(null);
-  const [checked, setChecked] = useState(false);
+  const saved = getQuizAnswer(block.id);
+  const [selected, setSelected] = useState(saved);
+  const [checked, setChecked] = useState(saved !== null);
   const options = (block.options || []).filter(Boolean);
   const correctIndex = options.findIndex((option) => option.startsWith("*"));
   const isCorrect = checked && selected === correctIndex;
-  return <section className="lesson-mini-quiz"><small>ПРОВЕРЬТЕ СЕБЯ</small><h3>{block.question}</h3>{options.map((option, index) => <label className={checked && index === correctIndex ? "correct" : checked && selected === index ? "wrong" : ""} key={index}><input type="radio" name={`quiz-${block.id}`} checked={selected === index} onChange={() => { setSelected(index); setChecked(false); }}/><span/>{option.replace(/^\*/, "")}</label>)}<button type="button" disabled={selected === null} onClick={() => setChecked(true)}>Проверить ответ</button>{checked && <p className={isCorrect ? "quiz-result success" : "quiz-result"}>{isCorrect ? "Верно. " : "Пока нет. "}{block.explanation}</p>}</section>;
+  return <section className="lesson-mini-quiz"><small>ПРОВЕРЬТЕ СЕБЯ</small><h3>{block.question}</h3>{options.map((option, index) => <label className={checked && index === correctIndex ? "correct" : checked && selected === index ? "wrong" : ""} key={index}><input type="radio" name={`quiz-${block.id}`} checked={selected === index} onChange={() => { setSelected(index); setChecked(false); }}/><span/>{option.replace(/^\*/, "")}</label>)}<button type="button" disabled={selected === null} onClick={() => { setChecked(true); saveQuizAnswer(block.id, selected); }}>Проверить ответ</button>{checked && <p className={isCorrect ? "quiz-result success" : "quiz-result"}>{isCorrect ? "Верно. " : "Пока нет. "}{block.explanation}</p>}</section>;
 }
 
 function TaskBlock({ block }) {

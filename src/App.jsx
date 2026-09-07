@@ -14,6 +14,7 @@ import { SqlCoursePage, SqlTask, SqlTrainer } from "./components/SqlExperience.j
 import { PythonCoursePage, PythonTask, PythonTrainer } from "./components/PythonExperience.jsx";
 import { BusinessPracticeComing, ProductCoursePage, QaCoursePage } from "./components/BusinessCourses.jsx";
 import { QaTask, QaTrainer } from "./components/QaExperience.jsx";
+import { TermsPage, PrivacyPage } from "./components/LegalPages.jsx";
 
 const modules = [
   { n: "00", title: "Старт", text: "Как устроен курс, среда разработки и первая программа.", lessons: ["Добро пожаловать в Go", "Установка Go и редактора", "Первая программа"] },
@@ -197,6 +198,8 @@ export function App() {
       "/certificates": "Сертификаты Godemy",
       "/subscription": "Подписка Godemy",
       "/course-editor": "Редактор курса — Godemy",
+      "/terms": "Условия использования — Godemy",
+      "/privacy": "Политика конфиденциальности — Godemy",
     };
     const sprint = route.match(/^\/go\/task-tracker\/sprint\/([1-4])$/);
     const courseLesson = route.match(/^\/go\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
@@ -245,6 +248,8 @@ export function App() {
   else if (route === "/certificates") content = <CertificatesPage navigate={navigate}/>;
   else if (route === "/subscription") content = <SubscriptionPage navigate={navigate}/>;
   else if (route === "/course-editor") content = <EditorAuthGate><CourseEditor navigate={navigate}/></EditorAuthGate>;
+  else if (route === "/terms") content = <TermsPage navigate={navigate}/>;
+  else if (route === "/privacy") content = <PrivacyPage navigate={navigate}/>;
   else if (lessonMatch) content = <StoryLesson sectionId={lessonMatch[1]} topicId={lessonMatch[2]} lessonId={lessonMatch[3]} navigate={navigate}/>;
   else if (route === "/lesson") content = <StoryLesson navigate={navigate}/>;
   else if (route === "/trainer" || route === "/go/practice") content = <Trainer setPage={navigate}/>;
@@ -255,5 +260,5 @@ export function App() {
 }
 
 function Footer({setPage}) {
-  return <footer><Logo onHome={()=>setPage("/")}/><p>Практическое IT-обучение через курсы, проекты и проверяемые результаты.</p><div><button onClick={()=>setPage("/academy")}>Курс Go</button><button onClick={()=>setPage("/sql")}>Курс SQL</button><button onClick={()=>setPage("/python")}>Курс Python</button><button onClick={()=>setPage("/product")}>Product</button><button onClick={()=>setPage("/qa")}>QA</button><button onClick={()=>setPage("/certificates")}>Сертификаты</button></div><small>© 2026 Godemy · Практический учебный проект</small></footer>;
+  return <footer><Logo onHome={()=>setPage("/")}/><p>Практическое IT-обучение через курсы, проекты и проверяемые результаты.</p><div><button onClick={()=>setPage("/academy")}>Курс Go</button><button onClick={()=>setPage("/sql")}>Курс SQL</button><button onClick={()=>setPage("/python")}>Курс Python</button><button onClick={()=>setPage("/product")}>Product</button><button onClick={()=>setPage("/qa")}>QA</button><button onClick={()=>setPage("/certificates")}>Сертификаты</button><button onClick={()=>setPage("/terms")}>Условия</button><button onClick={()=>setPage("/privacy")}>Конфиденциальность</button></div><small>© 2026 Godemy · Практический учебный проект</small></footer>;
 }
