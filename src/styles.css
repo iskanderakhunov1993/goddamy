@@ -6,6 +6,19 @@ header.site-header{height:72px;padding:0 30px;display:flex;align-items:center;ga
 .logo{border:0;background:none;color:#f5f6f7;font-size:16px;font-weight:900;letter-spacing:-.7px;white-space:nowrap;font-family:'Roboto Mono',monospace}.logo span{color:var(--yellow)}
 header.site-header nav{display:flex;gap:32px}header.site-header nav button,.header-actions>button{border:0;background:none;color:#c7c9d6;font-weight:600;font-size:13px;cursor:pointer}.header-actions{margin-left:auto;display:flex;align-items:center;gap:18px}.search{border:1px solid #3a3f5c!important;border-radius:8px!important;padding:10px 12px!important;width:190px;text-align:left;color:#e7e8f0;background:rgba(255,255,255,.04)!important}.search kbd{float:right;color:#666}.premium{color:var(--yellow)!important}.login{border:1px solid #3a3f5c!important;border-radius:8px!important;padding:9px 16px!important;color:#f5f6f7!important}.mobile-menu{display:none}
 .mobile-nav-panel{display:none}
+.search-overlay-backdrop{position:fixed;inset:0;background:rgba(10,10,25,.55);backdrop-filter:blur(2px);z-index:80;display:flex;align-items:flex-start;justify-content:center;padding:12vh 16px}
+.search-overlay{width:min(560px,100%);background:#12132b;border:1px solid #2c2e4d;border-radius:14px;box-shadow:0 24px 60px rgba(0,0,0,.4);overflow:hidden}
+.search-overlay-input{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid #23253f;color:#c7c9d6}
+.search-overlay-input input{flex:1;background:none;border:0;outline:0;color:#f5f6f7;font-size:15px}
+.search-overlay-input button{border:0;background:none;color:#8a8dab;cursor:pointer;display:flex}
+.search-overlay-results{max-height:60vh;overflow:auto;padding:8px}
+.search-overlay-results button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;background:none;border-radius:9px;padding:10px 12px;cursor:pointer;color:#e7e8f0}
+.search-overlay-results button:hover{background:#1d1f3c}
+.search-result-kind{flex:none;font-size:11px;font-weight:700;color:#8a8dab;text-transform:uppercase;width:52px}
+.search-result-body{display:flex;flex-direction:column;gap:2px;min-width:0}
+.search-result-body b{font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.search-result-body small{color:#8a8dab;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.search-overlay-empty{padding:20px 16px;color:#8a8dab;font-size:13.5px}
 .hero{min-height:620px;text-align:center;padding:105px 24px 80px;background:#e7e8ea}
 .eyebrow,.hero small,.audience small,.code-demo small,.curriculum-preview>small,.page-intro>small,.lesson-content>small{font:600 11px Roboto Mono;color:var(--green);letter-spacing:1.7px}
 .hero h1{font-size:66px;line-height:1.03;letter-spacing:-2px;margin:22px 0 24px;font-weight:900}.hero h1 em{font-style:normal;color:var(--amber-1)}.hero>p{max-width:660px;color:#282c3e;font-size:18px;line-height:1.65;margin:0 auto 32px}

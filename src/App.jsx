@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import {
   ArrowLeft, ArrowRight, Check, Circle,
-  List, UserCircle, X
+  List, MagnifyingGlass, UserCircle, X
 } from "@phosphor-icons/react";
+import { SearchOverlay } from "./components/SearchOverlay.jsx";
 import {
   CertificatesPage, CoursePage, ProfilePage, ProjectPage, RetrospectivePage, SetupPage, SprintPage, StoryLesson, SubscriptionPage
 } from "./components/LearningPages.jsx";
@@ -31,6 +32,7 @@ function Logo({ onHome }) {
 
 function Header({ setPage }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const nav = (page) => setPage(page);
   return (
     <header className="site-header">
@@ -41,10 +43,12 @@ function Header({ setPage }) {
         <button className="hide-mobile" onClick={() => nav("/#subscription")}>Подписка</button>
       </nav>
       <div className="header-actions">
+        <button aria-label="Поиск" onClick={() => setSearchOpen(true)}><MagnifyingGlass size={20}/></button>
         <button className="hide-mobile" aria-label="Профиль" onClick={() => nav("/profile")}><UserCircle size={20}/></button>
         <button className="login hide-mobile" onClick={() => nav("/go")}>Начать</button>
         <button className="mobile-menu" aria-label={menuOpen ? "Закрыть меню" : "Открыть меню"} aria-expanded={menuOpen} onClick={() => setMenuOpen((value) => !value)}>{menuOpen ? <X size={21}/> : <List size={21}/>}</button>
       </div>
+      {searchOpen && <SearchOverlay navigate={nav} onClose={() => setSearchOpen(false)}/>}
       {menuOpen && <nav className="mobile-nav-panel" aria-label="Мобильная навигация">
         <button onClick={() => { nav("/#courses"); setMenuOpen(false); }}>Курсы</button>
         <button onClick={() => { nav("/#certificate"); setMenuOpen(false); }}>Сертификаты</button>
