@@ -5,7 +5,7 @@ import {
   ArrowLeft, ArrowRight, Check, CheckCircle, Circle, Code,
   GithubLogo, Lightbulb, RocketLaunch, Target, BookOpen, House,
   List, X, CaretRight, UserCircle, PencilSimple, Flame,
-  Certificate, Briefcase, Cube
+  Certificate
 } from "@phosphor-icons/react";
 import { project, setupTasks, sprints, stages, storyBeats } from "../content/goCourse.js";
 import { courseCurriculum } from "../content/courseCurriculum.js";
@@ -16,7 +16,7 @@ import { getActivitySummary } from "../lib/activity.js";
 import { enrollCourse, getEnrolledCourses } from "../lib/enrollment.js";
 import { getCompletedCount, getCompletedLessonIds, isLessonComplete, markLessonComplete } from "../lib/progress.js";
 import { activateSubscription, hasActiveSubscription } from "../lib/subscription.js";
-import { loadProfile, saveProfile, saveProfileName } from "../lib/profile.js";
+import { loadProfile, saveProfile } from "../lib/profile.js";
 import { achievementDefs, getUnlockedAchievements } from "../lib/achievements.js";
 import { downloadCertificate } from "../lib/certificate.js";
 import "../styles-profile.css";
@@ -293,7 +293,7 @@ export function CertificatesPage({ navigate }) {
     : <button disabled={!item.path} onClick={() => item.path && navigate(item.path)}>{item.action} {item.path && <ArrowRight size={17}/>}</button>}</article>)}</div><section className="certificate-how"><h2>Как получить сертификат</h2><ol><li>Заверши обязательные модули и практические задания курса.</li><li>Оформи подписку Godemy.</li><li>Сертификат в формате PNG станет доступен для скачивания здесь и в профиле.</li></ol><button onClick={() => navigate("/profile")}>К профилю <ArrowLeft size={17}/></button></section></section></main>;
 }
 
-export function SubscriptionPage({ navigate }) {
+export function SubscriptionPage() {
   const [period, setPeriod] = useState("month");
   const price = period === "month" ? "1 990 ₽" : "1 250 ₽";
   const periodLabel = period === "month" ? "Ежемесячно" : "Ежегодно (−37%)";
@@ -414,10 +414,9 @@ function ContentBlock({ eyebrow, title, children, icon = null }) {
 }
 
 function StoryMessage({ story }) {
-  return <aside className="story-message" aria-label={`${story.name}: ${story.label}`}>
+  return <aside className="story-message" aria-label={story.label}>
     <div>
       <small>{story.label}</small>
-      <div className="story-person"><b>{story.name}</b><span>{story.role}</span></div>
       <p>{story.message}</p>
     </div>
   </aside>;

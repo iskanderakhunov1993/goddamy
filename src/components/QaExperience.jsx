@@ -40,7 +40,7 @@ export function QaTrainer({ navigate }) {
           <div>
             <p className="academy-kicker">ПРАКТИКА · QA</p>
             <h1>QA-тренажёр</h1>
-            <p>Разбирайте кейсы Bit Tech: приоритизация, тест-дизайн, баг-репорты, API и регрессия — с проверкой ответа.</p>
+            <p>Разбирайте рабочие кейсы: приоритизация, тест-дизайн, баг-репорты, API и регрессия — с проверкой ответа.</p>
           </div>
           <div className="trainer-progress-note">
             <CheckCircle size={20}/>
@@ -184,7 +184,7 @@ export function QaTask({ challengeId, navigate }) {
     <main className="qa-task-shell">
       <header>
         <button onClick={() => navigate("/qa/practice")}><ArrowLeft size={17}/> Все задачи</button>
-        <span>QA · Bit Tech</span>
+        <span>QA-практика</span>
         <button onClick={() => navigate("/qa")}>Программа курса</button>
       </header>
       <div className="qa-task-grid">

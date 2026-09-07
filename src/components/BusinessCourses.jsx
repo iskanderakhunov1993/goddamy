@@ -8,7 +8,7 @@ export const productModules = [
   { n: "03", title: "Метрики и решения", text: "Выбирайте метрики, читайте данные и не путайте корреляцию с причиной.", topics: ["Цель и North Star", "Воронка", "Retention", "Гипотеза", "Разбор результата"] },
   { n: "04", title: "Приоритизация и roadmap", text: "Собирайте план развития продукта из ограничений, возможностей и ценности.", topics: ["Backlog", "RICE", "Impact Mapping", "Roadmap", "Коммуникация решений"] },
   { n: "05", title: "Delivery с командой", text: "Превращайте продуктовую идею в ясную задачу для дизайна, разработки и QA.", topics: ["User story", "Acceptance criteria", "Декомпозиция", "Риски", "Проверка перед релизом"] },
-  { n: "06", title: "Проект: запуск функции", text: "Проведите реальную рабочую историю: от проблемы до решения и ретроспективы.", topics: ["Бриф Bit Tech", "Исследование", "Гипотеза и метрики", "План поставки", "Защита решения"] },
+  { n: "06", title: "Проект: запуск функции", text: "Проведите реальную рабочую историю: от проблемы до решения и ретроспективы.", topics: ["Продуктовый бриф", "Исследование", "Гипотеза и метрики", "План поставки", "Защита решения"] },
 ];
 
 export const qaModules = [
@@ -17,19 +17,19 @@ export const qaModules = [
   { n: "03", title: "Тест-кейсы и баг-репорты", text: "Фиксируйте проверку и ошибку так, чтобы команда могла быстро воспроизвести и исправить проблему.", topics: ["Структура тест-кейса", "Шаги и результат", "Приоритет и серьёзность", "Баг-репорт", "Повторная проверка"] },
   { n: "04", title: "Web и API", text: "Проверяйте интерфейсы, запросы и ответы сервисов в рабочих сценариях.", topics: ["Клиент и сервер", "HTTP-методы", "Коды ответа", "Postman", "Контракт API"] },
   { n: "05", title: "Регрессия и релиз", text: "Собирайте регрессионный набор и помогайте команде принимать решение о поставке.", topics: ["Smoke-проверка", "Регрессия", "Тестовый отчёт", "Релизные риски", "Ретроспектива"] },
-  { n: "06", title: "Проект: проверка сервиса", text: "Пройдите путь QA в Bit Tech: требования, тест-дизайн, API-проверки и релизная рекомендация.", topics: ["Бриф QA", "Тестовая стратегия", "Проверка сценариев", "Дефекты", "Итоговый отчёт"] },
+  { n: "06", title: "Проект: проверка сервиса", text: "Пройдите путь QA: требования, тест-дизайн, API-проверки и релизная рекомендация.", topics: ["Бриф QA", "Тестовая стратегия", "Проверка сценариев", "Дефекты", "Итоговый отчёт"] },
 ];
 
 export function ProductCoursePage({ navigate }) {
-  return <CourseCabinet navigate={navigate} course={{ slug: "product", label: "Product", kicker: "ПРОДУКТ · BIT TECH", title: "Product Management", description: "От пользовательской проблемы до решения, которое команда сможет выпустить и измерить.", modules: productModules, phases: ["СТАРТ", "ИССЛЕДОВАНИЕ", "МЕТРИКИ", "ПЛАН", "DELIVERY", "ПРОЕКТ"], role: "Текущая роль: junior product manager.", nextStep: "Разберите первый продуктовый бриф и оформите понятную гипотезу.", practicePath: "/product/practice", firstPath: "/product/practice", startLabel: "Начать обучение" }}/>;
+  return <CourseCabinet navigate={navigate} course={{ slug: "product", label: "Product", kicker: "ПРОДУКТОВАЯ РАБОТА", title: "Product Management", description: "От пользовательской проблемы до решения, которое команда сможет выпустить и измерить.", modules: productModules, phases: ["СТАРТ", "ИССЛЕДОВАНИЕ", "МЕТРИКИ", "ПЛАН", "DELIVERY", "ПРОЕКТ"], role: "Текущая роль: junior product manager.", nextStep: "Разберите первый продуктовый бриф и оформите понятную гипотезу.", practicePath: "/product/practice", firstPath: "/product/practice", startLabel: "Начать обучение" }}/>;
 }
 
 export function QaCoursePage({ navigate }) {
-  return <CourseCabinet navigate={navigate} course={{ slug: "qa", label: "QA", kicker: "КАЧЕСТВО · BIT TECH", title: "QA Engineer", description: "От анализа требований до проверки API и понятной рекомендации перед релизом.", modules: qaModules, phases: ["СТАРТ", "ДИЗАЙН", "ДЕФЕКТЫ", "API", "РЕЛИЗ", "ПРОЕКТ"], role: "Текущая роль: junior QA engineer.", nextStep: "Откройте задачу команды и составьте первый чек-лист проверок.", practicePath: "/qa/practice", firstPath: "/qa/practice/priority-vs-severity", startLabel: "Начать обучение" }}/>;
+  return <CourseCabinet navigate={navigate} course={{ slug: "qa", label: "QA", kicker: "КАЧЕСТВО ПРОДУКТА", title: "QA Engineer", description: "От анализа требований до проверки API и понятной рекомендации перед релизом.", modules: qaModules, phases: ["СТАРТ", "ДИЗАЙН", "ДЕФЕКТЫ", "API", "РЕЛИЗ", "ПРОЕКТ"], role: "Текущая роль: junior QA engineer.", nextStep: "Откройте задачу команды и составьте первый чек-лист проверок.", practicePath: "/qa/practice", firstPath: "/qa/practice/priority-vs-severity", startLabel: "Начать обучение" }}/>;
 }
 
 const practiceCopy = {
-  product: { icon: <Briefcase size={33}/>, kicker: "ПРАКТИКА · PRODUCT", title: "Продуктовые кейсы готовятся", text: "Здесь появятся брифы Bit Tech: интервью, метрики, приоритизация и защита решений." },
+  product: { icon: <Briefcase size={33}/>, kicker: "ПРАКТИКА · PRODUCT", title: "Продуктовые кейсы готовятся", text: "Здесь появятся продуктовые брифы: интервью, метрики, приоритизация и защита решений." },
 };
 
 export function BusinessPracticeComing({ navigate, course }) {

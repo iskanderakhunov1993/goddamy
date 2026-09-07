@@ -16,7 +16,7 @@ export const pythonModules = [
 ];
 
 export const pythonChallenges = [
-  { id: "clean-name", title: "Нормализация имени", category: "Строки", level: "Лёгкая", minutes: 7, description: "Очистите пробелы и приведите имя клиента к аккуратному виду.", starter: "def clean_name(value: str) -> str:\n    # ваш код\n    return value", token: ".strip()", hint: "Сначала используйте strip(), затем title().", result: "Искандер Ахунов" },
+  { id: "clean-name", title: "Нормализация имени", category: "Строки", level: "Лёгкая", minutes: 7, description: "Очистите пробелы и приведите имя клиента к аккуратному виду.", starter: "def clean_name(value: str) -> str:\n    # ваш код\n    return value", token: ".strip()", hint: "Сначала используйте strip(), затем title().", result: "Анна Петрова" },
   { id: "transaction-fee", title: "Комиссия операции", category: "Условия", level: "Лёгкая", minutes: 9, description: "Рассчитайте комиссию с учётом минимального значения.", starter: "def fee(amount: float) -> float:\n    # ваш код\n    return 0", token: "max(", hint: "Функция max поможет выбрать процент или минимальную комиссию.", result: "125.0" },
   { id: "positive-total", title: "Сумма пополнений", category: "Списки", level: "Лёгкая", minutes: 10, description: "Сложите только положительные операции из списка.", starter: "def deposits(values: list[int]) -> int:\n    # ваш код\n    return 0", token: "sum(", hint: "Передайте в sum генератор с условием value > 0.", result: "48200" },
   { id: "currency-counter", title: "Счётчик валют", category: "Словари", level: "Средняя", minutes: 14, description: "Посчитайте количество операций в каждой валюте.", starter: "def count_currencies(items: list[str]) -> dict[str, int]:\n    result = {}\n    # ваш код\n    return result", token: ".get(", hint: "Получайте текущее значение через dict.get(key, 0).", result: "{'BTC': 3, 'ETH': 2, 'USDT': 4}" },
@@ -34,7 +34,7 @@ function PythonContextNav({ navigate, active }) {
 }
 
 export function PythonCoursePage({ navigate }) {
-  return <CourseCabinet navigate={navigate} course={{ slug: "python", label: "Python", kicker: "АВТОМАТИЗАЦИЯ · BIT TECH", title: "Python для рабочих задач", description: "От первой функции до сервиса подготовки отчётов и проекта в GitHub.", modules: pythonModules, phases: ["СТАРТ", "ЛОГИКА", "ДАННЫЕ", "ИНСТРУМЕНТЫ", "АРХИТЕКТУРА", "ПРОЕКТ"], role: "Текущая роль: стажёр по автоматизации.", nextStep: "Освойте базовый синтаксис, закрепите его в практике и соберите CLI-сервис.", practicePath: "/python/practice", firstPath: "/python/practice/clean-name", startLabel: "Начать обучение" }}/>;
+  return <CourseCabinet navigate={navigate} course={{ slug: "python", label: "Python", kicker: "АВТОМАТИЗАЦИЯ РАБОЧИХ ЗАДАЧ", title: "Python для рабочих задач", description: "От первой функции до сервиса подготовки отчётов и проекта в GitHub.", modules: pythonModules, phases: ["СТАРТ", "ЛОГИКА", "ДАННЫЕ", "ИНСТРУМЕНТЫ", "АРХИТЕКТУРА", "ПРОЕКТ"], role: "Текущая роль: стажёр по автоматизации.", nextStep: "Освойте базовый синтаксис, закрепите его в практике и соберите CLI-сервис.", practicePath: "/python/practice", firstPath: "/python/practice/clean-name", startLabel: "Начать обучение" }}/>;
 }
 
 export function PythonTrainer({ navigate }) {

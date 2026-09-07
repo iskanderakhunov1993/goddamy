@@ -41,7 +41,7 @@ const createBlock = (type) => ({
   ...(type === "image" ? { src: "", alt: "", caption: "" } : {}),
   ...(type === "quote" ? { text: "Важная мысль урока", author: "" } : {}),
   ...(type === "list" ? { items: ["Первый пункт", "Второй пункт"] } : {}),
-  ...(type === "dialogue" ? { speaker: "Рома", role: "team lead", text: "Сообщение ученику", side: "team" } : {}),
+  ...(type === "dialogue" ? { speaker: "Наставник", role: "", text: "Сообщение ученику", side: "team" } : {}),
   ...(type === "link" ? { text: "Полезный материал", url: "https://" } : {}),
   ...(type === "code" ? { language: "go", code: "package main\n\nfunc main() {\n\t// Ваш код\n}" } : {}),
   ...(type === "callout" ? { tone: "info", title: "Обратите внимание", text: "Короткое пояснение или важная деталь." } : {}),

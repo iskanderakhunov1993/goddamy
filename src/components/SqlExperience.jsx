@@ -26,7 +26,7 @@ function SqlContextNav({ navigate, active }) {
 }
 
 export function SqlCoursePage({ navigate }) {
-  return <CourseCabinet navigate={navigate} course={{ slug: "sql", label: "SQL", kicker: "АНАЛИТИКА · BIT TECH", title: "SQL для работы с данными", description: "От первой выборки до итогового исследования операций криптобанка.", modules: sqlModules, phases: ["СТАРТ", "ОСНОВЫ", "ФИЛЬТРАЦИЯ", "ОТЧЁТЫ", "СВЯЗИ", "ПРОЕКТ"], role: "Текущая роль: младший аналитик данных.", nextStep: "Пройдите основы, решите первые запросы и подготовьте итоговый отчёт.", practicePath: "/sql/practice", firstPath: "/sql/practice/active-clients", startLabel: "Начать обучение" }}/>;
+  return <CourseCabinet navigate={navigate} course={{ slug: "sql", label: "SQL", kicker: "АНАЛИТИКА ДАННЫХ", title: "SQL для работы с данными", description: "От первой выборки до итогового исследования операций криптобанка.", modules: sqlModules, phases: ["СТАРТ", "ОСНОВЫ", "ФИЛЬТРАЦИЯ", "ОТЧЁТЫ", "СВЯЗИ", "ПРОЕКТ"], role: "Текущая роль: младший аналитик данных.", nextStep: "Пройдите основы, решите первые запросы и подготовьте итоговый отчёт.", practicePath: "/sql/practice", firstPath: "/sql/practice/active-clients", startLabel: "Начать обучение" }}/>;
 }
 
 export function SqlTrainer({ navigate }) {
