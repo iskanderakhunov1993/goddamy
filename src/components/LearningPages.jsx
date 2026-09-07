@@ -14,6 +14,9 @@ import { LessonBlocks } from "./LessonBlocks.jsx";
 import { ModuleGlyph } from "./CourseCabinet.jsx";
 import { getActivitySummary } from "../lib/activity.js";
 import { enrollCourse, getEnrolledCourses } from "../lib/enrollment.js";
+import { getCompletedCount, getCompletedLessonIds, isLessonComplete, markLessonComplete } from "../lib/progress.js";
+import { activateSubscription, hasActiveSubscription } from "../lib/subscription.js";
+import { loadProfile, saveProfile, saveProfileName } from "../lib/profile.js";
 import "../styles-profile.css";
 
 export function ProgressBar({ value, label = "Общий прогресс" }) {
@@ -137,6 +140,10 @@ export function CoursePage({ navigate }) {
   const [outlineSection, setOutlineSection] = useState(null);
   const closeOutline = () => setOutlineSection(null);
   const [activity] = useState(getActivitySummary);
+  const completedCount = getCompletedCount("go");
+  const percent = courseLessons.length ? Math.round((completedCount / courseLessons.length) * 100) : 0;
+  const nextLesson = courseLessons.find((item) => !isLessonComplete("go", item.id)) || courseLessons[0];
+  const continueToLesson = () => { if (nextLesson) { enrollCourse("go"); navigate(courseLessonPath(nextLesson)); } };
   return <main className="course-dashboard">
     <aside className="dashboard-rail" aria-label="Навигация кабинета"><button className="dashboard-logo" onClick={() => navigate("/")}><span>GO</span>DEMY</button><nav><button aria-label="Главная" onClick={() => navigate("/")}><House size={20}/></button><button className="active" aria-label="Мой курс" onClick={() => navigate("/go")}><BookOpen size={20}/></button><button aria-label="Практика курса Go" onClick={() => navigate("/go/practice")}><Code size={20}/></button><button aria-label="Программа курса" onClick={() => setOutlineSection("root")}><List size={20}/></button><button aria-label="Редактор курса" onClick={() => navigate("/course-editor")}><PencilSimple size={20}/></button></nav><button aria-label="Профиль" onClick={() => navigate("/profile")}><UserCircle size={21}/></button></aside>
     <div className="dashboard-content">
@@ -144,11 +151,11 @@ export function CoursePage({ navigate }) {
         <button className="go-info-link" onClick={() => setOutlineSection("root")}>О курсе ↗</button>
         <h1>Go Backend Internship</h1>
         <div className="go-progress-row">
-          <div className="go-progress-track"><span style={{ width: "0%" }}/></div>
-          <button className="go-continue-btn" disabled={!courseLessons.length} onClick={() => { if (courseLessons[0]) { enrollCourse("go"); navigate(courseLessonPath(courseLessons[0])); } }}>Начать бесплатно</button>
+          <div className="go-progress-track"><span style={{ width: `${percent}%` }}/></div>
+          <button className="go-continue-btn" disabled={!courseLessons.length} onClick={continueToLesson}>{completedCount > 0 ? "Продолжить" : "Начать бесплатно"}</button>
         </div>
         <div className="go-info-footer">
-          <span className="go-progress-caption">Прогресс курса · 0 / {courseLessons.length} уроков</span>
+          <span className="go-progress-caption">Прогресс курса · {completedCount} / {courseLessons.length} уроков</span>
           <button className="go-practice-link" onClick={() => navigate("/go/practice")}><Code size={15}/> Практика Go</button>
         </div>
       </section>
@@ -196,15 +203,15 @@ export function ProfilePage({ navigate }) {
     const entry = PROFILE_COURSE_CATALOG[slug];
     if (!entry) return null;
     const lessonCount = slug === "go" ? goLessonCount : entry.lessonCount;
-    const completedLessons = 0;
-    const percent = lessonCount ? Math.round((completedLessons / lessonCount) * 100) : 0;
-    return { slug, title: entry.title, path: entry.path, lessonCount, percent };
+    const completedLessons = getCompletedCount(slug);
+    const percent = lessonCount ? Math.min(100, Math.round((completedLessons / lessonCount) * 100)) : 0;
+    return { slug, title: entry.title, path: entry.path, lessonCount, completedLessons, percent };
   }).filter(Boolean);
-  const hasSubscription = false;
+  const hasSubscription = hasActiveSubscription();
   const courseComplete = enrolledCourses.length > 0 && enrolledCourses.every((item) => item.percent >= 100);
   const certReady = courseComplete && hasSubscription;
   const [editing, setEditing] = useState(false);
-  const [profile, setProfile] = useState({ name: "Стажёр Bit Tech", about: "Учусь собирать backend-сервисы на Go через реальные задачи команды.", city: "Москва, Россия", github: "" });
+  const [profile, setProfile] = useState(loadProfile);
   const changeProfile = (key, value) => setProfile((current) => ({ ...current, [key]: value }));
   const [activity] = useState(getActivitySummary);
   return <main className="profile-shell">
@@ -213,9 +220,9 @@ export function ProfilePage({ navigate }) {
         <aside className="profile-mini">
           <img className="profile-mini-avatar" src="/characters/avatar-protagonist-neutral-v1.png" alt="Аватар стажёра"/>
           <h2 className="profile-mini-name">{profile.name}</h2>
-          <p className="profile-mini-role">PRE-JUNIOR · BIT TECH</p>
+          <p className="profile-mini-role">PRE-JUNIOR · GO BACKEND</p>
           <button className="profile-mini-edit" onClick={() => setEditing((value) => !value)}>{editing ? "Готово" : "Редактировать профиль"}</button>
-          {editing ? <form onSubmit={(event) => { event.preventDefault(); setEditing(false); }}>
+          {editing ? <form onSubmit={(event) => { event.preventDefault(); saveProfile(profile); setEditing(false); }}>
             <label>Имя<input value={profile.name} onChange={(event) => changeProfile("name", event.target.value)} maxLength={40}/></label>
             <label>О себе<textarea value={profile.about} onChange={(event) => changeProfile("about", event.target.value)} maxLength={280}/></label>
             <label>Город<input value={profile.city} onChange={(event) => changeProfile("city", event.target.value)} maxLength={60}/></label>
@@ -238,7 +245,11 @@ export function ProfilePage({ navigate }) {
             <h3>Сертификат</h3>
             {certReady
               ? <button className="profile-mini-link" onClick={() => navigate("/certificates")}>Скачать сертификат <ArrowRight size={14}/></button>
-              : <p className="profile-mini-hint">{courseComplete ? <>Курс пройден. <button className="inline" onClick={() => navigate("/subscription")}>Оформите подписку</button>, чтобы скачать сертификат.</> : <><button className="inline" onClick={() => navigate("/subscription")}>Оформите подписку</button> — сертификат откроется после 100% курса.</>}</p>}
+              : <p className="profile-mini-hint">{hasSubscription
+                ? "Подписка активна. Сертификат откроется после 100% прохождения курса."
+                : courseComplete
+                  ? <>Курс пройден. <button className="inline" onClick={() => navigate("/subscription")}>Оформите подписку</button>, чтобы скачать сертификат.</>
+                  : <><button className="inline" onClick={() => navigate("/subscription")}>Оформите подписку</button> — сертификат откроется после 100% курса.</>}</p>}
           </section>
           <section className="profile-mini-section">
             <h3>Серия дней</h3>
@@ -269,7 +280,8 @@ export function SubscriptionPage({ navigate }) {
   const [period, setPeriod] = useState("month");
   const price = period === "month" ? "1 990 ₽" : "1 250 ₽";
   const periodLabel = period === "month" ? "Ежемесячно" : "Ежегодно (−37%)";
-  const [confirmed, setConfirmed] = useState(false);
+  const [confirmed, setConfirmed] = useState(hasActiveSubscription);
+  const confirmSubscription = () => { activateSubscription(); setConfirmed(true); };
   return <main className="profile-shell"><div className="profile-content checkout-content">
     <div className="profile-header"><div><small>GODEMY · ПОДПИСКА</small><h1>Один тариф, полный доступ ко всем курсам</h1></div></div>
     <div className="checkout-grid">
@@ -291,7 +303,7 @@ export function SubscriptionPage({ navigate }) {
         <div className="summary-total"><span>Сегодня</span><span>{price}</span></div>
         {confirmed
           ? <p className="checkout-confirm">Подписка активирована. Сертификаты откроются после 100% прохождения курса.</p>
-          : <button className="btn-primary checkout-submit" onClick={() => setConfirmed(true)}>Оформить подписку</button>}
+          : <button className="btn-primary checkout-submit" onClick={confirmSubscription}>Оформить подписку</button>}
         <small className="checkout-disclaimer">Демо-режим: оплата не списывается, это учебный проект.</small>
       </div>
     </div>
@@ -308,7 +320,12 @@ export function StoryLesson({ sectionId = "intro", topicId = "welcome", lessonId
   const lessonIndex = current.topic.lessons.findIndex((item) => item.id === current.id);
   const objectives = current.objectives?.length ? current.objectives : ["Понять основную идею урока", "Связать её с задачей проекта", "Проверить себя на небольшом примере"];
   const lessonBlocks = Array.isArray(current.blocks) ? current.blocks : [];
-  const openLesson = (item) => navigate(item ? courseLessonPath(item) : "/go/task-tracker");
+  const [completedIds, setCompletedIds] = useState(() => new Set(getCompletedLessonIds("go")));
+  const openLesson = (item) => {
+    markLessonComplete("go", current.id);
+    setCompletedIds((ids) => new Set(ids).add(current.id));
+    navigate(item ? courseLessonPath(item) : "/go/task-tracker");
+  };
 
   return <main className="story-lesson-shell">
     <aside className="story-side">
@@ -319,7 +336,7 @@ export function StoryLesson({ sectionId = "intro", topicId = "welcome", lessonId
     <article className="story-lesson lesson-reader">
       <header>
         <div>{current.section.title} <span/> {current.topic.title} · Урок {lessonIndex + 1}/{current.topic.lessons.length}</div>
-        <i>{current.topic.lessons.map((item, index) => <b className={index <= lessonIndex ? "complete" : ""} key={item.id}/>)}</i>
+        <i>{current.topic.lessons.map((item) => <b className={completedIds.has(item.id) || item.id === current.id ? "complete" : ""} key={item.id}/>)}</i>
       </header>
       <h1>{current.title}</h1>
       <p className="story-lead">{current.summary}</p>
@@ -327,23 +344,18 @@ export function StoryLesson({ sectionId = "intro", topicId = "welcome", lessonId
       {lessonBlocks.length > 0 && <LessonBlocks blocks={lessonBlocks}/>}
 
       {lessonBlocks.length === 0 && <><section className="lesson-copy">
-        <h2>Зачем это нужно в работе</h2>
-        <p>В Bit Tech знания не существуют отдельно от задачи. Материал этого урока понадобится, чтобы сделать следующий небольшой шаг в Task Tracker и объяснить своё решение команде.</p>
+        <h2>Зачем это нужно на практике</h2>
+        <p>Материал этого урока понадобится, чтобы сделать следующий небольшой шаг в проекте.</p>
         <p>Сначала разберите принцип на нейтральном примере. Затем перенесите подход в проект самостоятельно — готового решения задачи здесь нет.</p>
         <h2>После урока вы сможете:</h2>
         <ul>{objectives.map((goal) => <li key={goal}>{goal};</li>)}</ul>
       </section>
 
-      <div className="chat-thread lesson-dialogue">
-        <div className="chat-message learner"><div><small>Вы · стажёр</small><p>Как понять, что я действительно разобрался в теме?</p></div></div>
-        <div className="chat-message teammate"><div><small>Рома · team lead</small><p>Попробуй объяснить принцип без терминов и применить его в другом примере. Если оба шага получились — можно идти дальше.</p></div></div>
-      </div>
-
       <section className="lesson-copy lesson-example">
         <small>ПОХОЖИЙ ПРИМЕР</small>
-        <h2>Каталог оборудования</h2>
-        <p>Представьте небольшой внутренний каталог Bit Tech. Возьмите принцип из урока и примените его к данным об оборудовании: название, состояние и ответственный сотрудник.</p>
-        <p>Не копируйте предметную область в Task Tracker. Важно увидеть общий способ рассуждения и самостоятельно перенести его на задачи.</p>
+        <h2>Небольшой каталог</h2>
+        <p>Представьте небольшой каталог: список записей с названием, статусом и ответственным. Возьмите принцип из урока и примените его к этим данным.</p>
+        <p>Не копируйте предметную область в проект. Важно увидеть общий способ рассуждения и самостоятельно перенести его на задачи.</p>
       </section></>}
 
       <footer className="lesson-footer">

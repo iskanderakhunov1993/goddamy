@@ -7,6 +7,7 @@ import {
   Table, TerminalWindow, UserCircle, X,
 } from "@phosphor-icons/react";
 import { enrollCourse } from "../lib/enrollment.js";
+import { getCompletedCount } from "../lib/progress.js";
 
 const artworkSets = {
   go: [TerminalWindow, BracketsCurly, ListBullets, Database, ShareNetwork, RocketLaunch],
@@ -31,6 +32,8 @@ export function CourseCabinet({ navigate, course }) {
   const topicCount = course.modules.reduce((sum, module) => sum + module.topics.length, 0);
   const lessonCount = topicCount * 5;
   const selected = course.modules.find((module) => module.n === selectedModule);
+  const completedCount = getCompletedCount(course.slug);
+  const percent = lessonCount ? Math.min(100, Math.round((completedCount / lessonCount) * 100)) : 0;
   return <main className={`course-dashboard course-dashboard-${course.slug}`}>
     <aside className="dashboard-rail" aria-label={`Навигация курса ${course.label}`}>
       <button className="dashboard-logo" onClick={() => navigate("/")}><span>GO</span>DEMY</button>
@@ -57,7 +60,7 @@ export function CourseCabinet({ navigate, course }) {
           </ul>
         </div>
       </section>
-      <div className="course-prog"><span className="course-prog-pill">0%</span><div className="course-prog-track"><span style={{ width: "0%" }}/></div><span className="course-prog-label">0 / {lessonCount} уроков</span></div>
+      <div className="course-prog"><span className="course-prog-pill">{percent}%</span><div className="course-prog-track"><span style={{ width: `${percent}%` }}/></div><span className="course-prog-label">{completedCount} / {lessonCount} уроков</span></div>
       <section className="dashboard-note"><Briefcase size={19}/><p><b>{course.role}</b> {course.nextStep}</p></section>
       <section className="dashboard-program">
         <h2 className="course-syllabus-heading">Программа курса</h2>

@@ -8,6 +8,7 @@ import {
 const GoLogoTile = () => <span className="tech-logo-tile">Go</span>;
 import { courseCurriculum } from "../content/courseCurriculum.js";
 import { getGoChallenge, goChallenges } from "../content/goChallenges.js";
+import { saveProfileName } from "../lib/profile.js";
 import "../styles-academy.css";
 
 export { getGoChallenge, goChallenges };
@@ -20,7 +21,6 @@ const audience = [
 
 export function PublicGoLanding({ navigate }) {
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const tracks = [
     { title: "Go Backend", status: "Доступен сейчас", description: "Создайте три backend-проекта и пройдите путь от первой строки до релиза.", icon: <GoLogoTile/>, level: "Для начинающих", meta: "150 уроков", action: () => navigate("/go") },
     { title: "SQL", status: "Доступен сейчас", description: "Научитесь получать данные, строить отчёты и принимать решения на их основе.", icon: <Database size={20}/>, level: "Для начинающих", meta: "140 уроков", action: () => navigate("/sql") },
@@ -38,10 +38,9 @@ export function PublicGoLanding({ navigate }) {
           <div className="universal-hero-actions"><button onClick={() => navigate("/go")}>Войти в команду <ArrowRight size={20}/></button><button onClick={() => navigate("/#courses")}>Выбрать направление</button></div>
           <div className="universal-subscription-note"><Stack size={20}/><span>Все курсы по одной подписке</span></div>
         </div>
-        <form className="universal-signup" onSubmit={(event) => { event.preventDefault(); navigate("/go"); }}>
-          <b>Создайте аккаунт</b>
+        <form className="universal-signup" onSubmit={(event) => { event.preventDefault(); if (name.trim()) saveProfileName(name.trim()); navigate("/go"); }}>
+          <b>Как тебя зовут?</b>
           <input placeholder="Имя" value={name} onChange={(event) => setName(event.target.value)}/>
-          <input placeholder="you@example.com" type="email" value={email} onChange={(event) => setEmail(event.target.value)}/>
           <button type="submit">Начать <ArrowRight size={16}/></button>
         </form>
       </div>
