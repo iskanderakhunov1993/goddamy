@@ -10,6 +10,7 @@
 .checkout-price{display:flex;align-items:baseline;gap:8px;padding:18px 0;border-top:1px solid #c8cad0;border-bottom:1px solid #c8cad0;margin-bottom:20px}
 .checkout-price b{font:800 32px "Roboto Mono",monospace;color:#0c0d13}
 .checkout-price span{color:#5b6072;font-size:13px}
+.checkout-price-note{margin:-12px 0 20px;color:#5b6072;font-size:13px}
 .checkout-features{list-style:none;margin:0;padding:0;display:grid;gap:12px}
 .checkout-features li{display:flex;align-items:center;gap:9px;font-size:13.5px;color:#181a25}
 .checkout-features li svg{flex:none;color:#4b3aeb}

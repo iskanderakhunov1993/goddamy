@@ -294,7 +294,8 @@ export function CertificatesPage({ navigate }) {
 
 export function SubscriptionPage() {
   const [period, setPeriod] = useState("month");
-  const price = period === "month" ? "1 990 ₽" : "1 250 ₽";
+  const monthlyPrice = period === "month" ? "1 990 ₽" : "1 250 ₽";
+  const totalToday = period === "month" ? "1 990 ₽" : "15 000 ₽";
   const periodLabel = period === "month" ? "Ежемесячно" : "Ежегодно (−37%)";
   const [confirmed, setConfirmed] = useState(hasActiveSubscription);
   const confirmSubscription = () => { activateSubscription(); setConfirmed(true); };
@@ -306,17 +307,18 @@ export function SubscriptionPage() {
           <button className={period === "month" ? "active" : ""} onClick={() => setPeriod("month")}>Ежемесячно</button>
           <button className={period === "year" ? "active" : ""} onClick={() => setPeriod("year")}>Ежегодно −37%</button>
         </div>
-        <div className="checkout-price"><b>{price}</b><span>/ месяц</span></div>
+        <div className="checkout-price"><b>{monthlyPrice}</b><span>/ месяц</span></div>
+        {period === "year" && <p className="checkout-price-note">{totalToday} за год, списывается сразу</p>}
         <ul className="checkout-features">
           <li><Check size={17}/> Все практические IT-курсы</li>
           <li><Check size={17}/> Тренажёр с проверкой в каждом курсе</li>
-          <li><Check size={17}/> Проверяемые сертификаты</li>
+          <li><Check size={17}/> Сертификат об окончании курса</li>
         </ul>
       </div>
       <div className="summary-box">
-        <div className="summary-row"><span>Godemy Unlimited</span><span>{price}</span></div>
+        <div className="summary-row"><span>Godemy Unlimited</span><span>{monthlyPrice} / мес</span></div>
         <div className="summary-row"><span>Период</span><span>{periodLabel}</span></div>
-        <div className="summary-total"><span>Сегодня</span><span>{price}</span></div>
+        <div className="summary-total"><span>Сегодня</span><span>{totalToday}</span></div>
         {confirmed
           ? <p className="checkout-confirm">Подписка активирована. Сертификаты откроются после 100% прохождения курса.</p>
           : <button className="btn-primary checkout-submit" onClick={confirmSubscription}>Оформить подписку</button>}
