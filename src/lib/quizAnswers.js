@@ -1,3 +1,5 @@
+import { pushState } from "./cloudSync.js";
+
 const STORAGE_KEY = "godemy-quiz-answers-v1";
 
 function loadState() {
@@ -17,6 +19,7 @@ function saveState(state) {
   } catch {
     // ignore storage failures — the answer still applies this session, it just won't be remembered
   }
+  pushState(STORAGE_KEY, state);
 }
 
 export function getQuizAnswer(blockId) {

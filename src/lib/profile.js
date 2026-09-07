@@ -1,3 +1,5 @@
+import { pushState } from "./cloudSync.js";
+
 const STORAGE_KEY = "godemy-profile-v1";
 
 const DEFAULT_PROFILE = {
@@ -24,6 +26,7 @@ export function saveProfile(profile) {
   } catch {
     // ignore storage failures — the edit still applies this session, it just won't be remembered
   }
+  pushState(STORAGE_KEY, profile);
 }
 
 export function saveProfileName(name) {

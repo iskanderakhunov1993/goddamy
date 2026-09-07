@@ -1,3 +1,5 @@
+import { pushState } from "./cloudSync.js";
+
 const STORAGE_KEY = "godemy-enrolled-courses-v1";
 
 function loadList() {
@@ -17,6 +19,7 @@ function saveList(list) {
   } catch {
     // ignore storage failures (private mode, quota) — enrolling still navigates, it just won't be remembered
   }
+  pushState(STORAGE_KEY, list);
 }
 
 export function enrollCourse(slug) {

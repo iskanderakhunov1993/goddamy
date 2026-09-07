@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../styles-dashboard.css";
 import "../styles-lesson-blocks.css";
 import {
@@ -21,6 +21,7 @@ import { achievementDefs, getUnlockedAchievements } from "../lib/achievements.js
 import { downloadCertificate } from "../lib/certificate.js";
 import { lessonsLabel, topicsLabel } from "../lib/plural.js";
 import { getLessonFeedback, setLessonFeedback } from "../lib/lessonFeedback.js";
+import { getCurrentUser, signInWithEmail, signOut } from "../lib/auth.js";
 import "../styles-profile.css";
 
 export function ProgressBar({ value, label = "Общий прогресс" }) {
@@ -197,6 +198,55 @@ const PROFILE_COURSE_CATALOG = {
   go: { title: "Go Backend Internship", path: "/go" },
 };
 
+function AccountSyncSection() {
+  const [status, setStatus] = useState("loading"); // loading | signed-out | sent | signed-in
+  const [email, setEmail] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    getCurrentUser().then((user) => {
+      if (user) { setUserEmail(user.email); setStatus("signed-in"); }
+      else setStatus("signed-out");
+    });
+  }, []);
+
+  const submit = async (event) => {
+    event.preventDefault();
+    setError("");
+    try {
+      await signInWithEmail(email.trim());
+      setStatus("sent");
+    } catch (err) {
+      setError(err.message || "Не удалось отправить ссылку");
+    }
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    window.location.reload();
+  };
+
+  if (status === "loading") return null;
+
+  return <section className="profile-mini-section profile-account">
+    <h3>Аккаунт</h3>
+    {status === "signed-in" && <>
+      <p className="profile-mini-hint">Вы вошли как <b>{userEmail}</b>. Прогресс сохраняется в облаке и доступен с любого устройства.</p>
+      <button className="profile-mini-edit" onClick={handleSignOut}>Выйти</button>
+    </>}
+    {status === "sent" && <p className="profile-mini-hint">Ссылка для входа отправлена на <b>{email}</b>. Открой её на этом или любом другом устройстве — прогресс подтянется автоматически.</p>}
+    {status === "signed-out" && <>
+      <p className="profile-mini-hint">Сейчас прогресс хранится только в этом браузере. Войди по email, чтобы он сохранился в облаке и был доступен с любого устройства.</p>
+      <form className="profile-account-form" onSubmit={submit}>
+        <input type="email" required placeholder="you@example.com" value={email} onChange={(event) => setEmail(event.target.value)}/>
+        <button className="profile-mini-edit" type="submit">Получить ссылку для входа</button>
+      </form>
+      {error && <p className="profile-account-error">{error}</p>}
+    </>}
+  </section>;
+}
+
 export function ProfilePage({ navigate }) {
   const [course] = useState(loadCourseDraft);
   const goLessonCount = flattenCourse(course).length;
@@ -238,6 +288,7 @@ export function ProfilePage({ navigate }) {
           </>}
         </aside>
         <div className="profile-mini-main">
+          <AccountSyncSection/>
           <section className="profile-mini-section">
             <h3>Прогресс по обучению</h3>
             {enrolledCourses.length ? enrolledCourses.map((item) => <button className="profile-mini-row" key={item.slug} onClick={() => navigate(item.path)}>

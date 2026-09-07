@@ -1,3 +1,5 @@
+import { pushState } from "./cloudSync.js";
+
 const STORAGE_KEY = "godemy-practice-log-v1";
 
 function toDateKey(date) {
@@ -20,6 +22,7 @@ function saveLog(log) {
   } catch {
     // ignore storage failures (private mode, quota) — practice still works, it just won't be remembered
   }
+  pushState(STORAGE_KEY, log);
 }
 
 export function recordPractice(courseSlug, now = new Date()) {
