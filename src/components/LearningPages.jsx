@@ -20,6 +20,7 @@ import { loadProfile, saveProfile } from "../lib/profile.js";
 import { achievementDefs, getUnlockedAchievements } from "../lib/achievements.js";
 import { downloadCertificate } from "../lib/certificate.js";
 import { lessonsLabel, topicsLabel } from "../lib/plural.js";
+import { getLessonFeedback, setLessonFeedback } from "../lib/lessonFeedback.js";
 import "../styles-profile.css";
 
 export function ProgressBar({ value, label = "Общий прогресс" }) {
@@ -339,6 +340,16 @@ export function StoryLesson({ sectionId = "intro", topicId = "welcome", lessonId
   const objectives = current.objectives?.length ? current.objectives : ["Понять основную идею урока", "Связать её с задачей проекта", "Проверить себя на небольшом примере"];
   const lessonBlocks = Array.isArray(current.blocks) ? current.blocks : [];
   const [completedIds, setCompletedIds] = useState(() => new Set(getCompletedLessonIds("go")));
+  const [feedbackState, setFeedbackState] = useState(() => ({ id: current.id, value: getLessonFeedback(current.id) }));
+  if (feedbackState.id !== current.id) {
+    setFeedbackState({ id: current.id, value: getLessonFeedback(current.id) });
+  }
+  const feedback = feedbackState.value;
+  const sendFeedback = (value) => {
+    const next = feedback === value ? null : value;
+    setFeedbackState({ id: current.id, value: next });
+    setLessonFeedback(current.id, next);
+  };
   const openLesson = (item) => {
     markLessonComplete("go", current.id);
     setCompletedIds((ids) => new Set(ids).add(current.id));
@@ -377,7 +388,11 @@ export function StoryLesson({ sectionId = "intro", topicId = "welcome", lessonId
       </section></>}
 
       <footer className="lesson-footer">
-        <button className="lesson-feedback">Полезно</button><button className="lesson-feedback">Непонятно</button>
+        <div className="lesson-feedback-group">
+          <button className={`lesson-feedback ${feedback === "useful" ? "active" : ""}`} aria-pressed={feedback === "useful"} onClick={() => sendFeedback("useful")}>Полезно</button>
+          <button className={`lesson-feedback ${feedback === "confusing" ? "active" : ""}`} aria-pressed={feedback === "confusing"} onClick={() => sendFeedback("confusing")}>Непонятно</button>
+          {feedback && <span className="lesson-feedback-thanks">Спасибо, учли</span>}
+        </div>
         <div className="lesson-pager">{previous && <button onClick={() => openLesson(previous)}><ArrowLeft size={17}/> Назад</button>}<button className="story-next" onClick={() => openLesson(next)}>{next ? "К следующему уроку" : "К проекту"} <ArrowRight size={17}/></button></div>
       </footer>
     </article>

@@ -168,7 +168,8 @@ body { min-width: 0; }
   letter-spacing: .08em;
 }
 .lesson-example h2 { margin-top: 10px; }
-.lesson-footer { justify-content: space-between; }
+.lesson-footer { display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: center; }
+.lesson-feedback-group { display: flex; align-items: center; gap: 10px; }
 .lesson-feedback {
   padding: 9px 12px !important;
   border:1px solid #dfe0e4 !important;
@@ -177,6 +178,8 @@ body { min-width: 0; }
   font-weight:500;font-size:12px;
 }
 .lesson-feedback:hover { background:#e2e3e6 !important; }
+.lesson-feedback.active { background: #4b3aeb !important; border-color: #4b3aeb !important; color: #fff !important; }
+.lesson-feedback-thanks { color: #5b6072; font-size: 12px; }
 .lesson-pager { display: flex; align-items: center; gap: 10px; margin-left: auto; }
 .lesson-pager > button:first-child {
   display: inline-flex;
