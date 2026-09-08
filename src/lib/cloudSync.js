@@ -22,8 +22,13 @@ export function pushState(key, value) {
   supabase.auth.getUser().then(({ data }) => {
     const user = data?.user;
     if (!user) return;
-    supabase.from("user_state").upsert({ user_id: user.id, key, value, updated_at: new Date().toISOString() }).then(() => {});
-  }).catch(() => {});
+    // PostgREST returns failures in `error` rather than rejecting, so a silent
+    // sync failure would otherwise be invisible — log it, but never throw:
+    // the local save already succeeded and must not be rolled back.
+    supabase.from("user_state")
+      .upsert({ user_id: user.id, key, value, updated_at: new Date().toISOString() })
+      .then(({ error }) => { if (error) console.warn(`[godemy] не удалось синхронизировать "${key}":`, error.message); });
+  }).catch((error) => console.warn("[godemy] синхронизация недоступна:", error.message));
 }
 
 function readLocal(key) {
