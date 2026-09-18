@@ -8,10 +8,13 @@ import { CourseEditor } from "./components/CourseEditor.jsx";
 import { EditorAuthGate } from "./components/EditorAuthGate.jsx";
 import { AcademyHub, PublicGoLanding, GoTrainer } from "./components/AcademyExperience.jsx";
 import { GoTask } from "./components/GoTask.jsx";
+import { getGoChallenge } from "./content/goChallenges.js";
 import { SqlCoursePage, SqlTask, SqlTrainer } from "./components/SqlExperience.jsx";
-import { PythonCoursePage, PythonTask, PythonTrainer } from "./components/PythonExperience.jsx";
+import { getSqlChallenge } from "./content/sqlChallenges.js";
+import { PythonCoursePage, PythonTask, PythonTrainer, getPythonChallenge } from "./components/PythonExperience.jsx";
 import { BusinessPracticeComing, ProductCoursePage, QaCoursePage } from "./components/BusinessCourses.jsx";
 import { QaTask, QaTrainer } from "./components/QaExperience.jsx";
+import { getQaChallenge } from "./content/qaChallenges.js";
 import { TermsPage, PrivacyPage } from "./components/LegalPages.jsx";
 
 function Logo({ onHome }) {
@@ -93,7 +96,17 @@ export function App() {
     };
     const sprint = route.match(/^\/go\/task-tracker\/sprint\/([1-4])$/);
     const courseLesson = route.match(/^\/go\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
-    document.title = courseLesson ? "Урок курса Основы Go — Godemy" : sprint ? `Спринт ${sprint[1]} · Task Tracker — Godemy` : titleByRoute[route] || "Godemy — обучение Go";
+    const goTask = route.match(/^\/(?:task|go\/practice)\/([^/]+)$/);
+    const sqlTask = route.match(/^\/sql\/practice\/([^/]+)$/);
+    const pythonTask = route.match(/^\/python\/practice\/([^/]+)$/);
+    const qaTask = route.match(/^\/qa\/practice\/([^/]+)$/);
+    document.title = courseLesson ? "Урок курса Основы Go — Godemy"
+      : sprint ? `Спринт ${sprint[1]} · Task Tracker — Godemy`
+      : goTask ? `${getGoChallenge(goTask[1]).title} — Godemy`
+      : sqlTask ? `${getSqlChallenge(sqlTask[1]).title} — Godemy`
+      : pythonTask ? `${getPythonChallenge(pythonTask[1]).title} — Godemy`
+      : qaTask ? `${getQaChallenge(qaTask[1]).title} — Godemy`
+      : titleByRoute[route] || "Godemy — обучение Go";
   }, [route]);
   const navigate = (target) => {
     const routes = { home: "/", course: "/go", trainer: "/go/practice", lesson: "/lesson", task: "/go/practice" };

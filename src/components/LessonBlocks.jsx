@@ -1,4 +1,5 @@
 import { getQuizAnswer, saveQuizAnswer } from "../lib/quizAnswers.js";
+import { getCheckedItems, toggleCheckedItem } from "../lib/taskChecklist.js";
 
 function safeExternalUrl(value, allowImage = false) {
   if (typeof value !== "string") return "";
@@ -58,8 +59,8 @@ function QuizBlock({ block }) {
 }
 
 function TaskBlock({ block }) {
-  const [done, setDone] = useState([]);
+  const [done, setDone] = useState(() => getCheckedItems(block.id));
   const items = (block.checklist || []).filter(Boolean);
-  return <section className="lesson-practice-task"><small>ПРАКТИКА</small><h3>{block.title}</h3><p><InlineText text={block.text}/></p>{items.map((item, index) => <label key={index}><input type="checkbox" checked={done.includes(index)} onChange={() => setDone((value) => value.includes(index) ? value.filter((itemIndex) => itemIndex !== index) : [...value, index])}/><span/>{item}</label>)}</section>;
+  return <section className="lesson-practice-task"><small>ПРАКТИКА</small><h3>{block.title}</h3><p><InlineText text={block.text}/></p>{items.map((item, index) => <label key={index}><input type="checkbox" checked={done.includes(index)} onChange={() => setDone(toggleCheckedItem(block.id, index))}/><span/>{item}</label>)}</section>;
 }
 import { useState } from "react";

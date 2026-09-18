@@ -350,6 +350,9 @@ export function SubscriptionPage() {
   const totalToday = period === "month" ? "1 990 ₽" : "15 000 ₽";
   const periodLabel = period === "month" ? "Ежемесячно" : "Ежегодно (−37%)";
   const [confirmed, setConfirmed] = useState(hasActiveSubscription);
+  const [course] = useState(loadCourseDraft);
+  const goLessonCount = flattenCourse(course).length;
+  const goComplete = goLessonCount > 0 && getCompletedCount("go") >= goLessonCount;
   const confirmSubscription = () => { activateSubscription(); setConfirmed(true); };
   return <main className="profile-shell"><div className="profile-content checkout-content">
     <div className="profile-header"><div><small>GODEMY · ПОДПИСКА</small><h1>Один тариф, полный доступ ко всем курсам</h1></div></div>
@@ -372,7 +375,7 @@ export function SubscriptionPage() {
         <div className="summary-row"><span>Период</span><span>{periodLabel}</span></div>
         <div className="summary-total"><span>Сегодня</span><span>{totalToday}</span></div>
         {confirmed
-          ? <p className="checkout-confirm">Подписка активирована. Сертификаты откроются после 100% прохождения курса.</p>
+          ? <p className="checkout-confirm">{goComplete ? "Подписка активирована. Сертификат уже доступен в профиле." : "Подписка активирована. Сертификаты откроются после 100% прохождения курса."}</p>
           : <button className="btn-primary checkout-submit" onClick={confirmSubscription}>Оформить подписку</button>}
         <small className="checkout-disclaimer">Демо-режим: оплата не списывается, это учебный проект.</small>
       </div>
