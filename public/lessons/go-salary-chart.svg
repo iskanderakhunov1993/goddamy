@@ -1,0 +1,19 @@
+<svg width="800" height="420" viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="420" fill="#0a0a23"/>
+  <text x="400" y="45" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">Зарплата Go-разработчика, ₽/мес (ориентировочно)</text>
+  <line x1="90" y1="380" x2="740" y2="380" stroke="#3a3f5c" stroke-width="1.5"/>
+
+  <rect x="140" y="322" width="120" height="58" fill="#4b3aeb" rx="6"/>
+  <text x="200" y="310" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" text-anchor="middle">80–150 тыс</text>
+  <text x="200" y="405" fill="#c9cce6" font-family="Arial, sans-serif" font-size="14" text-anchor="middle">Junior</text>
+
+  <rect x="360" y="255" width="120" height="125" fill="#6b5cff" rx="6"/>
+  <text x="420" y="243" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" text-anchor="middle">180–350 тыс</text>
+  <text x="420" y="405" fill="#c9cce6" font-family="Arial, sans-serif" font-size="14" text-anchor="middle">Middle</text>
+
+  <rect x="580" y="155" width="120" height="225" fill="#ffd300" rx="6"/>
+  <text x="640" y="143" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" text-anchor="middle">350–600+ тыс</text>
+  <text x="640" y="405" fill="#c9cce6" font-family="Arial, sans-serif" font-size="14" text-anchor="middle">Senior</text>
+
+  <text x="400" y="418" fill="#6b6f94" font-family="Arial, sans-serif" font-size="11" text-anchor="middle">По данным открытых зарплатных агрегаторов IT-рынка РФ, 2024–2025. Реальная цифра зависит от города, компании и портфолио.</text>
+</svg>

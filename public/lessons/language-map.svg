@@ -1,0 +1,44 @@
+<svg width="800" height="300" viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="300" fill="#0a0a23"/>
+  <g font-family="Arial, sans-serif">
+    <rect x="20" y="60" width="140" height="180" rx="12" fill="#14143a" stroke="#3a3f5c" stroke-width="1.5"/>
+    <text x="90" y="100" fill="#ffffff" font-size="20" font-weight="700" text-anchor="middle">C</text>
+    <text x="90" y="125" fill="#9aa0c3" font-size="12" text-anchor="middle">1972</text>
+    <circle cx="90" cy="160" r="18" fill="#4b3aeb"/>
+    <text x="90" y="165" fill="#fff" font-size="14" text-anchor="middle">⚙</text>
+    <text x="90" y="205" fill="#c9cce6" font-size="13" text-anchor="middle">Железо,</text>
+    <text x="90" y="222" fill="#c9cce6" font-size="13" text-anchor="middle">ОС, драйверы</text>
+
+    <rect x="180" y="60" width="140" height="180" rx="12" fill="#14143a" stroke="#3a3f5c" stroke-width="1.5"/>
+    <text x="250" y="100" fill="#ffffff" font-size="20" font-weight="700" text-anchor="middle">Python</text>
+    <text x="250" y="125" fill="#9aa0c3" font-size="12" text-anchor="middle">1991</text>
+    <circle cx="250" cy="160" r="18" fill="#4b3aeb"/>
+    <text x="250" y="165" fill="#fff" font-size="14" text-anchor="middle">≈</text>
+    <text x="250" y="205" fill="#c9cce6" font-size="13" text-anchor="middle">Данные,</text>
+    <text x="250" y="222" fill="#c9cce6" font-size="13" text-anchor="middle">автоматизация</text>
+
+    <rect x="340" y="60" width="140" height="180" rx="12" fill="#14143a" stroke="#3a3f5c" stroke-width="1.5"/>
+    <text x="410" y="100" fill="#ffffff" font-size="20" font-weight="700" text-anchor="middle">JS</text>
+    <text x="410" y="125" fill="#9aa0c3" font-size="12" text-anchor="middle">1995</text>
+    <circle cx="410" cy="160" r="18" fill="#4b3aeb"/>
+    <text x="410" y="165" fill="#fff" font-size="14" text-anchor="middle">▢</text>
+    <text x="410" y="205" fill="#c9cce6" font-size="13" text-anchor="middle">Браузер,</text>
+    <text x="410" y="222" fill="#c9cce6" font-size="13" text-anchor="middle">фронтенд</text>
+
+    <rect x="500" y="60" width="140" height="180" rx="12" fill="#14143a" stroke="#3a3f5c" stroke-width="1.5"/>
+    <text x="570" y="100" fill="#ffffff" font-size="20" font-weight="700" text-anchor="middle">Java</text>
+    <text x="570" y="125" fill="#9aa0c3" font-size="12" text-anchor="middle">1995</text>
+    <circle cx="570" cy="160" r="18" fill="#4b3aeb"/>
+    <text x="570" y="165" fill="#fff" font-size="14" text-anchor="middle">🏢</text>
+    <text x="570" y="205" fill="#c9cce6" font-size="13" text-anchor="middle">Корпоративный</text>
+    <text x="570" y="222" fill="#c9cce6" font-size="13" text-anchor="middle">бэкенд</text>
+
+    <rect x="660" y="60" width="120" height="180" rx="12" fill="#1c1a4a" stroke="#ffd300" stroke-width="2"/>
+    <text x="720" y="100" fill="#ffffff" font-size="20" font-weight="700" text-anchor="middle">Go</text>
+    <text x="720" y="125" fill="#ffd300" font-size="12" text-anchor="middle">2009</text>
+    <circle cx="720" cy="160" r="18" fill="#ffd300"/>
+    <text x="720" y="165" fill="#0a0a23" font-size="14" text-anchor="middle">☁</text>
+    <text x="720" y="205" fill="#ffffff" font-size="13" text-anchor="middle">Облачный</text>
+    <text x="720" y="222" fill="#ffffff" font-size="13" text-anchor="middle">бэкенд</text>
+  </g>
+</svg>
