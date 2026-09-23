@@ -1,5 +1,62 @@
 import { getQuizAnswer, saveQuizAnswer } from "../lib/quizAnswers.js";
 import { getCheckedItems, toggleCheckedItem } from "../lib/taskChecklist.js";
+import { runGoProgram } from "../lib/goPlayground.js";
+
+// A code block is runnable as-is only if it's a complete program, or if it's
+// a plain sequence of statements with no top-level func/type declaration —
+// those can be safely wrapped in a synthetic main(). A snippet that declares
+// a func or type (most lesson examples) needs a caller/harness the lesson
+// doesn't provide, so running it naively would just show a confusing
+// compiler error about a missing func main — better to leave it copy-only.
+// A lesson snippet demonstrating "here's how you declare a variable" is
+// often never read afterward within the same fragment — Go would reject
+// that as "declared and not used". Only top-level (non-indented) lines are
+// scanned so loop/if-scoped variables from `for i := range ...` are never
+// touched — referencing those after their block closes would itself be a
+// compile error the snippet didn't have before wrapping.
+function extractTopLevelNames(code) {
+  const names = new Set();
+  for (const line of code.split("\n")) {
+    if (/^\s/.test(line)) continue;
+    const shortDecl = line.match(/^([A-Za-z_][\w]*(?:\s*,\s*[A-Za-z_]\w*)*)\s*:=/);
+    const varDecl = line.match(/^var\s+([A-Za-z_][\w]*(?:\s*,\s*[A-Za-z_]\w*)*)\s/);
+    const match = shortDecl || varDecl;
+    if (!match) continue;
+    match[1].split(",").map((part) => part.trim()).filter((name) => name && name !== "_").forEach((name) => names.add(name));
+  }
+  return [...names];
+}
+
+const KNOWN_PACKAGES = {
+  fmt: "fmt", os: "os", strconv: "strconv", errors: "errors", log: "log",
+  strings: "strings", time: "time", math: "math", sort: "sort", bytes: "bytes",
+  bufio: "bufio", json: "encoding/json",
+};
+
+// Snippets verified NOT to compile standalone once wrapped — they reference
+// a variable or function declared in a *different* code block of the same
+// lesson (e.g. `addTask` defined two blocks earlier), or need a live
+// database/network connection. Ground-truthed once with the local Go
+// compiler rather than guessed; re-run the same check if lesson content
+// changes. Keyed by the block's own id (`${lessonId}-b${indexInLesson}`,
+// assigned in content/courseCurriculum.js).
+const NOT_SELF_CONTAINED = new Set([
+  "go-foundations-go-core-3-b1", "go-foundations-go-core-3-b3", "go-foundations-go-core-3-b6",
+  "go-foundations-data-model-3-b4", "go-foundations-quality-5-b1", "go-foundations-database-basics-5-b3",
+  "project-task-tracker-task-cli-2-b3", "project-task-tracker-task-cli-5-b1",
+]);
+
+function buildRunnableSource(code, blockId) {
+  if (NOT_SELF_CONTAINED.has(blockId)) return null;
+  const trimmed = code.trim();
+  if (/package\s+main/.test(trimmed) && /func\s+main\s*\(/.test(trimmed)) return trimmed;
+  if (/^\s*(func|type)\s/m.test(trimmed) || trimmed.startsWith("import")) return null;
+  const usedPackages = Object.keys(KNOWN_PACKAGES).filter((pkg) => new RegExp(`\\b${pkg}\\.`).test(trimmed));
+  const imports = usedPackages.map((pkg) => `\t"${KNOWN_PACKAGES[pkg]}"`).join("\n");
+  const indented = trimmed.split("\n").map((line) => (line ? `\t${line}` : line)).join("\n");
+  const keepAlive = extractTopLevelNames(trimmed).map((name) => `\t_ = ${name}`).join("\n");
+  return `package main\n\n${imports ? `import (\n${imports}\n)\n\n` : ""}func main() {\n${indented}\n${keepAlive}\n}`;
+}
 
 function safeExternalUrl(value, allowImage = false) {
   if (typeof value !== "string") return "";
@@ -51,6 +108,10 @@ function InlineText({ text = "" }) {
 
 function CodeBlock({ block }) {
   const [copied, setCopied] = useState(false);
+  const [run, setRun] = useState(null); // null | { busy } | { status, stdout, message }
+  const isGo = !block.language || block.language === "go";
+  const runnableSource = isGo ? buildRunnableSource(block.code || "", block.id) : null;
+
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(block.code || "");
@@ -60,7 +121,30 @@ function CodeBlock({ block }) {
       setCopied(false);
     }
   };
-  return <figure className="lesson-code-block"><figcaption><span>{block.language || "code"}</span><button type="button" onClick={copy}>{copied ? "Скопировано" : "Копировать"}</button></figcaption><pre><code>{block.code || ""}</code></pre></figure>;
+
+  const execute = async () => {
+    setRun({ busy: true });
+    try {
+      const result = await runGoProgram(runnableSource);
+      setRun(result);
+    } catch (error) {
+      setRun({ status: "network-error", stdout: "", message: error.message });
+    }
+  };
+
+  return <figure className="lesson-code-block">
+    <figcaption>
+      <span>{block.language || "code"}</span>
+      <span className="lesson-code-actions">
+        {runnableSource && <button type="button" onClick={execute} disabled={run?.busy}>{run?.busy ? "Выполняется…" : "Запустить"}</button>}
+        <button type="button" onClick={copy}>{copied ? "Скопировано" : "Копировать"}</button>
+      </span>
+    </figcaption>
+    <pre><code>{block.code || ""}</code></pre>
+    {run && !run.busy && <div className={`lesson-code-output ${run.status === "ok" ? "success" : "error"}`}>
+      <pre>{run.status === "ok" ? (run.stdout || "(пустой вывод)") : run.message}</pre>
+    </div>}
+  </figure>;
 }
 
 function QuizBlock({ block }) {
