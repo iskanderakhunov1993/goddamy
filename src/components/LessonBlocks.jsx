@@ -28,7 +28,7 @@ export function LessonBlocks({ blocks }) {
       const href = safeExternalUrl(block.url);
       return href ? <p className="lesson-resource" key={block.id}><a href={href} target="_blank" rel="noreferrer">{block.text || href}</a></p> : null;
     }
-    if (block.type === "code") return <figure className="lesson-code-block" key={block.id}><figcaption>{block.language || "code"}</figcaption><pre><code>{block.code || ""}</code></pre></figure>;
+    if (block.type === "code") return <CodeBlock block={block} key={block.id}/>;
     if (block.type === "callout") return <aside className={`lesson-callout ${block.tone || "info"}`} key={block.id}><b>{block.title}</b><p><InlineText text={block.text}/></p></aside>;
     if (block.type === "quiz") return <QuizBlock block={block} key={block.id}/>;
     if (block.type === "task") return <TaskBlock block={block} key={block.id}/>;
@@ -38,14 +38,29 @@ export function LessonBlocks({ blocks }) {
 }
 
 function InlineText({ text = "" }) {
-  const parts = String(text).split(/(\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\(https?:\/\/[^)]+\))/g).filter(Boolean);
+  const parts = String(text).split(/(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\(https?:\/\/[^)]+\))/g).filter(Boolean);
   return parts.map((part, index) => {
+    if (part.length > 2 && part.startsWith("`") && part.endsWith("`")) return <code className="inline-code" key={index}>{part.slice(1, -1)}</code>;
     if (part.startsWith("**") && part.endsWith("**")) return <strong key={index}>{part.slice(2, -2)}</strong>;
     if (part.startsWith("*") && part.endsWith("*")) return <em key={index}>{part.slice(1, -1)}</em>;
     const link = part.match(/^\[([^\]]+)\]\((https?:\/\/[^)]+)\)$/);
     if (link) return <a key={index} href={safeExternalUrl(link[2])} target="_blank" rel="noreferrer">{link[1]}</a>;
     return part;
   });
+}
+
+function CodeBlock({ block }) {
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(block.code || "");
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {
+      setCopied(false);
+    }
+  };
+  return <figure className="lesson-code-block"><figcaption><span>{block.language || "code"}</span><button type="button" onClick={copy}>{copied ? "Скопировано" : "Копировать"}</button></figcaption><pre><code>{block.code || ""}</code></pre></figure>;
 }
 
 function QuizBlock({ block }) {
