@@ -1,10 +1,12 @@
 import { useMemo, useState } from "react";
 import {
   ArrowLeft, ArrowRight, CheckCircle, MagnifyingGlass, Play,
-  SlidersHorizontal,
+  SlidersHorizontal, XCircle,
 } from "@phosphor-icons/react";
 import "../styles-sql.css";
 import { CourseCabinet } from "./CourseCabinet.jsx";
+import { checkSolution, runPythonProgram, assembleSource } from "../lib/pyodidePlayground.js";
+import { recordPractice } from "../lib/activity.js";
 
 export const pythonModules = [
   { n: "01", title: "Старт и базовый синтаксис", text: "Настройте Python, запустите первую программу и освойте переменные.", topics: ["Среда и первый запуск", "Переменные", "Числа и строки", "Ввод и вывод", "Функции"] },
@@ -16,15 +18,78 @@ export const pythonModules = [
 ];
 
 export const pythonChallenges = [
-  { id: "clean-name", title: "Нормализация имени", category: "Строки", level: "Лёгкая", minutes: 7, description: "Очистите пробелы и приведите имя клиента к аккуратному виду.", starter: "def clean_name(value: str) -> str:\n    # ваш код\n    return value", token: ".strip()", hint: "Сначала используйте strip(), затем title().", result: "Анна Петрова" },
-  { id: "transaction-fee", title: "Комиссия операции", category: "Условия", level: "Лёгкая", minutes: 9, description: "Рассчитайте комиссию с учётом минимального значения.", starter: "def fee(amount: float) -> float:\n    # ваш код\n    return 0", token: "max(", hint: "Функция max поможет выбрать процент или минимальную комиссию.", result: "125.0" },
-  { id: "positive-total", title: "Сумма пополнений", category: "Списки", level: "Лёгкая", minutes: 10, description: "Сложите только положительные операции из списка.", starter: "def deposits(values: list[int]) -> int:\n    # ваш код\n    return 0", token: "sum(", hint: "Передайте в sum генератор с условием value > 0.", result: "48200" },
-  { id: "currency-counter", title: "Счётчик валют", category: "Словари", level: "Средняя", minutes: 14, description: "Посчитайте количество операций в каждой валюте.", starter: "def count_currencies(items: list[str]) -> dict[str, int]:\n    result = {}\n    # ваш код\n    return result", token: ".get(", hint: "Получайте текущее значение через dict.get(key, 0).", result: "{'BTC': 3, 'ETH': 2, 'USDT': 4}" },
-  { id: "parse-records", title: "Разбор JSON-операций", category: "JSON", level: "Средняя", minutes: 17, description: "Прочитайте JSON и верните только валидные операции.", starter: "import json\n\ndef parse_records(raw: str) -> list[dict]:\n    # ваш код\n    return []", token: "json.loads", hint: "Используйте json.loads и перехватите JSONDecodeError.", result: "3 валидные операции" },
-  { id: "safe-rate", title: "Безопасный курс валют", category: "Ошибки", level: "Средняя", minutes: 16, description: "Обработайте отсутствие курса без падения отчёта.", starter: "def convert(amount: float, rates: dict, currency: str) -> float:\n    # ваш код\n    return 0", token: "raise", hint: "Явно проверьте наличие валюты и поднимите ValueError.", result: "ValueError: unknown currency" },
-  { id: "wallet-class", title: "Модель кошелька", category: "Классы", level: "Средняя", minutes: 20, description: "Создайте класс кошелька с пополнением и проверкой баланса.", starter: "class Wallet:\n    def __init__(self, balance: int = 0):\n        # ваш код\n        pass", token: "self.balance", hint: "Сохраните balance в экземпляре и добавьте метод deposit.", result: "Wallet(balance=1500)" },
-  { id: "report-pipeline", title: "Конвейер отчёта", category: "Функции", level: "Сложная", minutes: 26, description: "Свяжите очистку, группировку и форматирование данных.", starter: "def build_report(rows: list[dict]) -> str:\n    # ваш код\n    return ''", token: "sorted(", hint: "Разделите решение на маленькие функции и отсортируйте итог.", result: "Отчёт сформирован · 4 категории" },
-  { id: "csv-summary", title: "Сводка из CSV", category: "Файлы", level: "Сложная", minutes: 28, description: "Прочитайте CSV-поток и соберите итог без загрузки всего файла в память.", starter: "import csv\n\ndef summarize(stream) -> dict:\n    # ваш код\n    return {}", token: "csv.DictReader", hint: "Итерируйтесь по csv.DictReader построчно.", result: "12 540 строк обработано" },
+  {
+    id: "clean-name", title: "Нормализация имени", category: "Строки", level: "Лёгкая", minutes: 7,
+    description: "Очистите пробелы и приведите имя клиента к аккуратному виду.",
+    starter: "def clean_name(value: str) -> str:\n    # ваш код\n    return value",
+    harness: "print(repr(clean_name(\"  анна петрова  \")))\nprint(repr(clean_name(\"ИВАН\")))\nprint(repr(clean_name(\"\")))",
+    referenceSolution: "def clean_name(value: str) -> str:\n    return value.strip().title()",
+    hint: "Сначала используйте strip(), затем title().",
+  },
+  {
+    id: "transaction-fee", title: "Комиссия операции", category: "Условия", level: "Лёгкая", minutes: 9,
+    description: "Комиссия — 2% от суммы, но не меньше 50.",
+    starter: "def fee(amount: float) -> float:\n    # ваш код\n    return 0",
+    harness: "print(fee(100))\nprint(fee(10000))\nprint(fee(2500))",
+    referenceSolution: "def fee(amount: float) -> float:\n    return max(amount * 0.02, 50.0)",
+    hint: "Функция max поможет выбрать процент или минимальную комиссию.",
+  },
+  {
+    id: "positive-total", title: "Сумма пополнений", category: "Списки", level: "Лёгкая", minutes: 10,
+    description: "Сложите только положительные операции из списка.",
+    starter: "def deposits(values: list[int]) -> int:\n    # ваш код\n    return 0",
+    harness: "print(deposits([100, -50, 200, -10, 5]))\nprint(deposits([]))\nprint(deposits([-1, -2]))",
+    referenceSolution: "def deposits(values: list[int]) -> int:\n    return sum(v for v in values if v > 0)",
+    hint: "Передайте в sum генератор с условием value > 0.",
+  },
+  {
+    id: "currency-counter", title: "Счётчик валют", category: "Словари", level: "Средняя", minutes: 14,
+    description: "Посчитайте количество операций в каждой валюте.",
+    starter: "def count_currencies(items: list[str]) -> dict[str, int]:\n    result = {}\n    # ваш код\n    return result",
+    harness: "result = count_currencies([\"BTC\", \"ETH\", \"BTC\", \"USDT\", \"BTC\"])\nfor key in sorted(result):\n    print(key, result[key])",
+    referenceSolution: "def count_currencies(items: list[str]) -> dict[str, int]:\n    result = {}\n    for item in items:\n        result[item] = result.get(item, 0) + 1\n    return result",
+    hint: "Получайте текущее значение через dict.get(key, 0).",
+  },
+  {
+    id: "parse-records", title: "Разбор JSON-операций", category: "JSON", level: "Средняя", minutes: 17,
+    description: "Прочитайте JSON и верните только записи с полем amount. Невалидный JSON — пустой список.",
+    starter: "import json\n\ndef parse_records(raw: str) -> list[dict]:\n    # ваш код\n    return []",
+    harness: "print(len(parse_records('[{\"amount\": 100}, {\"note\": \"no amount\"}, {\"amount\": 50}]')))\nprint(parse_records('not json'))",
+    referenceSolution: "import json\n\ndef parse_records(raw: str) -> list[dict]:\n    try:\n        data = json.loads(raw)\n    except json.JSONDecodeError:\n        return []\n    if not isinstance(data, list):\n        return []\n    return [item for item in data if isinstance(item, dict) and \"amount\" in item]",
+    hint: "Используйте json.loads внутри try/except и перехватите JSONDecodeError.",
+  },
+  {
+    id: "safe-rate", title: "Безопасный курс валют", category: "Ошибки", level: "Средняя", minutes: 16,
+    description: "Переведите сумму по курсу. Неизвестная валюта — понятная ошибка, а не падение по KeyError.",
+    starter: "def convert(amount: float, rates: dict, currency: str) -> float:\n    # ваш код\n    return 0",
+    harness: "rates = {\"USD\": 90, \"EUR\": 98}\nprint(convert(10, rates, \"USD\"))\ntry:\n    convert(10, rates, \"GBP\")\nexcept ValueError as e:\n    print(\"caught:\", e)",
+    referenceSolution: "def convert(amount: float, rates: dict, currency: str) -> float:\n    if currency not in rates:\n        raise ValueError(f\"unknown currency: {currency}\")\n    return amount * rates[currency]",
+    hint: "Явно проверьте наличие валюты и поднимите ValueError с понятным текстом.",
+  },
+  {
+    id: "wallet-class", title: "Модель кошелька", category: "Классы", level: "Средняя", minutes: 20,
+    description: "Создайте класс кошелька с пополнением и списанием, без ухода в минус.",
+    starter: "class Wallet:\n    def __init__(self, balance: int = 0):\n        # ваш код\n        pass",
+    harness: "w = Wallet(100)\nw.deposit(50)\nprint(w.balance)\nprint(w.withdraw(30))\nprint(w.balance)\nprint(w.withdraw(1000))\nprint(w.balance)",
+    referenceSolution: "class Wallet:\n    def __init__(self, balance: int = 0):\n        self.balance = balance\n\n    def deposit(self, amount: int) -> None:\n        self.balance += amount\n\n    def withdraw(self, amount: int) -> bool:\n        if amount > self.balance:\n            return False\n        self.balance -= amount\n        return True",
+    hint: "Сохраните balance в экземпляре; withdraw должен возвращать False и не менять баланс, если денег не хватает.",
+  },
+  {
+    id: "report-pipeline", title: "Конвейер отчёта", category: "Функции", level: "Сложная", minutes: 26,
+    description: "Сгруппируйте операции по категории и верните отсортированный текстовый отчёт.",
+    starter: "def build_report(rows: list[dict]) -> str:\n    # ваш код\n    return ''",
+    harness: "rows = [{\"category\": \"food\", \"amount\": 100}, {\"category\": \"transport\", \"amount\": 40}, {\"category\": \"food\", \"amount\": 25}]\nprint(build_report(rows))\nprint(repr(build_report([])))",
+    referenceSolution: "def build_report(rows: list[dict]) -> str:\n    totals: dict[str, int] = {}\n    for row in rows:\n        totals[row[\"category\"]] = totals.get(row[\"category\"], 0) + row[\"amount\"]\n    lines = [f\"{category}: {totals[category]}\" for category in sorted(totals)]\n    return \"\\n\".join(lines)",
+    hint: "Разделите решение на группировку в словарь и сборку отсортированных строк.",
+  },
+  {
+    id: "csv-summary", title: "Сводка из CSV", category: "Файлы", level: "Сложная", minutes: 28,
+    description: "Прочитайте CSV-поток и соберите количество строк и сумму колонки amount.",
+    starter: "import csv\n\ndef summarize(stream) -> dict:\n    # ваш код\n    return {}",
+    harness: "import io\ncsv_text = \"amount\\n100\\n250\\n50\\n\"\nresult = summarize(io.StringIO(csv_text))\nprint(result[\"count\"], result[\"total\"])",
+    referenceSolution: "import csv\n\ndef summarize(stream) -> dict:\n    reader = csv.DictReader(stream)\n    total = 0.0\n    count = 0\n    for row in reader:\n        total += float(row[\"amount\"])\n        count += 1\n    return {\"count\": count, \"total\": total}",
+    hint: "Итерируйтесь по csv.DictReader построчно, не загружая всё содержимое заранее.",
+  },
 ];
 
 export const getPythonChallenge = (id) => pythonChallenges.find((item) => item.id === id) || pythonChallenges[0];
@@ -45,7 +110,89 @@ export function PythonTrainer({ navigate }) {
 }
 
 export function PythonTask({ challengeId, navigate }) {
-  const challenge = getPythonChallenge(challengeId); const [code, setCode] = useState(challenge.starter); const [state, setState] = useState("idle");
-  const run = () => setState(code.includes(challenge.token) ? "success" : "error");
-  return <main className="sql-task-shell python-task-shell"><header><button onClick={() => navigate("/python/practice")}><ArrowLeft size={17}/> Все задачи</button><span>Python · 3.13</span><button onClick={() => navigate("/python")}>Программа курса</button></header><div className="sql-task-grid"><section className="sql-task-brief"><p className="academy-kicker">{challenge.level.toUpperCase()} · {challenge.minutes} МИН</p><h1>{challenge.title}</h1><p>{challenge.description}</p><div className="python-tests"><small>АВТОПРОВЕРКА</small><b>Обычный сценарий</b><span>Проверяет ожидаемый результат</span><b>Граничный сценарий</b><span>Проверяет пустые и ошибочные данные</span><b>Читаемость</b><span>Сохраняет публичный контракт функции</span></div><button onClick={() => setState("hint")}>Показать подсказку</button>{state === "hint" && <aside>{challenge.hint}</aside>}</section><section className="sql-editor"><div className="sql-editor-top"><b>solution.py</b><span>Учебная среда Godemy</span></div><textarea value={code} onChange={(event) => { setCode(event.target.value); setState("idle"); }} spellCheck="false" aria-label="Редактор Python-кода"/><div className="sql-runbar"><button onClick={() => setCode(challenge.starter)}>Сбросить</button><button onClick={run}><Play size={15} weight="fill"/> Запустить тесты</button></div><div className={`sql-result ${state}`}><header><b>Результат</b><span>{state === "success" ? "3 проверки" : "Консоль"}</span></header>{state === "success" ? <div className="python-test-result"><p>✓ Базовый сценарий пройден</p><p>✓ Граничный сценарий пройден</p><p>✓ Результат: {challenge.result}</p></div> : <p>{state === "error" ? `Проверка пока не пройдена. ${challenge.hint}` : "Запустите тесты, чтобы проверить решение."}</p>}</div></section></div></main>;
+  const challenge = getPythonChallenge(challengeId);
+  const [code, setCode] = useState(challenge.starter);
+  const [tab, setTab] = useState("result");
+  const [showHint, setShowHint] = useState(false);
+  const [run, setRun] = useState({ status: "idle", stdout: "", message: "" });
+  const [busy, setBusy] = useState(false);
+  const [loadMessage, setLoadMessage] = useState("");
+
+  const withLoadMessage = async (action) => {
+    setBusy(true);
+    setTab("result");
+    recordPractice("python");
+    setLoadMessage("Загружаем Python в браузер (только при первом запуске)…");
+    const timer = setTimeout(() => setLoadMessage("Выполняем код…"), 1500);
+    try {
+      await action();
+    } finally {
+      clearTimeout(timer);
+      setBusy(false);
+      setLoadMessage("");
+    }
+  };
+
+  const execute = () => withLoadMessage(async () => {
+    try {
+      const result = await runPythonProgram(assembleSource(code, challenge.harness));
+      setRun({ status: result.status === "ok" ? "ran" : result.status, stdout: result.stdout, message: result.message });
+    } catch (error) {
+      setRun({ status: "network-error", stdout: "", message: error.message });
+    }
+  });
+
+  const submit = () => withLoadMessage(async () => {
+    try {
+      const result = await checkSolution(challenge, code);
+      setRun({
+        status: result.status === "ok" ? (result.matched ? "success" : "mismatch") : result.status,
+        stdout: result.stdout,
+        message: result.message,
+      });
+    } catch (error) {
+      setRun({ status: "network-error", stdout: "", message: error.message });
+    }
+  });
+
+  const resultTone = run.status === "success" ? "success" : ["mismatch", "compile-error", "runtime-error", "network-error"].includes(run.status) ? "error" : "";
+
+  return <main className="sql-task-shell python-task-shell">
+    <header><button onClick={() => navigate("/python/practice")}><ArrowLeft size={17}/> Все задачи</button><span>Python · Pyodide (CPython в браузере)</span><button onClick={() => navigate("/python")}>Программа курса</button></header>
+    <div className="sql-task-grid">
+      <section className="sql-task-brief">
+        <p className="academy-kicker">{challenge.level.toUpperCase()} · {challenge.minutes} МИН · {challenge.category.toUpperCase()}</p>
+        <h1>{challenge.title}</h1>
+        <p>{challenge.description}</p>
+        <button onClick={() => setShowHint((value) => !value)}>{showHint ? "Скрыть подсказку" : "Показать подсказку"}</button>
+        {showHint && <aside>{challenge.hint}</aside>}
+      </section>
+      <section className="sql-editor">
+        <div className="sql-editor-top"><b>solution.py</b><span>Pyodide</span></div>
+        <textarea value={code} onChange={(event) => setCode(event.target.value)} spellCheck="false" aria-label="Редактор Python-кода"/>
+        <div className="sql-runbar">
+          <button onClick={() => setCode(challenge.starter)}>Сбросить</button>
+          <button className="secondary" onClick={execute} disabled={busy}><Play size={15} weight="fill"/> Выполнить</button>
+          <button className="primary" onClick={submit} disabled={busy}>Отправить <ArrowRight size={16}/></button>
+        </div>
+        <div className="sql-result-tabs">
+          <button className={tab === "result" ? "active" : ""} onClick={() => setTab("result")}>Результат</button>
+          <button className={tab === "harness" ? "active" : ""} onClick={() => setTab("harness")}>Что вызывается</button>
+        </div>
+        <div className={`sql-result ${resultTone}`}>
+          {tab === "harness"
+            ? <><header><b>Тестовый вызов</b><span>только для чтения</span></header><pre className="sql-error-text" style={{ color: "#b8efdb" }}>{challenge.harness}</pre></>
+            : <>
+                <header><b>Результат</b><span>{busy ? "Выполняется…" : run.status === "idle" ? "Предпросмотр" : run.status}</span></header>
+                {busy && <p>{loadMessage}</p>}
+                {!busy && run.status === "idle" && <p>Нажмите «Выполнить», чтобы увидеть вывод программы.</p>}
+                {!busy && (run.status === "compile-error" || run.status === "runtime-error" || run.status === "network-error") && <pre className="sql-error-text">{run.message}</pre>}
+                {!busy && (run.status === "ran" || run.status === "success" || run.status === "mismatch") && <pre className="sql-error-text" style={{ color: "#eaf4f0" }}>{run.stdout || "(пустой вывод)"}</pre>}
+              </>}
+          {run.status === "success" && <div className="sql-verdict success"><CheckCircle size={18}/> Верно — вывод совпал с эталонным решением.</div>}
+          {run.status === "mismatch" && <div className="sql-verdict error"><XCircle size={18}/> Код выполнился, но вывод пока не совпадает. {challenge.hint}</div>}
+        </div>
+      </section>
+    </div>
+  </main>;
 }
