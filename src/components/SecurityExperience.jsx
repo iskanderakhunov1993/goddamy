@@ -11,6 +11,7 @@ import {
   securityLessonPath, securityPlannedModules,
 } from "../content/security/curriculum.js";
 import { getSecurityChallenge, securityChallenges } from "../content/security/challenges.js";
+import { PROJECT_SLUG, securityProject, securityProjectStages } from "../content/security/project.js";
 import { checkSolution, runPythonProgram, assembleSource } from "../lib/pyodidePlayground.js";
 import { getCompletedCount, getCompletedLessonIds, markLessonComplete } from "../lib/progress.js";
 import { getLessonFeedback, setLessonFeedback } from "../lib/lessonFeedback.js";
@@ -30,6 +31,7 @@ export function SecurityCoursePage({ navigate }) {
   const percent = total ? Math.round((done / total) * 100) : 0;
   const nextLesson = securityFlatLessons.find((lesson) => !completed.has(lesson.id));
   const solved = getCompletedCount(SECURITY_PRACTICE_SLUG);
+  const doneSprints = new Set(getCompletedLessonIds(PROJECT_SLUG));
   const start = () => navigate(securityLessonPath(nextLesson || securityFlatLessons[0]));
 
   return <main className="course-dashboard course-dashboard-security">
@@ -58,12 +60,12 @@ export function SecurityCoursePage({ navigate }) {
           <ul>
             <li><BookOpen size={16}/> {lessonsLabel(total)} в 2 теоретических модулях</li>
             <li><Code size={16}/> {securityChallenges.length} задач «исправь уязвимость»</li>
-            <li><ShieldCheck size={16}/> Проект «Заметки» — в разработке</li>
+            <li><ShieldCheck size={16}/> Проект «Заметки»: {securityProject.sprints.length} спринта, проверка скриптом</li>
           </ul>
         </div>
       </section>
 
-      <div className="course-prog"><span className="course-prog-pill">{percent}%</span><div className="course-prog-track"><span style={{ width: `${percent}%` }}/></div><span className="course-prog-label">{done} / {total} уроков · {solved} / {securityChallenges.length} задач</span></div>
+      <div className="course-prog"><span className="course-prog-pill">{percent}%</span><div className="course-prog-track"><span style={{ width: `${percent}%` }}/></div><span className="course-prog-label">{done} / {total} уроков · {solved} / {securityChallenges.length} задач · {[...doneSprints].filter((id) => id.startsWith("sprint-")).length} / {securityProject.sprints.length} спринтов</span></div>
 
       <section className="dashboard-program">
         <h2 className="course-syllabus-heading">Программа курса</h2>
@@ -86,12 +88,22 @@ export function SecurityCoursePage({ navigate }) {
             </article>;
           })}
           {securityPlannedModules.map((module, index) => <article className="sec-module planned" key={module.id}>
-            <button className="sec-module-head" disabled={!module.ready} onClick={() => module.path && navigate(module.path)}>
+            <button className="sec-module-head" onClick={() => navigate(module.path)}>
               <span className="sec-module-num">{String(securityCurriculum.length + index + 1).padStart(2, "0")}</span>
               <span className="sec-module-title"><b>{module.title}</b><small>{module.summary}</small></span>
-              <span className="sec-module-meta">{module.ready ? <>Открыть <ArrowRight size={13}/></> : "В плане"}</span>
+              <span className="sec-module-meta">Открыть <ArrowRight size={13}/></span>
             </button>
           </article>)}
+          <article className={`sec-module ${openModule === "project" ? "open" : ""}`}>
+            <button className="sec-module-head" onClick={() => setOpenModule(openModule === "project" ? null : "project")} aria-expanded={openModule === "project"}>
+              <span className="sec-module-num">{String(securityCurriculum.length + securityPlannedModules.length + 1).padStart(2, "0")}</span>
+              <span className="sec-module-title"><b>{securityProject.title}</b><small>Запускаешь уязвимое приложение у себя и закрываешь девять уязвимостей. Проверка: скрипт check.py.</small></span>
+              <span className="sec-module-meta">ПРОЕКТ · {[...doneSprints].filter((id) => id.startsWith("sprint-")).length}/{securityProject.sprints.length}</span>
+            </button>
+            {openModule === "project" && <div className="sec-topics"><div className="sec-topic"><h3>Этапы</h3><ul>
+              {securityProjectStages.map((stage) => <li key={stage.id}><button onClick={() => navigate(stage.path)}><span className={`sec-check ${doneSprints.has(stage.id) ? "done" : ""}`}>{doneSprints.has(stage.id) && <Check size={12} weight="bold"/>}</span>{stage.title}</button></li>)}
+            </ul></div></div>}
+          </article>
         </div>
       </section>
     </div>
@@ -247,4 +259,59 @@ export function SecurityTask({ challengeId, navigate }) {
       </section>
     </div>
   </main>;
+}
+
+function withOrigin(blocks) {
+  const origin = typeof window === "undefined" ? "" : window.location.origin;
+  return blocks.map((block) => (block.type === "code" && block.code.includes("{ORIGIN}") ? { ...block, code: block.code.replaceAll("{ORIGIN}", origin) } : block));
+}
+
+export function SecurityProject({ stageId, navigate }) {
+  const stages = securityProjectStages;
+  const index = Math.max(0, stages.findIndex((stage) => stage.id === stageId));
+  const stage = stages[index];
+  const sprint = securityProject.sprints.find((item) => `sprint-${item.number}` === stage.id);
+  const page = sprint || (stage.id === "setup" ? securityProject.setup : securityProject.overview);
+  const [completed, setCompleted] = useState(() => new Set(getCompletedLessonIds(PROJECT_SLUG)));
+  const previous = stages[index - 1];
+  const next = stages[index + 1];
+  const finish = () => {
+    if (sprint) { markLessonComplete(PROJECT_SLUG, stage.id); setCompleted((ids) => new Set(ids).add(stage.id)); }
+    navigate(next ? next.path : "/security");
+  };
+  const origin = typeof window === "undefined" ? "" : window.location.origin;
+
+  return <div className="learning-layout">
+    <aside className="stage-sidebar" aria-label="Этапы проекта">
+      <button className="stage-course-link" onClick={() => navigate("/security")}><ArrowLeft size={16}/> К курсу</button>
+      <small>ПРОЕКТ</small>
+      <h2>Заметки</h2>
+      <nav>{stages.map((item) => <button key={item.id} className={item.id === stage.id ? "active" : ""} aria-current={item.id === stage.id ? "page" : undefined} onClick={() => navigate(item.path)}>
+        {completed.has(item.id) ? <CheckCircle size={18} weight="fill"/> : <span className="sec-stage-dot"/>}<span>{item.title}</span></button>)}</nav>
+    </aside>
+    <div className="mobile-stage-nav">
+      <span>{index + 1} / {stages.length}</span>
+      <select aria-label="Текущий этап" value={stage.id} onChange={(event) => navigate(stages.find((item) => item.id === event.target.value).path)}>
+        {stages.map((item) => <option value={item.id} key={item.id}>{item.title}</option>)}
+      </select>
+    </div>
+    <main className="learning-main"><article className="learning-article">
+      <header className="learning-header">
+        <small>{sprint ? `СПРИНТ ${sprint.number} ИЗ ${securityProject.sprints.length} · ${sprint.time.toUpperCase()}` : "ПРОЕКТ КУРСА"}</small>
+        <h1>{sprint ? sprint.title : stage.id === "setup" ? "Подготовка" : securityProject.title}</h1>
+        {sprint && <p>{sprint.goal} Результат: {sprint.result}</p>}
+      </header>
+      {stage.id === "setup" && <div className="sec-downloads">
+        <a href={`${origin}/security-notes/app.py`} download>Скачать app.py</a>
+        <a href={`${origin}/security-notes/check.py`} download>Скачать check.py</a>
+      </div>}
+      <LessonBlocks blocks={withOrigin(page.blocks)}/>
+      <footer className="lesson-footer sec-project-footer">
+        <div className="lesson-pager">
+          {previous && <button onClick={() => navigate(previous.path)}><ArrowLeft size={17}/> {previous.title}</button>}
+          <button className="story-next" onClick={finish}>{sprint ? "Спринт пройден" : "Дальше"}{next ? <> · {next.title}</> : <> · к курсу</>} <ArrowRight size={17}/></button>
+        </div>
+      </footer>
+    </article></main>
+  </div>;
 }

@@ -29,10 +29,7 @@ export function getSecurityLesson(sectionId, topicId, lessonId) {
   return securityFlatLessons.find((item) => item.section.id === sectionId && item.topic.id === topicId && item.id === lessonId) || securityFlatLessons[0];
 }
 
-// Модули практики и проекта: пока только план, без уроков.
+// Модуль практики. Проект «Заметки» описан отдельно в project.js.
 export const securityPlannedModules = [
   { id: "sec-practice", title: "Практика: исправь уязвимость", phase: "ПРАКТИКА", summary: "Девять задач с настоящим выполнением кода: инъекции, пароли, сессии, файлы, секреты, логи.", path: "/security/practice", ready: true },
-  { id: "sec-project-audit", title: "Проект · Аудит приложения «Заметки»", phase: "ПРОЕКТ", summary: "Запускаешь намеренно уязвимое приложение у себя, составляешь модель угроз и находишь уязвимости.", ready: false },
-  { id: "sec-project-fix", title: "Проект · Исправления и аутентификация", phase: "ПРОЕКТ", summary: "Закрываешь найденные уязвимости, внедряешь хеширование паролей, сессии и ограничение попыток.", ready: false },
-  { id: "sec-project-report", title: "Проект · Логи, инцидент и отчёт", phase: "ПРОЕКТ", summary: "Журналирование, разбор учебного инцидента и итоговый security-отчёт в репозитории.", ready: false },
 ];

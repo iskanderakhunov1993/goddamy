@@ -16,7 +16,7 @@ import { BusinessPracticeComing, ProductCoursePage, QaCoursePage } from "./compo
 import { QaTask, QaTrainer } from "./components/QaExperience.jsx";
 import { getQaChallenge } from "./content/qaChallenges.js";
 import { TermsPage, PrivacyPage } from "./components/LegalPages.jsx";
-import { SecurityCoursePage, SecurityLesson, SecurityTrainer, SecurityTask } from "./components/SecurityExperience.jsx";
+import { SecurityCoursePage, SecurityLesson, SecurityProject, SecurityTrainer, SecurityTask } from "./components/SecurityExperience.jsx";
 import { getSecurityChallenge } from "./content/security/challenges.js";
 
 function Logo({ onHome }) {
@@ -95,6 +95,8 @@ export function App() {
       "/course-editor": "Редактор курса — Godemy",
       "/security": "Основы кибербезопасности — Godemy",
       "/security/practice": "Практика: исправь уязвимость — Godemy",
+      "/security/project": "Проект «Заметки» — Основы кибербезопасности",
+      "/security/project/setup": "Подготовка проекта — Основы кибербезопасности",
       "/terms": "Условия использования — Godemy",
       "/privacy": "Политика конфиденциальности — Godemy",
     };
@@ -106,7 +108,9 @@ export function App() {
     const qaTask = route.match(/^\/qa\/practice\/([^/]+)$/);
     const secTask = route.match(/^\/security\/practice\/([^/]+)$/);
     const secLesson = route.match(/^\/security\/lesson\//);
-    document.title = secLesson ? "Урок · Основы кибербезопасности — Godemy"
+    const secSprint = route.match(/^\/security\/project\/sprint\/([1-4])$/);
+    document.title = secSprint ? `Спринт ${secSprint[1]} · Проект «Заметки» — Godemy`
+      : secLesson ? "Урок · Основы кибербезопасности — Godemy"
       : secTask ? `${getSecurityChallenge(secTask[1]).title} — Godemy`
       : courseLesson ? "Урок курса Основы Go — Godemy"
       : sprint ? `Спринт ${sprint[1]} · Task Tracker — Godemy`
@@ -138,6 +142,7 @@ export function App() {
   const qaTaskMatch = route.match(/^\/qa\/practice\/([^/]+)$/);
   const secLessonMatch = route.match(/^\/security\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
   const secTaskMatch = route.match(/^\/security\/practice\/([^/]+)$/);
+  const secSprintMatch = route.match(/^\/security\/project\/sprint\/([1-4])$/);
   let content;
   if (route === "/") content = <Home setPage={navigate}/>;
   else if (route === "/academy") content = <AcademyHub navigate={navigate}/>;
@@ -149,6 +154,9 @@ export function App() {
   else if (route === "/python/practice") content = <PythonTrainer navigate={navigate}/>;
   else if (pythonTaskMatch) content = <PythonTask challengeId={pythonTaskMatch[1]} navigate={navigate}/>;
   else if (route === "/security") content = <SecurityCoursePage navigate={navigate}/>;
+  else if (route === "/security/project") content = <SecurityProject stageId="overview" navigate={navigate} key="overview"/>;
+  else if (route === "/security/project/setup") content = <SecurityProject stageId="setup" navigate={navigate} key="setup"/>;
+  else if (secSprintMatch) content = <SecurityProject stageId={`sprint-${secSprintMatch[1]}`} navigate={navigate} key={secSprintMatch[1]}/>;
   else if (route === "/security/practice") content = <SecurityTrainer navigate={navigate}/>;
   else if (secTaskMatch) content = <SecurityTask challengeId={secTaskMatch[1]} navigate={navigate} key={secTaskMatch[1]}/>;
   else if (secLessonMatch) content = <SecurityLesson sectionId={secLessonMatch[1]} topicId={secLessonMatch[2]} lessonId={secLessonMatch[3]} navigate={navigate} key={secLessonMatch[3]}/>;
