@@ -18,8 +18,9 @@ import { getQaChallenge } from "./content/qaChallenges.js";
 import { TermsPage, PrivacyPage } from "./components/LegalPages.jsx";
 import { SecurityCoursePage, SecurityLesson, SecurityProject, SecurityTrainer, SecurityTask } from "./components/SecurityExperience.jsx";
 import { getSecurityChallenge } from "./content/security/challenges.js";
-import { TrackCoursePage, TrackLesson, TrackTrainer, TrackTask } from "./components/TrackExperience.jsx";
+import { TrackCoursePage, TrackLesson, TrackProject, TrackTrainer, TrackTask } from "./components/TrackExperience.jsx";
 import { kubernetesTrack } from "./content/kubernetes/curriculum.js";
+import { youtubeTrack } from "./content/youtube/curriculum.js";
 
 function Logo({ onHome }) {
   return <button className="logo" onClick={onHome}><span>GO</span>DEMY</button>;
@@ -99,6 +100,9 @@ export function App() {
       "/security/practice": "Практика: исправь уязвимость — Godemy",
       "/security/project": "Проект «Заметки» — Основы кибербезопасности",
       "/security/project/setup": "Подготовка проекта — Основы кибербезопасности",
+      "/youtube": "YouTube с нуля — Godemy",
+      "/youtube/project": "Проект «Пять видео» — YouTube с нуля",
+      "/youtube/project/setup": "Подготовка проекта — YouTube с нуля",
       "/kubernetes": "Kubernetes и Kafka — Godemy",
       "/kubernetes/practice": "Практика: Kubernetes и Kafka — Godemy",
       "/terms": "Условия использования — Godemy",
@@ -148,6 +152,8 @@ export function App() {
   const sqlTaskMatch = route.match(/^\/sql\/practice\/([^/]+)$/);
   const pythonTaskMatch = route.match(/^\/python\/practice\/([^/]+)$/);
   const qaTaskMatch = route.match(/^\/qa\/practice\/([^/]+)$/);
+  const ytLessonMatch = route.match(/^\/youtube\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
+  const ytSprintMatch = route.match(/^\/youtube\/project\/sprint\/([1-4])$/);
   const k8sLessonMatch = route.match(/^\/kubernetes\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
   const k8sTaskMatch = route.match(/^\/kubernetes\/practice\/([^/]+)$/);
   const secLessonMatch = route.match(/^\/security\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
@@ -163,6 +169,11 @@ export function App() {
   else if (route === "/python") content = <PythonCoursePage navigate={navigate}/>;
   else if (route === "/python/practice") content = <PythonTrainer navigate={navigate}/>;
   else if (pythonTaskMatch) content = <PythonTask challengeId={pythonTaskMatch[1]} navigate={navigate}/>;
+  else if (route === "/youtube") content = <TrackCoursePage track={youtubeTrack} navigate={navigate}/>;
+  else if (route === "/youtube/project") content = <TrackProject track={youtubeTrack} stageId="overview" navigate={navigate} key="yo"/>;
+  else if (route === "/youtube/project/setup") content = <TrackProject track={youtubeTrack} stageId="setup" navigate={navigate} key="ys"/>;
+  else if (ytSprintMatch) content = <TrackProject track={youtubeTrack} stageId={`sprint-${ytSprintMatch[1]}`} navigate={navigate} key={`y${ytSprintMatch[1]}`}/>;
+  else if (ytLessonMatch) content = <TrackLesson track={youtubeTrack} sectionId={ytLessonMatch[1]} topicId={ytLessonMatch[2]} lessonId={ytLessonMatch[3]} navigate={navigate} key={ytLessonMatch[3]}/>;
   else if (route === "/kubernetes") content = <TrackCoursePage track={kubernetesTrack} navigate={navigate}/>;
   else if (route === "/kubernetes/practice") content = <TrackTrainer track={kubernetesTrack} navigate={navigate}/>;
   else if (k8sTaskMatch) content = <TrackTask track={kubernetesTrack} challengeId={k8sTaskMatch[1]} navigate={navigate} key={k8sTaskMatch[1]}/>;
@@ -194,7 +205,7 @@ export function App() {
   else if (route === "/trainer" || route === "/go/practice") content = <Trainer setPage={navigate}/>;
   else if (taskMatch) content = <GoTask challengeId={taskMatch[1]} navigate={navigate} key={taskMatch[1]}/>;
   else content = <CoursePage navigate={navigate}/>;
-  const immersive = route === "/kubernetes" || route === "/kubernetes/practice" || Boolean(k8sTaskMatch) || Boolean(k8sLessonMatch) || route === "/security" || route === "/security/practice" || Boolean(secTaskMatch) || Boolean(secLessonMatch) || Boolean(taskMatch) || Boolean(sqlTaskMatch) || Boolean(pythonTaskMatch) || Boolean(qaTaskMatch) || route === "/trainer" || route === "/go/practice" || route === "/sql" || route === "/sql/practice" || route === "/python" || route === "/python/practice" || route === "/product" || route === "/product/practice" || route === "/qa" || route === "/qa/practice" || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
+  const immersive = route === "/youtube" || Boolean(ytLessonMatch) || route === "/kubernetes" || route === "/kubernetes/practice" || Boolean(k8sTaskMatch) || Boolean(k8sLessonMatch) || route === "/security" || route === "/security/practice" || Boolean(secTaskMatch) || Boolean(secLessonMatch) || Boolean(taskMatch) || Boolean(sqlTaskMatch) || Boolean(pythonTaskMatch) || Boolean(qaTaskMatch) || route === "/trainer" || route === "/go/practice" || route === "/sql" || route === "/sql/practice" || route === "/python" || route === "/python/practice" || route === "/product" || route === "/product/practice" || route === "/qa" || route === "/qa/practice" || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
   return <>{!immersive && <Header setPage={navigate}/>} {content}{!immersive && <Footer setPage={navigate}/>}</>;
 }
 

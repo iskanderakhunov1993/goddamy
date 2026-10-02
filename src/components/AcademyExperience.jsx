@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import {
   ArrowRight, BookOpen, BracketsCurly, CheckCircle, Code,
   MagnifyingGlass, ShieldCheck, SlidersHorizontal,
-  Stack, FilePy, Database, ChartLineUp, Cube,
+  Stack, FilePy, Database, ChartLineUp, Cube, Play,
 } from "@phosphor-icons/react";
 
 const GoLogoTile = () => <span className="tech-logo-tile">Go</span>;
@@ -23,6 +23,7 @@ export function PublicGoLanding({ navigate }) {
     { title: "QA", status: "Тренажёр доступен", description: "Разбирайте кейсы с проверкой ответа: приоритизация, тест-дизайн, баг-репорты и API. Уроки курса в разработке.", icon: <ShieldCheck size={20}/>, level: "Для начинающих", meta: "Уроки готовятся", action: () => navigate("/qa") },
     { title: "Кибербезопасность", status: "Курс доступен", description: "Теория с задачами и тренажёр «исправь уязвимость»: пароли, инъекции, сессии, логи. Код выполняется в браузере.", icon: <ShieldCheck size={20}/>, level: "Для начинающих", meta: "Теория и практика", action: () => navigate("/security") },
     { title: "Kubernetes и Kafka", status: "Курс доступен", description: "Теория и тренажёр: манифесты, планировщик, партиции, группы потребителей, гарантии доставки. Проект с настоящим кластером в разработке.", icon: <Cube size={20}/>, level: "Для продолжающих", meta: "Теория и практика", action: () => navigate("/kubernetes") },
+    { title: "YouTube с нуля", status: "Курс доступен", description: "Теория по материалам YouTube и проект: пять опубликованных, полностью оформленных видео на вашем канале.", icon: <Play size={20}/>, level: "Для начинающих", meta: "Теория и проект", action: () => navigate("/youtube") },
     { title: "Product Management", status: "Скоро", description: "Исследование проблемы, метрики и путь продуктовой задачи к релизу.", icon: <ChartLineUp size={20}/>, level: "—", meta: "Программа готовится", action: () => navigate("/product") },
     { title: "Docker", status: "Скоро", description: "Упакуйте приложение в контейнер и разверните его в любой среде.", icon: <Cube size={20}/>, level: "—", meta: "Программа готовится" },
   ];

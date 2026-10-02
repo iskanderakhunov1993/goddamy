@@ -34,7 +34,7 @@ export function TrackCoursePage({ track, navigate }) {
   const project = track.project;
   const start = () => navigate(track.lessonPath(nextLesson || track.flatLessons[0]));
   const practiceIndex = track.curriculum.length;
-  const projectIndex = practiceIndex + 1;
+  const projectIndex = practiceIndex + (track.practice ? 1 : 0);
 
   return <main className="course-dashboard course-dashboard-security course-dashboard-track">
     <aside className="dashboard-rail" aria-label="Навигация курса">
@@ -42,7 +42,7 @@ export function TrackCoursePage({ track, navigate }) {
       <nav>
         <button aria-label="Главная" onClick={() => navigate("/")}><House size={20}/></button>
         <button className="active" aria-label="Курс"><BookOpen size={20}/></button>
-        <button aria-label="Практика" onClick={() => navigate(`${track.base}/practice`)}><Code size={20}/></button>
+        {track.practice && <button aria-label="Практика" onClick={() => navigate(`${track.base}/practice`)}><Code size={20}/></button>}
       </nav>
       <button aria-label="Профиль" onClick={() => navigate("/profile")}><UserCircle size={21}/></button>
     </aside>
@@ -54,20 +54,20 @@ export function TrackCoursePage({ track, navigate }) {
           <p>{track.description}</p>
           <div className="course-hero-actions">
             <button className="btn-primary" onClick={start}>{done ? "Продолжить" : "Начать курс"} <ArrowRight size={18}/></button>
-            <button className="btn-ghost" onClick={() => navigate(`${track.base}/practice`)}><Code size={17}/> Тренажёр</button>
+            {track.practice && <button className="btn-ghost" onClick={() => navigate(`${track.base}/practice`)}><Code size={17}/> Тренажёр</button>}
           </div>
         </div>
         <div className="course-includes">
           <b>В курсе сейчас</b>
           <ul>
             <li><BookOpen size={16}/> {lessonsLabel(total)} в {track.curriculum.length} теоретических модулях</li>
-            <li><Code size={16}/> {track.practice.challenges.length} {track.practice.countLabel}</li>
+            {track.practice && <li><Code size={16}/> {track.practice.challenges.length} {track.practice.countLabel}</li>}
             <li><Stack size={16}/> {project ? project.includesLine : track.projectPlanned.includesLine}</li>
           </ul>
         </div>
       </section>
 
-      <div className="course-prog"><span className="course-prog-pill">{percent}%</span><div className="course-prog-track"><span style={{ width: `${percent}%` }}/></div><span className="course-prog-label">{done} / {total} уроков · {solved} / {track.practice.challenges.length} задач{project ? ` · ${sprintCount(doneSprints)} / ${project.sprints.length} спринтов` : ""}</span></div>
+      <div className="course-prog"><span className="course-prog-pill">{percent}%</span><div className="course-prog-track"><span style={{ width: `${percent}%` }}/></div><span className="course-prog-label">{done} / {total} уроков{track.practice ? ` · ${solved} / ${track.practice.challenges.length} задач` : ""}{project ? ` · ${sprintCount(doneSprints)} / ${project.sprints.length} спринтов` : ""}</span></div>
 
       <section className="dashboard-program">
         <h2 className="course-syllabus-heading">Программа курса</h2>
@@ -89,13 +89,13 @@ export function TrackCoursePage({ track, navigate }) {
               </div>)}</div>}
             </article>;
           })}
-          <article className="sec-module planned">
+          {track.practice && <article className="sec-module planned">
             <button className="sec-module-head" onClick={() => navigate(`${track.base}/practice`)}>
               <span className="sec-module-num">{String(practiceIndex + 1).padStart(2, "0")}</span>
               <span className="sec-module-title"><b>{track.practice.title}</b><small>{track.practice.summary}</small></span>
               <span className="sec-module-meta">Открыть <ArrowRight size={13}/></span>
             </button>
-          </article>
+          </article>}
           {project
             ? <article className={`sec-module ${openModule === "project" ? "open" : ""}`}>
               <button className="sec-module-head" onClick={() => setOpenModule(openModule === "project" ? null : "project")} aria-expanded={openModule === "project"}>
@@ -138,7 +138,7 @@ export function TrackLesson({ track, sectionId, topicId, lessonId, navigate }) {
   const go = (target) => {
     markLessonComplete(track.slug, current.id);
     setCompletedIds((ids) => new Set(ids).add(current.id));
-    navigate(target ? track.lessonPath(target) : `${track.base}/practice`);
+    navigate(target ? track.lessonPath(target) : track.practice ? `${track.base}/practice` : `${track.base}/project`);
   };
 
   return <main className="story-lesson-shell">
@@ -163,7 +163,7 @@ export function TrackLesson({ track, sectionId, topicId, lessonId, navigate }) {
         </div>
         <div className="lesson-pager">
           {previous && <button onClick={() => navigate(track.lessonPath(previous))}><ArrowLeft size={17}/> Назад</button>}
-          <button className="story-next" onClick={() => go(next)}>{next ? "К следующему уроку" : "К тренажёру"} <ArrowRight size={17}/></button>
+          <button className="story-next" onClick={() => go(next)}>{next ? "К следующему уроку" : track.practice ? "К тренажёру" : "К проекту"} <ArrowRight size={17}/></button>
         </div>
       </footer>
     </article>
