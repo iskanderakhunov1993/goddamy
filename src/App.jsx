@@ -16,6 +16,8 @@ import { BusinessPracticeComing, ProductCoursePage, QaCoursePage } from "./compo
 import { QaTask, QaTrainer } from "./components/QaExperience.jsx";
 import { getQaChallenge } from "./content/qaChallenges.js";
 import { TermsPage, PrivacyPage } from "./components/LegalPages.jsx";
+import { SecurityCoursePage, SecurityLesson, SecurityTrainer, SecurityTask } from "./components/SecurityExperience.jsx";
+import { getSecurityChallenge } from "./content/security/challenges.js";
 
 function Logo({ onHome }) {
   return <button className="logo" onClick={onHome}><span>GO</span>DEMY</button>;
@@ -91,6 +93,8 @@ export function App() {
       "/certificates": "Сертификаты Godemy",
       "/subscription": "Подписка Godemy",
       "/course-editor": "Редактор курса — Godemy",
+      "/security": "Основы кибербезопасности — Godemy",
+      "/security/practice": "Практика: исправь уязвимость — Godemy",
       "/terms": "Условия использования — Godemy",
       "/privacy": "Политика конфиденциальности — Godemy",
     };
@@ -100,7 +104,11 @@ export function App() {
     const sqlTask = route.match(/^\/sql\/practice\/([^/]+)$/);
     const pythonTask = route.match(/^\/python\/practice\/([^/]+)$/);
     const qaTask = route.match(/^\/qa\/practice\/([^/]+)$/);
-    document.title = courseLesson ? "Урок курса Основы Go — Godemy"
+    const secTask = route.match(/^\/security\/practice\/([^/]+)$/);
+    const secLesson = route.match(/^\/security\/lesson\//);
+    document.title = secLesson ? "Урок · Основы кибербезопасности — Godemy"
+      : secTask ? `${getSecurityChallenge(secTask[1]).title} — Godemy`
+      : courseLesson ? "Урок курса Основы Go — Godemy"
       : sprint ? `Спринт ${sprint[1]} · Task Tracker — Godemy`
       : goTask ? `${getGoChallenge(goTask[1]).title} — Godemy`
       : sqlTask ? `${getSqlChallenge(sqlTask[1]).title} — Godemy`
@@ -128,6 +136,8 @@ export function App() {
   const sqlTaskMatch = route.match(/^\/sql\/practice\/([^/]+)$/);
   const pythonTaskMatch = route.match(/^\/python\/practice\/([^/]+)$/);
   const qaTaskMatch = route.match(/^\/qa\/practice\/([^/]+)$/);
+  const secLessonMatch = route.match(/^\/security\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
+  const secTaskMatch = route.match(/^\/security\/practice\/([^/]+)$/);
   let content;
   if (route === "/") content = <Home setPage={navigate}/>;
   else if (route === "/academy") content = <AcademyHub navigate={navigate}/>;
@@ -138,6 +148,10 @@ export function App() {
   else if (route === "/python") content = <PythonCoursePage navigate={navigate}/>;
   else if (route === "/python/practice") content = <PythonTrainer navigate={navigate}/>;
   else if (pythonTaskMatch) content = <PythonTask challengeId={pythonTaskMatch[1]} navigate={navigate}/>;
+  else if (route === "/security") content = <SecurityCoursePage navigate={navigate}/>;
+  else if (route === "/security/practice") content = <SecurityTrainer navigate={navigate}/>;
+  else if (secTaskMatch) content = <SecurityTask challengeId={secTaskMatch[1]} navigate={navigate} key={secTaskMatch[1]}/>;
+  else if (secLessonMatch) content = <SecurityLesson sectionId={secLessonMatch[1]} topicId={secLessonMatch[2]} lessonId={secLessonMatch[3]} navigate={navigate} key={secLessonMatch[3]}/>;
   else if (route === "/product") content = <ProductCoursePage navigate={navigate}/>;
   else if (route === "/product/practice") content = <BusinessPracticeComing navigate={navigate} course="product"/>;
   else if (route === "/qa") content = <QaCoursePage navigate={navigate}/>;
@@ -158,7 +172,7 @@ export function App() {
   else if (route === "/trainer" || route === "/go/practice") content = <Trainer setPage={navigate}/>;
   else if (taskMatch) content = <GoTask challengeId={taskMatch[1]} navigate={navigate} key={taskMatch[1]}/>;
   else content = <CoursePage navigate={navigate}/>;
-  const immersive = Boolean(taskMatch) || Boolean(sqlTaskMatch) || Boolean(pythonTaskMatch) || Boolean(qaTaskMatch) || route === "/trainer" || route === "/go/practice" || route === "/sql" || route === "/sql/practice" || route === "/python" || route === "/python/practice" || route === "/product" || route === "/product/practice" || route === "/qa" || route === "/qa/practice" || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
+  const immersive = route === "/security" || route === "/security/practice" || Boolean(secTaskMatch) || Boolean(secLessonMatch) || Boolean(taskMatch) || Boolean(sqlTaskMatch) || Boolean(pythonTaskMatch) || Boolean(qaTaskMatch) || route === "/trainer" || route === "/go/practice" || route === "/sql" || route === "/sql/practice" || route === "/python" || route === "/python/practice" || route === "/product" || route === "/product/practice" || route === "/qa" || route === "/qa/practice" || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
   return <>{!immersive && <Header setPage={navigate}/>} {content}{!immersive && <Footer setPage={navigate}/>}</>;
 }
 

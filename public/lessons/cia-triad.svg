@@ -1,0 +1,26 @@
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="400" fill="#eef1fb"/>
+  <text x="60" y="46" fill="#4b3aeb" font-family="monospace" font-size="13" font-weight="700" letter-spacing="1">ТРИАДА CIA · ТРИ СВОЙСТВА ДАННЫХ</text>
+
+  <path d="M400 90 L 560 340 L 240 340 Z" fill="#ffffff" stroke="#dfe1ee" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="400" cy="90" r="34" fill="#0a0a23"/>
+  <text x="400" y="97" fill="#ffd300" font-family="monospace" font-size="22" font-weight="700" text-anchor="middle">C</text>
+  <circle cx="560" cy="340" r="34" fill="#0a0a23"/>
+  <text x="560" y="347" fill="#ffd300" font-family="monospace" font-size="22" font-weight="700" text-anchor="middle">I</text>
+  <circle cx="240" cy="340" r="34" fill="#0a0a23"/>
+  <text x="240" y="347" fill="#ffd300" font-family="monospace" font-size="22" font-weight="700" text-anchor="middle">A</text>
+
+  <text x="400" y="214" fill="#141522" font-family="sans-serif" font-size="15" font-weight="700" text-anchor="middle">данные и системы</text>
+
+  <text x="450" y="72" fill="#141522" font-family="sans-serif" font-size="14" font-weight="700">Конфиденциальность</text>
+  <text x="450" y="92" fill="#5b6072" font-family="sans-serif" font-size="12">видят только свои</text>
+  <text x="450" y="110" fill="#8b3e3e" font-family="sans-serif" font-size="12">нарушение: утечка базы паролей</text>
+
+  <text x="610" y="332" fill="#141522" font-family="sans-serif" font-size="14" font-weight="700">Целостность</text>
+  <text x="610" y="352" fill="#5b6072" font-family="sans-serif" font-size="12">не изменены втихую</text>
+  <text x="610" y="370" fill="#8b3e3e" font-family="sans-serif" font-size="12">нарушение: подмена суммы</text>
+
+  <text x="40" y="332" fill="#141522" font-family="sans-serif" font-size="14" font-weight="700">Доступность</text>
+  <text x="40" y="352" fill="#5b6072" font-family="sans-serif" font-size="12">работает, когда нужно</text>
+  <text x="40" y="370" fill="#8b3e3e" font-family="sans-serif" font-size="12">нарушение: сайт лежит</text>
+</svg>

@@ -1,0 +1,33 @@
+.sec-modules { display: grid; gap: 10px; }
+.sec-module { border: 1px solid #dfe1ee; border-radius: 14px; background: #fff; overflow: hidden; }
+.sec-module.planned { background: #f5f6fb; }
+.sec-module-head { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 14px; width: 100%; padding: 18px 20px; border: 0; background: transparent; text-align: left; cursor: pointer; color: #12141d; }
+.sec-module-head:disabled { cursor: default; opacity: .72; }
+.sec-module-head:not(:disabled):hover { background: #f7f8fd; }
+.sec-module-num { font: 700 12px "Roboto Mono", monospace; color: #4b3aeb; }
+.sec-module-title { display: grid; gap: 3px; min-width: 0; }
+.sec-module-title b { font-size: 16px; }
+.sec-module-title small { color: #5b6072; font-size: 13px; line-height: 1.5; }
+.sec-module-meta { display: inline-flex; align-items: center; gap: 4px; font: 600 11px "Roboto Mono", monospace; color: #5b6072; white-space: nowrap; }
+.sec-topics { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; padding: 6px 20px 22px 78px; border-top: 1px solid #eceef6; }
+.sec-topic h3 { margin: 18px 0 8px; font-size: 14px; }
+.sec-topic ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.sec-topic li button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 7px 8px; margin-left: -8px; border: 0; border-radius: 8px; background: transparent; text-align: left; font-size: 13.5px; color: #2b2f3f; cursor: pointer; }
+.sec-topic li button:hover { background: #eef1fb; color: #4b3aeb; }
+.sec-check { flex: none; display: grid; place-items: center; width: 16px; height: 16px; border: 1.5px solid #c4c7d8; border-radius: 50%; color: #fff; }
+.sec-check.done { background: #4b3aeb; border-color: #4b3aeb; }
+.sec-solved { color: #1a7554; font-style: normal; font-weight: 600; }
+.sec-explain { margin-top: 18px; border-left: 3px solid #1a7554; background: #d3eee3; padding: 14px 16px; line-height: 1.55; }
+.sec-explain p { margin: 6px 0 0; }
+.sec-next { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; border: 1px solid currentColor; border-radius: 8px; background: transparent; padding: 6px 10px; color: inherit; font-weight: 700; cursor: pointer; }
+.security-practice-shell .academy-kicker { color: #4b3aeb; }
+@media (max-width: 700px) {
+  .sec-module-head { grid-template-columns: 34px minmax(0, 1fr); }
+  .sec-module-meta { grid-column: 2; }
+  .sec-topics { padding: 6px 16px 20px; }
+}
+.course-dashboard-security .course-prog { flex-wrap: wrap; }
+.course-dashboard-security .course-prog-track { min-width: 120px; }
+@media (max-width: 700px) { .course-dashboard-security .course-prog-label { flex: 1 1 100%; } }
+.course-dashboard-security .course-hero h1 { overflow-wrap: anywhere; }
+@media (max-width: 700px) { .course-dashboard-security .course-hero h1 { font-size: clamp(28px, 8.4vw, 40px); } }

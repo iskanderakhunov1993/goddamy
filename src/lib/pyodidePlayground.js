@@ -24,7 +24,15 @@ async function getPyodide() {
   if (!pyodidePromise) {
     pyodidePromise = (async () => {
       await loadScript(`${PYODIDE_CDN}pyodide.js`);
-      return window.loadPyodide({ indexURL: PYODIDE_CDN });
+      const pyodide = await window.loadPyodide({ indexURL: PYODIDE_CDN });
+      // The default Pyodide build ships hashlib without OpenSSL, so
+      // pbkdf2_hmac / scrypt-style helpers are missing. The official
+      // "hashlib" package adds them; reload so already-imported modules
+      // pick up the full implementation.
+      // sqlite3 is likewise a separate package in Pyodide's stdlib split.
+      await pyodide.loadPackage(["hashlib", "sqlite3"]);
+      pyodide.runPython("import importlib, hashlib, hmac\nimportlib.reload(hashlib)\nimportlib.reload(hmac)");
+      return pyodide;
     })();
   }
   return pyodidePromise;

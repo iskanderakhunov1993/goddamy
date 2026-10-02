@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MagnifyingGlass, X } from "@phosphor-icons/react";
 import { flatLessons, getLessonPath } from "../content/courseCurriculum.js";
+import { securityFlatLessons, securityLessonPath } from "../content/security/curriculum.js";
+import { securityChallenges } from "../content/security/challenges.js";
 
 const STATIC_ENTRIES = [
   { kind: "Курс", title: "Go Backend Internship", subtitle: "141 урок · Task Tracker, Expense Tracker, URL Shortener", path: "/go" },
@@ -21,7 +23,13 @@ const LESSON_ENTRIES = flatLessons.map((item) => ({
   path: getLessonPath(item),
 }));
 
-const ALL_ENTRIES = [...STATIC_ENTRIES, ...LESSON_ENTRIES];
+const SECURITY_ENTRIES = [
+  { kind: "Курс", title: "Основы кибербезопасности", subtitle: "Теория с задачами и тренажёр «исправь уязвимость»", path: "/security" },
+  ...securityFlatLessons.map((item) => ({ kind: "Урок", title: item.title, subtitle: `Кибербезопасность · ${item.section.title}`, path: securityLessonPath(item) })),
+  ...securityChallenges.map((item) => ({ kind: "Задача", title: item.title, subtitle: `Кибербезопасность · ${item.category}`, path: `/security/practice/${item.id}` })),
+];
+
+const ALL_ENTRIES = [...STATIC_ENTRIES, ...SECURITY_ENTRIES, ...LESSON_ENTRIES];
 
 export function SearchOverlay({ navigate, onClose }) {
   const [query, setQuery] = useState("");

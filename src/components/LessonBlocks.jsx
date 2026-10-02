@@ -1,6 +1,7 @@
 import { getQuizAnswer, saveQuizAnswer } from "../lib/quizAnswers.js";
 import { getCheckedItems, toggleCheckedItem } from "../lib/taskChecklist.js";
 import { runGoProgram } from "../lib/goPlayground.js";
+import { runPythonProgram } from "../lib/pyodidePlayground.js";
 
 // A code block is runnable as-is only if it's a complete program, or if it's
 // a plain sequence of statements with no top-level func/type declaration —
@@ -110,7 +111,8 @@ function CodeBlock({ block }) {
   const [copied, setCopied] = useState(false);
   const [run, setRun] = useState(null); // null | { busy } | { status, stdout, message }
   const isGo = !block.language || block.language === "go";
-  const runnableSource = isGo ? buildRunnableSource(block.code || "", block.id) : null;
+  const isPython = block.language === "python";
+  const runnableSource = isGo ? buildRunnableSource(block.code || "", block.id) : isPython ? block.code || "" : null;
 
   const copy = async () => {
     try {
@@ -125,7 +127,7 @@ function CodeBlock({ block }) {
   const execute = async () => {
     setRun({ busy: true });
     try {
-      const result = await runGoProgram(runnableSource);
+      const result = isPython ? await runPythonProgram(runnableSource) : await runGoProgram(runnableSource);
       setRun(result);
     } catch (error) {
       setRun({ status: "network-error", stdout: "", message: error.message });
@@ -136,7 +138,7 @@ function CodeBlock({ block }) {
     <figcaption>
       <span>{block.language || "code"}</span>
       <span className="lesson-code-actions">
-        {runnableSource && <button type="button" onClick={execute} disabled={run?.busy}>{run?.busy ? "Выполняется…" : "Запустить"}</button>}
+        {runnableSource && <button type="button" onClick={execute} disabled={run?.busy}>{run?.busy ? (isPython ? "Загрузка Python…" : "Выполняется…") : "Запустить"}</button>}
         <button type="button" onClick={copy}>{copied ? "Скопировано" : "Копировать"}</button>
       </span>
     </figcaption>
