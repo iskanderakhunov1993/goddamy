@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" font-family="Inter,Arial,sans-serif" font-size="14">
+<rect width="720" height="320" fill="#f5f6fb"/>
+<text x="30" y="34" font-weight="700" fill="#12141d">Топик orders · 3 партиции</text>
+<g font-size="13" fill="#5b6072"><text x="30" y="84">partition 0</text><text x="30" y="154">partition 1</text><text x="30" y="224">partition 2</text></g>
+<g fill="#fff" stroke="#4b3aeb" stroke-width="1.5">
+<rect x="130" y="62" width="48" height="36"/><rect x="178" y="62" width="48" height="36"/><rect x="226" y="62" width="48" height="36"/><rect x="274" y="62" width="48" height="36"/><rect x="322" y="62" width="48" height="36"/>
+<rect x="130" y="132" width="48" height="36"/><rect x="178" y="132" width="48" height="36"/><rect x="226" y="132" width="48" height="36"/><rect x="274" y="132" width="48" height="36"/>
+<rect x="130" y="202" width="48" height="36"/><rect x="178" y="202" width="48" height="36"/><rect x="226" y="202" width="48" height="36"/><rect x="274" y="202" width="48" height="36"/><rect x="322" y="202" width="48" height="36"/><rect x="370" y="202" width="48" height="36"/>
+</g>
+<g fill="#12141d" text-anchor="middle" font-size="13"><text x="154" y="85">0</text><text x="202" y="85">1</text><text x="250" y="85">2</text><text x="298" y="85">3</text><text x="346" y="85">4</text><text x="154" y="155">0</text><text x="202" y="155">1</text><text x="250" y="155">2</text><text x="298" y="155">3</text><text x="154" y="225">0</text><text x="202" y="225">1</text><text x="250" y="225">2</text><text x="298" y="225">3</text><text x="346" y="225">4</text><text x="394" y="225">5</text></g>
+<g stroke="#5b6072" stroke-width="2" fill="none"><path d="M376 80 H470"/><path d="M328 150 H470"/><path d="M424 220 H470"/></g>
+<rect x="470" y="40" width="220" height="220" rx="14" fill="#fff" stroke="#12141d" stroke-width="1.5"/>
+<text x="486" y="66" font-weight="700" fill="#12141d">Группа billing</text>
+<g fill="#eef1fb" stroke="#4b3aeb"><rect x="486" y="82" width="188" height="44" rx="8"/><rect x="486" y="138" width="188" height="44" rx="8"/><rect x="486" y="194" width="188" height="44" rx="8"/></g>
+<g fill="#12141d" font-size="13"><text x="500" y="109">consumer A ← p0</text><text x="500" y="165">consumer B ← p1</text><text x="500" y="221">consumer C ← p2</text></g>
+<text x="130" y="276" fill="#5b6072" font-size="13">Число — офсет события. Новые события дописываются справа.</text>
+</svg>

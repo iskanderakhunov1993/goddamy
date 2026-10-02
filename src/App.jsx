@@ -18,6 +18,8 @@ import { getQaChallenge } from "./content/qaChallenges.js";
 import { TermsPage, PrivacyPage } from "./components/LegalPages.jsx";
 import { SecurityCoursePage, SecurityLesson, SecurityProject, SecurityTrainer, SecurityTask } from "./components/SecurityExperience.jsx";
 import { getSecurityChallenge } from "./content/security/challenges.js";
+import { TrackCoursePage, TrackLesson, TrackTrainer, TrackTask } from "./components/TrackExperience.jsx";
+import { kubernetesTrack } from "./content/kubernetes/curriculum.js";
 
 function Logo({ onHome }) {
   return <button className="logo" onClick={onHome}><span>GO</span>DEMY</button>;
@@ -97,6 +99,8 @@ export function App() {
       "/security/practice": "Практика: исправь уязвимость — Godemy",
       "/security/project": "Проект «Заметки» — Основы кибербезопасности",
       "/security/project/setup": "Подготовка проекта — Основы кибербезопасности",
+      "/kubernetes": "Kubernetes и Kafka — Godemy",
+      "/kubernetes/practice": "Практика: Kubernetes и Kafka — Godemy",
       "/terms": "Условия использования — Godemy",
       "/privacy": "Политика конфиденциальности — Godemy",
     };
@@ -109,7 +113,11 @@ export function App() {
     const secTask = route.match(/^\/security\/practice\/([^/]+)$/);
     const secLesson = route.match(/^\/security\/lesson\//);
     const secSprint = route.match(/^\/security\/project\/sprint\/([1-4])$/);
-    document.title = secSprint ? `Спринт ${secSprint[1]} · Проект «Заметки» — Godemy`
+    const k8sTask = route.match(/^\/kubernetes\/practice\/([^/]+)$/);
+    const k8sLesson = route.match(/^\/kubernetes\/lesson\//);
+    document.title = k8sTask ? `${kubernetesTrack.practice.getChallenge(k8sTask[1]).title} — Godemy`
+      : k8sLesson ? "Урок · Kubernetes и Kafka — Godemy"
+      : secSprint ? `Спринт ${secSprint[1]} · Проект «Заметки» — Godemy`
       : secLesson ? "Урок · Основы кибербезопасности — Godemy"
       : secTask ? `${getSecurityChallenge(secTask[1]).title} — Godemy`
       : courseLesson ? "Урок курса Основы Go — Godemy"
@@ -140,6 +148,8 @@ export function App() {
   const sqlTaskMatch = route.match(/^\/sql\/practice\/([^/]+)$/);
   const pythonTaskMatch = route.match(/^\/python\/practice\/([^/]+)$/);
   const qaTaskMatch = route.match(/^\/qa\/practice\/([^/]+)$/);
+  const k8sLessonMatch = route.match(/^\/kubernetes\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
+  const k8sTaskMatch = route.match(/^\/kubernetes\/practice\/([^/]+)$/);
   const secLessonMatch = route.match(/^\/security\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
   const secTaskMatch = route.match(/^\/security\/practice\/([^/]+)$/);
   const secSprintMatch = route.match(/^\/security\/project\/sprint\/([1-4])$/);
@@ -153,6 +163,10 @@ export function App() {
   else if (route === "/python") content = <PythonCoursePage navigate={navigate}/>;
   else if (route === "/python/practice") content = <PythonTrainer navigate={navigate}/>;
   else if (pythonTaskMatch) content = <PythonTask challengeId={pythonTaskMatch[1]} navigate={navigate}/>;
+  else if (route === "/kubernetes") content = <TrackCoursePage track={kubernetesTrack} navigate={navigate}/>;
+  else if (route === "/kubernetes/practice") content = <TrackTrainer track={kubernetesTrack} navigate={navigate}/>;
+  else if (k8sTaskMatch) content = <TrackTask track={kubernetesTrack} challengeId={k8sTaskMatch[1]} navigate={navigate} key={k8sTaskMatch[1]}/>;
+  else if (k8sLessonMatch) content = <TrackLesson track={kubernetesTrack} sectionId={k8sLessonMatch[1]} topicId={k8sLessonMatch[2]} lessonId={k8sLessonMatch[3]} navigate={navigate} key={k8sLessonMatch[3]}/>;
   else if (route === "/security") content = <SecurityCoursePage navigate={navigate}/>;
   else if (route === "/security/project") content = <SecurityProject stageId="overview" navigate={navigate} key="overview"/>;
   else if (route === "/security/project/setup") content = <SecurityProject stageId="setup" navigate={navigate} key="setup"/>;
@@ -180,7 +194,7 @@ export function App() {
   else if (route === "/trainer" || route === "/go/practice") content = <Trainer setPage={navigate}/>;
   else if (taskMatch) content = <GoTask challengeId={taskMatch[1]} navigate={navigate} key={taskMatch[1]}/>;
   else content = <CoursePage navigate={navigate}/>;
-  const immersive = route === "/security" || route === "/security/practice" || Boolean(secTaskMatch) || Boolean(secLessonMatch) || Boolean(taskMatch) || Boolean(sqlTaskMatch) || Boolean(pythonTaskMatch) || Boolean(qaTaskMatch) || route === "/trainer" || route === "/go/practice" || route === "/sql" || route === "/sql/practice" || route === "/python" || route === "/python/practice" || route === "/product" || route === "/product/practice" || route === "/qa" || route === "/qa/practice" || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
+  const immersive = route === "/kubernetes" || route === "/kubernetes/practice" || Boolean(k8sTaskMatch) || Boolean(k8sLessonMatch) || route === "/security" || route === "/security/practice" || Boolean(secTaskMatch) || Boolean(secLessonMatch) || Boolean(taskMatch) || Boolean(sqlTaskMatch) || Boolean(pythonTaskMatch) || Boolean(qaTaskMatch) || route === "/trainer" || route === "/go/practice" || route === "/sql" || route === "/sql/practice" || route === "/python" || route === "/python/practice" || route === "/product" || route === "/product/practice" || route === "/qa" || route === "/qa/practice" || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
   return <>{!immersive && <Header setPage={navigate}/>} {content}{!immersive && <Footer setPage={navigate}/>}</>;
 }
 

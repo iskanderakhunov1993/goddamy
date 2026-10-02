@@ -30,7 +30,7 @@ async function getPyodide() {
       // "hashlib" package adds them; reload so already-imported modules
       // pick up the full implementation.
       // sqlite3 is likewise a separate package in Pyodide's stdlib split.
-      await pyodide.loadPackage(["hashlib", "sqlite3"]);
+      await pyodide.loadPackage(["hashlib", "sqlite3", "pyyaml"]);
       pyodide.runPython("import importlib, hashlib, hmac\nimportlib.reload(hashlib)\nimportlib.reload(hmac)");
       return pyodide;
     })();

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 340" font-family="Inter,Arial,sans-serif" font-size="14">
+<rect width="720" height="340" fill="#f5f6fb"/>
+<rect x="30" y="24" width="660" height="110" rx="14" fill="#fff" stroke="#4b3aeb" stroke-width="2"/>
+<text x="48" y="50" font-weight="700" fill="#4b3aeb">Control plane</text>
+<g fill="#eef1fb" stroke="#4b3aeb"><rect x="48" y="66" width="140" height="48" rx="8"/><rect x="202" y="66" width="140" height="48" rx="8"/><rect x="356" y="66" width="140" height="48" rx="8"/><rect x="510" y="66" width="164" height="48" rx="8"/></g>
+<g fill="#12141d" text-anchor="middle"><text x="118" y="95">kube-apiserver</text><text x="272" y="95">etcd</text><text x="426" y="95">scheduler</text><text x="592" y="95">controller-manager</text></g>
+<g stroke="#5b6072" stroke-width="2" fill="none"><path d="M118 134 V176"/><path d="M360 134 V176"/><path d="M600 134 V176"/></g>
+<g fill="#fff" stroke="#12141d" stroke-width="1.5"><rect x="30" y="176" width="200" height="140" rx="12"/><rect x="260" y="176" width="200" height="140" rx="12"/><rect x="490" y="176" width="200" height="140" rx="12"/></g>
+<g font-weight="700" fill="#12141d"><text x="46" y="200">Node 1</text><text x="276" y="200">Node 2</text><text x="506" y="200">Node 3</text></g>
+<g fill="#eef1fb" stroke="#4b3aeb"><rect x="46" y="212" width="80" height="34" rx="6"/><rect x="134" y="212" width="80" height="34" rx="6"/><rect x="276" y="212" width="80" height="34" rx="6"/><rect x="364" y="212" width="80" height="34" rx="6"/><rect x="506" y="212" width="80" height="34" rx="6"/></g>
+<g fill="#12141d" text-anchor="middle" font-size="13"><text x="86" y="234">pod</text><text x="174" y="234">pod</text><text x="316" y="234">pod</text><text x="404" y="234">pod</text><text x="546" y="234">pod</text></g>
+<g fill="#5b6072" font-size="13"><text x="46" y="278">kubelet</text><text x="46" y="298">kube-proxy · runtime</text><text x="276" y="278">kubelet</text><text x="276" y="298">kube-proxy · runtime</text><text x="506" y="278">kubelet</text><text x="506" y="298">kube-proxy · runtime</text></g>
+</svg>

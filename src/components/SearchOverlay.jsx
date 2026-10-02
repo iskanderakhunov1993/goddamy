@@ -23,13 +23,21 @@ const LESSON_ENTRIES = flatLessons.map((item) => ({
   path: getLessonPath(item),
 }));
 
+import { kubernetesTrack } from "../content/kubernetes/curriculum.js";
+
+const K8S_ENTRIES = [
+  { kind: "Курс", title: "Kubernetes и Kafka", subtitle: "Теория и тренажёр", path: "/kubernetes" },
+  ...kubernetesTrack.flatLessons.map((item) => ({ kind: "Урок", title: item.title, subtitle: `Kubernetes и Kafka · ${item.section.title}`, path: kubernetesTrack.lessonPath(item) })),
+  ...kubernetesTrack.practice.challenges.map((item) => ({ kind: "Задача", title: item.title, subtitle: `Kubernetes и Kafka · ${item.category}`, path: `/kubernetes/practice/${item.id}` })),
+];
+
 const SECURITY_ENTRIES = [
   { kind: "Курс", title: "Основы кибербезопасности", subtitle: "Теория с задачами и тренажёр «исправь уязвимость»", path: "/security" },
   ...securityFlatLessons.map((item) => ({ kind: "Урок", title: item.title, subtitle: `Кибербезопасность · ${item.section.title}`, path: securityLessonPath(item) })),
   ...securityChallenges.map((item) => ({ kind: "Задача", title: item.title, subtitle: `Кибербезопасность · ${item.category}`, path: `/security/practice/${item.id}` })),
 ];
 
-const ALL_ENTRIES = [...STATIC_ENTRIES, ...SECURITY_ENTRIES, ...LESSON_ENTRIES];
+const ALL_ENTRIES = [...STATIC_ENTRIES, ...SECURITY_ENTRIES, ...K8S_ENTRIES, ...LESSON_ENTRIES];
 
 export function SearchOverlay({ navigate, onClose }) {
   const [query, setQuery] = useState("");
