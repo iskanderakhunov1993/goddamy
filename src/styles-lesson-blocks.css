@@ -70,3 +70,9 @@
 .contract-table { display: grid; gap: 8px; margin: 12px 0; }
 .contract-table p { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 12px; margin: 0; align-items: baseline; }
 @media (max-width: 600px) { .contract-table p { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
+
+.cabinet-project { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 18px; padding: 20px 22px; border: 1px solid #d9d4ff; border-radius: 16px; background: #fff; }
+.cabinet-project > div { flex: 1 1 320px; min-width: 0; }
+.cabinet-project small { font: 700 11px "Roboto Mono", monospace; color: #4b3aeb; }
+.cabinet-project h2 { margin: 6px 0; font-size: 20px; }
+.cabinet-project p { margin: 0; color: #5b6072; line-height: 1.55; }

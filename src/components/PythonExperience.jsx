@@ -7,6 +7,7 @@ import "../styles-sql.css";
 import { CourseCabinet } from "./CourseCabinet.jsx";
 import { checkSolution, runPythonProgram, assembleSource } from "../lib/pyodidePlayground.js";
 import { recordPractice } from "../lib/activity.js";
+import { pythonProjectTrack } from "../content/python/project.js";
 
 export const pythonModules = [
   { n: "01", title: "Старт и базовый синтаксис", text: "Настройте Python, запустите первую программу и освойте переменные.", topics: ["Среда и первый запуск", "Переменные", "Числа и строки", "Ввод и вывод", "Функции"] },
@@ -99,7 +100,7 @@ function PythonContextNav({ navigate, active }) {
 }
 
 export function PythonCoursePage({ navigate }) {
-  return <CourseCabinet navigate={navigate} course={{ slug: "python", label: "Python", kicker: "АВТОМАТИЗАЦИЯ РАБОЧИХ ЗАДАЧ", title: "Python для рабочих задач", description: "От первой функции до сервиса подготовки отчётов и проекта в GitHub.", modules: pythonModules, phases: ["СТАРТ", "ЛОГИКА", "ДАННЫЕ", "ИНСТРУМЕНТЫ", "АРХИТЕКТУРА", "ПРОЕКТ"], practiceSummary: "Тренажёр Python с запуском кода", practiceHint: "Зато тренажёр Python уже работает и покрывает эти темы: код запускается в браузере, решение проверяется автоматически.", practicePath: "/python/practice", firstPath: "/python/practice", startLabel: "Открыть тренажёр Python" }}/>;
+  return <CourseCabinet navigate={navigate} course={{ slug: "python", label: "Python", kicker: "АВТОМАТИЗАЦИЯ РАБОЧИХ ЗАДАЧ", title: "Python для рабочих задач", description: "От первой функции до сервиса подготовки отчётов и проекта в GitHub.", modules: pythonModules, phases: ["СТАРТ", "ЛОГИКА", "ДАННЫЕ", "ИНСТРУМЕНТЫ", "АРХИТЕКТУРА", "ПРОЕКТ"], practiceSummary: "Тренажёр Python с запуском кода", practiceHint: "Зато тренажёр Python уже работает и покрывает эти темы: код запускается в браузере, решение проверяется автоматически.", practicePath: "/python/practice", firstPath: "/python/practice", startLabel: "Открыть тренажёр Python", project: { title: pythonProjectTrack.project.title, summary: pythonProjectTrack.project.summary, includes: pythonProjectTrack.project.includes, path: "/python/project" } }}/>;
 }
 
 export function PythonTrainer({ navigate }) {

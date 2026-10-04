@@ -51,10 +51,15 @@ export function CourseCabinet({ navigate, course }) {
           <ul>
             <li><Code size={16}/> {course.practiceSummary}</li>
             <li><Cube size={16}/> Программа: {modulesLabel(course.modules.length)} · {topicsLabel(topicCount)}</li>
+            {course.project && <li><RocketLaunch size={16}/> {course.project.includes}</li>}
             <li><BookOpen size={16}/> Уроки курса в разработке</li>
           </ul>
         </div>
       </section>
+      {course.project && <section className="cabinet-project">
+        <div><small>ПРОЕКТ НА ВАШЕМ КОМПЬЮТЕРЕ</small><h2>{course.project.title}</h2><p>{course.project.summary}</p></div>
+        <button className="btn-primary" onClick={() => navigate(course.project.path)}>Открыть проект <ArrowRight size={18}/></button>
+      </section>}
       <section className="course-draft-note"><BookOpen size={19}/><p><b>Курс ещё пишется.</b> Ниже — план программы, уроков по нему пока нет. {course.practiceHint}</p></section>
       <section className="dashboard-program">
         <h2 className="course-syllabus-heading">Программа курса</h2>

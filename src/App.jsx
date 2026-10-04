@@ -21,6 +21,7 @@ import { getSecurityChallenge } from "./content/security/challenges.js";
 import { TrackCoursePage, TrackLesson, TrackProject, TrackTrainer, TrackTask } from "./components/TrackExperience.jsx";
 import { kubernetesTrack } from "./content/kubernetes/curriculum.js";
 import { youtubeTrack } from "./content/youtube/curriculum.js";
+import { pythonProjectTrack } from "./content/python/project.js";
 
 function Logo({ onHome }) {
   return <button className="logo" onClick={onHome}><span>GO</span>DEMY</button>;
@@ -100,6 +101,8 @@ export function App() {
       "/security/practice": "Практика: исправь уязвимость — Godemy",
       "/security/project": "Проект «Заметки» — Основы кибербезопасности",
       "/security/project/setup": "Подготовка проекта — Основы кибербезопасности",
+      "/python/project": "Проект «Учёт расходов» — Python",
+      "/python/project/setup": "Подготовка проекта — Python",
       "/youtube": "YouTube с нуля — Godemy",
       "/youtube/project": "Проект «Пять видео» — YouTube с нуля",
       "/youtube/project/setup": "Подготовка проекта — YouTube с нуля",
@@ -152,6 +155,7 @@ export function App() {
   const sqlTaskMatch = route.match(/^\/sql\/practice\/([^/]+)$/);
   const pythonTaskMatch = route.match(/^\/python\/practice\/([^/]+)$/);
   const qaTaskMatch = route.match(/^\/qa\/practice\/([^/]+)$/);
+  const pySprintMatch = route.match(/^\/python\/project\/sprint\/([1-4])$/);
   const ytLessonMatch = route.match(/^\/youtube\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
   const ytSprintMatch = route.match(/^\/youtube\/project\/sprint\/([1-4])$/);
   const k8sLessonMatch = route.match(/^\/kubernetes\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
@@ -169,6 +173,9 @@ export function App() {
   else if (route === "/python") content = <PythonCoursePage navigate={navigate}/>;
   else if (route === "/python/practice") content = <PythonTrainer navigate={navigate}/>;
   else if (pythonTaskMatch) content = <PythonTask challengeId={pythonTaskMatch[1]} navigate={navigate}/>;
+  else if (route === "/python/project") content = <TrackProject track={pythonProjectTrack} stageId="overview" navigate={navigate} key="po"/>;
+  else if (route === "/python/project/setup") content = <TrackProject track={pythonProjectTrack} stageId="setup" navigate={navigate} key="ps"/>;
+  else if (pySprintMatch) content = <TrackProject track={pythonProjectTrack} stageId={`sprint-${pySprintMatch[1]}`} navigate={navigate} key={`p${pySprintMatch[1]}`}/>;
   else if (route === "/youtube") content = <TrackCoursePage track={youtubeTrack} navigate={navigate}/>;
   else if (route === "/youtube/project") content = <TrackProject track={youtubeTrack} stageId="overview" navigate={navigate} key="yo"/>;
   else if (route === "/youtube/project/setup") content = <TrackProject track={youtubeTrack} stageId="setup" navigate={navigate} key="ys"/>;
