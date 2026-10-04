@@ -5,9 +5,9 @@ import {
   ArrowLeft, ArrowRight, Check, CheckCircle, Circle, Code,
   GithubLogo, Lightbulb, RocketLaunch, Target, BookOpen, House,
   List, X, CaretRight, UserCircle, PencilSimple, Flame,
-  Certificate
+  Certificate, Terminal
 } from "@phosphor-icons/react";
-import { project, setupTasks, sprints, stages, storyBeats } from "../content/goCourse.js";
+import { cliContract, contractRules, project, setupTasks, sprints, stages, storyBeats } from "../content/goCourse.js";
 import { courseCurriculum } from "../content/courseCurriculum.js";
 import { courseLessonPath, findLesson, flattenCourse, loadCourseDraft } from "../content/courseDraft.js";
 import { LessonBlocks } from "./LessonBlocks.jsx";
@@ -460,6 +460,7 @@ export function ProjectPage({ navigate }) {
       <StoryMessage story={storyBeats.project}/>
       <section className="situation-grid"><div><Target size={24}/><small>РАБОЧАЯ СИТУАЦИЯ</small><h2>{project.situation}</h2></div><div><Lightbulb size={24}/><small>ПРОБЛЕМА</small><p>{project.problem}</p></div></section>
       <section><h2>Что вы создадите</h2><div className="requirements-grid">{project.requirements.map((item) => <span key={item}><CheckCircle size={18}/>{item}</span>)}</div></section>
+      <section><h2>Контракт команд</h2><p>Ваш Task Tracker должен понимать эти команды. Именно их проверяет скрипт check.go, который вы запускаете у себя после каждого спринта.</p><div className="contract-table">{cliContract.map(([command, text]) => <p key={command}><code className="inline-code">{command}</code><span>{text}</span></p>)}</div><ul>{contractRules.map((item) => <li key={item}>{item}</li>)}</ul></section>
       <section className="scope-grid"><div><h3>Входит в проект</h3><div className="tag-list">{project.stack.map((item) => <span key={item}>{item}</span>)}</div></div><div><h3>Не входит</h3><ul>{project.exclusions.map((item) => <li key={item}>{item}</li>)}</ul></div></section>
       <section><h2>Маршрут из четырёх спринтов</h2><div className="sprint-overview">{sprints.map((sprint) => <button key={sprint.number} onClick={() => navigate(`/go/task-tracker/sprint/${sprint.number}`)}><span>0{sprint.number}</span><b>{sprint.title}</b><small>{sprint.result}</small><ArrowRight size={17}/></button>)}</div></section>
       <section className="completion-panel"><div><RocketLaunch size={27}/><h2>Готовый результат</h2><p>{project.result}</p></div><div><h3>Критерии завершения</h3>{project.completionCriteria.map((item) => <p key={item}><Check size={15}/>{item}</p>)}</div><div><h3>Артефакты GitHub</h3>{project.artifacts.map((item) => <p key={item}><GithubLogo size={15}/>{item}</p>)}</div></section>
@@ -474,6 +475,7 @@ export function SetupPage({ navigate }) {
       <header className="learning-header"><small>ПОДГОТОВИТЕЛЬНЫЙ ЭТАП</small><h1>Настройте рабочее окружение</h1><p>Пройдите шаги по порядку. Раскрывайте инструкции, выполняйте команды и отмечайте только реально проверенные пункты.</p></header>
       <StoryMessage story={storyBeats.setup}/>
       <Checklist items={setupTasks} title="12 шагов до первого push"/>
+      <AutoCheck/>
       <PageNavigation current="setup" navigate={navigate}/>
     </article>
   </LearningLayout>;
@@ -492,6 +494,17 @@ function StoryMessage({ story }) {
   </aside>;
 }
 
+function AutoCheck({ sprint }) {
+  return <ContentBlock eyebrow="АВТОПРОВЕРКА" title={sprint ? `Проверьте спринт ${sprint} у себя` : "Скрипт проверки check.go"} icon={<Terminal size={24}/>}>
+    {sprint
+      ? <p>Запустите проверку в папке проекта. Спринт готов, когда в разделе «Спринт {sprint}» все пункты отмечены ✓. Проверки следующих спринтов пока могут не проходить — это нормально.</p>
+      : <p>Скачайте check.go в корень своего репозитория. Он собирает ваше приложение, запускает его в пустой временной папке и проверяет контракт команд, хранение, обработку ошибок, тесты и README. Ваш tasks.json он не трогает.</p>}
+    <pre className="check-command"><code>go run check.go</code></pre>
+    {!sprint && <p><a className="check-download" href="/task-tracker/check.go" download>Скачать check.go</a></p>}
+    <p className="check-note">Файл помечен <code className="inline-code">//go:build ignore</code>, поэтому не мешает <code className="inline-code">go build</code> и <code className="inline-code">go test</code>. Добавьте его в репозиторий — так ревьюер сможет повторить проверку.</p>
+  </ContentBlock>;
+}
+
 export function SprintPage({ number, navigate }) {
   const sprint = sprints.find((item) => item.number === number) || sprints[0];
   const current = `sprint-${sprint.number}`;
@@ -505,6 +518,7 @@ export function SprintPage({ number, navigate }) {
       <ContentBlock eyebrow="ПОХОЖИЙ ПРИМЕР" title={sprint.exampleTitle}><p>{sprint.example}</p><div className="example-note"><Lightbulb size={18}/><span>Перенесите принцип, но не предметную область. Готового решения Task Tracker здесь нет.</span></div></ContentBlock>
       <Checklist items={sprint.tasks} title="Самостоятельные задачи"/>
       <ContentBlock eyebrow="ПРИЁМКА" title="Критерии готовности"><div className="criteria-list">{sprint.criteria.map((item) => <p key={item}><Circle size={17}/>{item}</p>)}</div></ContentBlock>
+      <AutoCheck sprint={sprint.number}/>
       <ContentBlock eyebrow="ПОДСКАЗКИ" title="Открывайте только когда застряли"><div className="hint-list">{sprint.hints.map((item, index) => <button key={item} onClick={() => setHint(hint === index ? null : index)}><span>Подсказка {index + 1}</span><b>{hint === index ? item : "Показать"}</b></button>)}</div></ContentBlock>
       <ContentBlock eyebrow="САМОПРОВЕРКА" title="Объясните себе"><Checklist items={sprint.selfCheck}/></ContentBlock>
       <ContentBlock eyebrow="GITHUB-ПРОЦЕСС" title="Доведите работу до репозитория" icon={<GithubLogo size={24}/>}><ol className="github-steps">{sprint.github.map((item) => <li key={item}>{item}</li>)}</ol></ContentBlock>
