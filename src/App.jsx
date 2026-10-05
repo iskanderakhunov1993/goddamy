@@ -23,6 +23,7 @@ import { kubernetesTrack } from "./content/kubernetes/curriculum.js";
 import { youtubeTrack } from "./content/youtube/curriculum.js";
 import { pythonProjectTrack } from "./content/python/project.js";
 import { sqlProjectTrack } from "./content/sql/project.js";
+import { qaProjectTrack } from "./content/qa/project.js";
 
 function Logo({ onHome }) {
   return <button className="logo" onClick={onHome}><span>GO</span>DEMY</button>;
@@ -102,6 +103,8 @@ export function App() {
       "/security/practice": "Практика: исправь уязвимость — Godemy",
       "/security/project": "Проект «Заметки» — Основы кибербезопасности",
       "/security/project/setup": "Подготовка проекта — Основы кибербезопасности",
+      "/qa/project": "Проект «Тестирование интернет-магазина» — QA",
+      "/qa/project/setup": "Подготовка проекта — QA",
       "/sql/project": "Проект «Аналитика интернет-магазина» — SQL",
       "/sql/project/setup": "Подготовка проекта — SQL",
       "/python/project": "Проект «Учёт расходов» — Python",
@@ -158,6 +161,7 @@ export function App() {
   const sqlTaskMatch = route.match(/^\/sql\/practice\/([^/]+)$/);
   const pythonTaskMatch = route.match(/^\/python\/practice\/([^/]+)$/);
   const qaTaskMatch = route.match(/^\/qa\/practice\/([^/]+)$/);
+  const qaSprintMatch = route.match(/^\/qa\/project\/sprint\/([1-4])$/);
   const sqlSprintMatch = route.match(/^\/sql\/project\/sprint\/([1-4])$/);
   const pySprintMatch = route.match(/^\/python\/project\/sprint\/([1-4])$/);
   const ytLessonMatch = route.match(/^\/youtube\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
@@ -177,6 +181,9 @@ export function App() {
   else if (route === "/python") content = <PythonCoursePage navigate={navigate}/>;
   else if (route === "/python/practice") content = <PythonTrainer navigate={navigate}/>;
   else if (pythonTaskMatch) content = <PythonTask challengeId={pythonTaskMatch[1]} navigate={navigate}/>;
+  else if (route === "/qa/project") content = <TrackProject track={qaProjectTrack} stageId="overview" navigate={navigate} key="ao"/>;
+  else if (route === "/qa/project/setup") content = <TrackProject track={qaProjectTrack} stageId="setup" navigate={navigate} key="as"/>;
+  else if (qaSprintMatch) content = <TrackProject track={qaProjectTrack} stageId={`sprint-${qaSprintMatch[1]}`} navigate={navigate} key={`a${qaSprintMatch[1]}`}/>;
   else if (route === "/sql/project") content = <TrackProject track={sqlProjectTrack} stageId="overview" navigate={navigate} key="qo"/>;
   else if (route === "/sql/project/setup") content = <TrackProject track={sqlProjectTrack} stageId="setup" navigate={navigate} key="qs"/>;
   else if (sqlSprintMatch) content = <TrackProject track={sqlProjectTrack} stageId={`sprint-${sqlSprintMatch[1]}`} navigate={navigate} key={`q${sqlSprintMatch[1]}`}/>;

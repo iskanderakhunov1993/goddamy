@@ -1,6 +1,7 @@
 import { ArrowLeft, ArrowRight, Briefcase, ClipboardText, Kanban, UserFocus } from "@phosphor-icons/react";
 import { CourseCabinet } from "./CourseCabinet.jsx";
 import "../styles-business-courses.css";
+import { qaProjectTrack } from "../content/qa/project.js";
 
 export const productModules = [
   { n: "01", title: "Роль продуктового менеджера", text: "Поймите, за какой результат отвечает PM и как продукт связывает людей, данные и бизнес.", topics: ["Продукт и ценность", "Роль PM в команде", "Пользователь и его задача", "Метрики продукта", "Первый продуктовый бриф"] },
@@ -25,7 +26,7 @@ export function ProductCoursePage({ navigate }) {
 }
 
 export function QaCoursePage({ navigate }) {
-  return <CourseCabinet navigate={navigate} course={{ slug: "qa", label: "QA", kicker: "КАЧЕСТВО ПРОДУКТА", title: "QA Engineer", description: "От анализа требований до проверки API и понятной рекомендации перед релизом.", modules: qaModules, phases: ["СТАРТ", "ДИЗАЙН", "ДЕФЕКТЫ", "API", "РЕЛИЗ", "ПРОЕКТ"], practiceSummary: "Тренажёр QA с проверкой ответа", practiceHint: "Зато тренажёр QA уже работает и покрывает эти темы: кейсы по приоритизации, тест-дизайну, баг-репортам и API.", practicePath: "/qa/practice", firstPath: "/qa/practice", startLabel: "Открыть тренажёр QA" }}/>;
+  return <CourseCabinet navigate={navigate} course={{ slug: "qa", label: "QA", kicker: "КАЧЕСТВО ПРОДУКТА", title: "QA Engineer", description: "От анализа требований до проверки API и понятной рекомендации перед релизом.", modules: qaModules, phases: ["СТАРТ", "ДИЗАЙН", "ДЕФЕКТЫ", "API", "РЕЛИЗ", "ПРОЕКТ"], practiceSummary: "Тренажёр QA с проверкой ответа", practiceHint: "Зато тренажёр QA уже работает и покрывает эти темы: кейсы по приоритизации, тест-дизайну, баг-репортам и API.", practicePath: "/qa/practice", firstPath: "/qa/practice", startLabel: "Открыть тренажёр QA" , project: { title: qaProjectTrack.project.title, summary: qaProjectTrack.project.summary, includes: qaProjectTrack.project.includes, path: "/qa/project" } }}/>;
 }
 
 const practiceCopy = {
