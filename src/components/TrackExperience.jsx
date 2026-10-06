@@ -62,7 +62,7 @@ export function TrackCoursePage({ track, navigate }) {
           <ul>
             <li><BookOpen size={16}/> {lessonsLabel(total)} в {track.curriculum.length} теоретических модулях</li>
             {track.practice && <li><Code size={16}/> {track.practice.challenges.length} {track.practice.countLabel}</li>}
-            <li><Stack size={16}/> {project ? project.includesLine : track.projectPlanned.includesLine}</li>
+            {(project || track.projectPlanned) && <li><Stack size={16}/> {project ? project.includesLine : track.projectPlanned.includesLine}</li>}
           </ul>
         </div>
       </section>
@@ -107,7 +107,7 @@ export function TrackCoursePage({ track, navigate }) {
                 {project.stages.map((stage) => <li key={stage.id}><button onClick={() => navigate(stage.path)}><span className={`sec-check ${doneSprints.has(stage.id) ? "done" : ""}`}>{doneSprints.has(stage.id) && <Check size={12} weight="bold"/>}</span>{stage.title}</button></li>)}
               </ul></div></div>}
             </article>
-            : <article className="sec-module planned">
+            : track.projectPlanned && <article className="sec-module planned">
               <div className="sec-module-head sec-static">
                 <span className="sec-module-num">{String(projectIndex + 1).padStart(2, "0")}</span>
                 <span className="sec-module-title"><b>{track.projectPlanned.title}</b><small>{track.projectPlanned.summary}</small></span>

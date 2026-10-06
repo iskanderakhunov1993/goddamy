@@ -38,13 +38,21 @@ const YT_ENTRIES = [
   ...youtubeTrack.flatLessons.map((item) => ({ kind: "Урок", title: item.title, subtitle: `YouTube · ${item.section.title}`, path: youtubeTrack.lessonPath(item) })),
 ];
 
+import { schoolTrack } from "../content/school/curriculum.js";
+
+const SCHOOL_ENTRIES = [
+  { kind: "Курс", title: "Python для школьников", subtitle: "Реальные задачи, всё в браузере", path: "/school" },
+  ...schoolTrack.flatLessons.map((item) => ({ kind: "Урок", title: item.title, subtitle: `Python для школьников · ${item.section.title}`, path: schoolTrack.lessonPath(item) })),
+  ...schoolTrack.practice.challenges.map((item) => ({ kind: "Задача", title: item.title, subtitle: `Python для школьников · ${item.category}`, path: `/school/practice/${item.id}` })),
+];
+
 const SECURITY_ENTRIES = [
   { kind: "Курс", title: "Основы кибербезопасности", subtitle: "Теория с задачами и тренажёр «исправь уязвимость»", path: "/security" },
   ...securityFlatLessons.map((item) => ({ kind: "Урок", title: item.title, subtitle: `Кибербезопасность · ${item.section.title}`, path: securityLessonPath(item) })),
   ...securityChallenges.map((item) => ({ kind: "Задача", title: item.title, subtitle: `Кибербезопасность · ${item.category}`, path: `/security/practice/${item.id}` })),
 ];
 
-const ALL_ENTRIES = [...STATIC_ENTRIES, ...SECURITY_ENTRIES, ...K8S_ENTRIES, ...YT_ENTRIES, ...LESSON_ENTRIES];
+const ALL_ENTRIES = [...STATIC_ENTRIES, ...SECURITY_ENTRIES, ...K8S_ENTRIES, ...SCHOOL_ENTRIES, ...YT_ENTRIES, ...LESSON_ENTRIES];
 
 export function SearchOverlay({ navigate, onClose }) {
   const [query, setQuery] = useState("");
