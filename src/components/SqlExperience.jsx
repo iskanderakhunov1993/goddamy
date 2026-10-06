@@ -10,6 +10,7 @@ import { sqlSchemaColumns, sqlSchemaTables } from "../content/sqlSchema.js";
 import { compareResults, createSeededDatabase, runQuery } from "../lib/sqlEngine.js";
 import { recordPractice } from "../lib/activity.js";
 import { sqlProjectTrack } from "../content/sql/project.js";
+import { sqlLessons } from "../content/sql/lessons.js";
 
 export { getSqlChallenge, sqlChallenges };
 
@@ -27,7 +28,7 @@ function SqlContextNav({ navigate, active }) {
 }
 
 export function SqlCoursePage({ navigate }) {
-  return <CourseCabinet navigate={navigate} course={{ slug: "sql", label: "SQL", kicker: "АНАЛИТИКА ДАННЫХ", title: "SQL для работы с данными", description: "От первой выборки до итогового исследования операций криптобанка.", modules: sqlModules, phases: ["СТАРТ", "ОСНОВЫ", "ФИЛЬТРАЦИЯ", "ОТЧЁТЫ", "СВЯЗИ", "ПРОЕКТ"], practiceSummary: "Тренажёр SQL с проверкой на реальной базе", practiceHint: "Зато тренажёр SQL уже работает и покрывает эти темы: запросы выполняются на настоящей базе прямо в браузере.", practicePath: "/sql/practice", firstPath: "/sql/practice", startLabel: "Открыть тренажёр SQL" , project: { title: sqlProjectTrack.project.title, summary: sqlProjectTrack.project.summary, includes: sqlProjectTrack.project.includes, path: "/sql/project" } }}/>;
+  return <CourseCabinet navigate={navigate} course={{ slug: "sql", label: "SQL", kicker: "АНАЛИТИКА ДАННЫХ", title: "SQL для работы с данными", description: "От первой выборки до аналитики интернет-магазина на своём компьютере.", modules: sqlModules, phases: ["СТАРТ", "ОСНОВЫ", "ФИЛЬТРАЦИЯ", "ОТЧЁТЫ", "СВЯЗИ", "ПРОЕКТ"], practiceSummary: "Тренажёр SQL с проверкой на реальной базе", practiceHint: "Зато тренажёр SQL уже работает и покрывает эти темы: запросы выполняются на настоящей базе прямо в браузере.", practicePath: "/sql/practice", firstPath: "/sql/practice", startLabel: "Открыть тренажёр SQL" , project: { title: sqlProjectTrack.project.title, summary: sqlProjectTrack.project.summary, includes: sqlProjectTrack.project.includes, path: "/sql/project" } , lessons: sqlLessons }}/>;
 }
 
 export function SqlTrainer({ navigate }) {

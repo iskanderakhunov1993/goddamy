@@ -2,6 +2,7 @@ import { getQuizAnswer, saveQuizAnswer } from "../lib/quizAnswers.js";
 import { getCheckedItems, toggleCheckedItem } from "../lib/taskChecklist.js";
 import { runGoProgram } from "../lib/goPlayground.js";
 import { runPythonProgram } from "../lib/pyodidePlayground.js";
+import { SHOP_DB_PY } from "../lib/shopDbPython.js";
 
 // A code block is runnable as-is only if it's a complete program, or if it's
 // a plain sequence of statements with no top-level func/type declaration —
@@ -107,12 +108,30 @@ function InlineText({ text = "" }) {
   });
 }
 
+// SQL-блок с run: "shop" выполняется в Pyodide (sqlite3) на учебной базе магазина —
+// той же, что ученик создаёт в проекте SQL командой python check.py --make-db.
+function shopQuerySource(sql) {
+  return `${SHOP_DB_PY}
+db = build_db(":memory:", 1)
+cur = db.execute(${JSON.stringify(sql.trim().replace(/;\s*$/, ""))})
+rows = cur.fetchall()
+names = [c[0] for c in cur.description or []]
+print(" | ".join(names))
+for row in rows[:30]:
+    print(" | ".join(str(v) for v in row))
+if len(rows) > 30:
+    print(f"… ещё {len(rows) - 30} строк")
+print(f"({len(rows)} строк)")
+`;
+}
+
 function CodeBlock({ block }) {
   const [copied, setCopied] = useState(false);
   const [run, setRun] = useState(null); // null | { busy } | { status, stdout, message }
   const isGo = !block.language || block.language === "go";
-  const isPython = block.language === "python";
-  const runnableSource = isGo ? buildRunnableSource(block.code || "", block.id) : isPython ? block.code || "" : null;
+  const isShopSql = block.language === "sql" && block.run === "shop";
+  const isPython = block.language === "python" || isShopSql;
+  const runnableSource = isGo ? buildRunnableSource(block.code || "", block.id) : isShopSql ? shopQuerySource(block.code || "") : isPython ? block.code || "" : null;
 
   const copy = async () => {
     try {

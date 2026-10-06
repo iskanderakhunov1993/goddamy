@@ -76,3 +76,18 @@
 .cabinet-project small { font: 700 11px "Roboto Mono", monospace; color: #4b3aeb; }
 .cabinet-project h2 { margin: 6px 0; font-size: 20px; }
 .cabinet-project p { margin: 0; color: #5b6072; line-height: 1.55; }
+
+.cabinet-lessons { margin: 0 0 18px; padding: 20px 22px; border: 1px solid #dfe1ee; border-radius: 16px; background: #fff; }
+.cabinet-lessons > header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.cabinet-lessons > header h2 { margin: 0; font-size: 20px; }
+.cabinet-lessons > header span { color: #5b6072; font: 600 12px "Roboto Mono", monospace; }
+.cabinet-lessons-module { margin-top: 16px; }
+.cabinet-lessons-module h3 { margin: 0 0 2px; font-size: 16px; }
+.cabinet-lessons-module > p { margin: 0 0 8px; color: #5b6072; font-size: 14px; }
+.cabinet-lessons-module ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.cabinet-lessons-module button { display: flex; align-items: flex-start; gap: 10px; width: 100%; padding: 10px 12px; border: 0; border-radius: 10px; background: transparent; text-align: left; cursor: pointer; color: #12141d; }
+.cabinet-lessons-module button:hover { background: #f5f6fb; }
+.cabinet-lessons-module button > svg { flex: none; color: #1b7a4b; margin-top: 1px; }
+.cabinet-lessons-module button > span:last-child { display: grid; gap: 2px; min-width: 0; }
+.cabinet-lessons-module small { color: #5b6072; font-size: 13px; line-height: 1.45; }
+.cabinet-lesson-dot { flex: none; width: 16px; height: 16px; margin: 2px 1px 0; border: 2px solid #c9cce0; border-radius: 50%; }

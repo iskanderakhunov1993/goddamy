@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { modulesLabel, topicsLabel } from "../lib/plural.js";
+import { lessonsLabel, modulesLabel, topicsLabel } from "../lib/plural.js";
+import { getCompletedLessonIds } from "../lib/progress.js";
 import {
   ArrowRight, ArrowsClockwise, ArrowsDownUp, BookOpen, BracketsCurly,
   Briefcase, ChartBar, ChartLineUp, CheckCircle, Code, Cube, Database, FileCode,
@@ -26,8 +27,28 @@ export function ModuleGlyph({ course = "go", index = 0 }) {
   return <Icon className="go-module-icon" size={58} weight="light" aria-hidden="true"/>;
 }
 
+function CourseLessons({ lessons, navigate }) {
+  const completed = new Set(getCompletedLessonIds(lessons.slug));
+  const done = lessons.flatLessons.filter((lesson) => completed.has(lesson.id)).length;
+  return <section className="cabinet-lessons">
+    <header><h2>Уроки</h2><span>{done} / {lessons.flatLessons.length} пройдено</span></header>
+    {lessons.curriculum.map((module) => <div className="cabinet-lessons-module" key={module.id}>
+      <h3>{module.title}</h3>
+      <p>{module.summary}</p>
+      <ol>{module.topics.flatMap((topic) => topic.lessons.map((lesson) => <li key={lesson.id}>
+        <button onClick={() => navigate(lessons.lessonPath({ ...lesson, topic, section: module }))}>
+          {completed.has(lesson.id) ? <CheckCircle size={18} weight="fill"/> : <span className="cabinet-lesson-dot"/>}
+          <span><b>{lesson.title}</b><small>{lesson.summary}</small></span>
+        </button>
+      </li>))}</ol>
+    </div>)}
+  </section>;
+}
+
 export function CourseCabinet({ navigate, course }) {
   const [selectedModule, setSelectedModule] = useState(null);
+  const lessons = course.lessons;
+  const nextLesson = lessons && (lessons.flatLessons.find((lesson) => !getCompletedLessonIds(lessons.slug).includes(lesson.id)) || lessons.flatLessons[0]);
   const topicCount = course.modules.reduce((sum, module) => sum + module.topics.length, 0);
   const selected = course.modules.find((module) => module.n === selectedModule);
   return <main className={`course-dashboard course-dashboard-${course.slug}`}>
@@ -42,7 +63,10 @@ export function CourseCabinet({ navigate, course }) {
           <small>{course.kicker}</small>
           <h1>{course.title}</h1>
           <p>{course.description}</p>
-          {course.startLabel && <div className="course-hero-actions">
+          {lessons ? <div className="course-hero-actions">
+            <button className="btn-primary" onClick={() => navigate(lessons.lessonPath(nextLesson))}>Начать уроки <ArrowRight size={18}/></button>
+            <button className="btn-ghost" onClick={() => navigate(course.practicePath)}><Code size={17}/> Тренажёр</button>
+          </div> : course.startLabel && <div className="course-hero-actions">
             <button className="btn-primary" onClick={() => navigate(course.firstPath)}>{course.startLabel} <ArrowRight size={18}/></button>
           </div>}
         </div>
@@ -52,7 +76,7 @@ export function CourseCabinet({ navigate, course }) {
             <li><Code size={16}/> {course.practiceSummary}</li>
             <li><Cube size={16}/> Программа: {modulesLabel(course.modules.length)} · {topicsLabel(topicCount)}</li>
             {course.project && <li><RocketLaunch size={16}/> {course.project.includes}</li>}
-            <li><BookOpen size={16}/> Уроки курса в разработке</li>
+            <li><BookOpen size={16}/> {lessons ? `${lessonsLabel(lessons.flatLessons.length)} — готовят к проекту` : "Уроки курса в разработке"}</li>
           </ul>
         </div>
       </section>
@@ -60,7 +84,10 @@ export function CourseCabinet({ navigate, course }) {
         <div><small>ПРОЕКТ НА ВАШЕМ КОМПЬЮТЕРЕ</small><h2>{course.project.title}</h2><p>{course.project.summary}</p></div>
         <button className="btn-primary" onClick={() => navigate(course.project.path)}>Открыть проект <ArrowRight size={18}/></button>
       </section>}
-      <section className="course-draft-note"><BookOpen size={19}/><p><b>Курс ещё пишется.</b> Ниже — план программы, уроков по нему пока нет. {course.practiceHint}</p></section>
+      {lessons && <CourseLessons lessons={lessons} navigate={navigate}/>}
+      <section className="course-draft-note"><BookOpen size={19}/><p>{lessons
+        ? <><b>Полная программа ещё пишется.</b> Уроки выше дают всё, что нужно для проекта; ниже — план остальных модулей.</>
+        : <><b>Курс ещё пишется.</b> Ниже — план программы, уроков по нему пока нет. {course.practiceHint}</>}</p></section>
       <section className="dashboard-program">
         <h2 className="course-syllabus-heading">Программа курса</h2>
         <div className="module-grid">{course.modules.map((module, index) =>

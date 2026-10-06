@@ -24,6 +24,9 @@ import { youtubeTrack } from "./content/youtube/curriculum.js";
 import { pythonProjectTrack } from "./content/python/project.js";
 import { sqlProjectTrack } from "./content/sql/project.js";
 import { qaProjectTrack } from "./content/qa/project.js";
+import { pythonLessons } from "./content/python/lessons.js";
+import { sqlLessons } from "./content/sql/lessons.js";
+import { qaLessons } from "./content/qa/lessons.js";
 
 function Logo({ onHome }) {
   return <button className="logo" onClick={onHome}><span>GO</span>DEMY</button>;
@@ -161,6 +164,8 @@ export function App() {
   const sqlTaskMatch = route.match(/^\/sql\/practice\/([^/]+)$/);
   const pythonTaskMatch = route.match(/^\/python\/practice\/([^/]+)$/);
   const qaTaskMatch = route.match(/^\/qa\/practice\/([^/]+)$/);
+  const courseLessonTrack = { python: pythonLessons, sql: sqlLessons, qa: qaLessons };
+  const extraLessonMatch = route.match(/^\/(python|sql|qa)\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
   const qaSprintMatch = route.match(/^\/qa\/project\/sprint\/([1-4])$/);
   const sqlSprintMatch = route.match(/^\/sql\/project\/sprint\/([1-4])$/);
   const pySprintMatch = route.match(/^\/python\/project\/sprint\/([1-4])$/);
@@ -181,6 +186,7 @@ export function App() {
   else if (route === "/python") content = <PythonCoursePage navigate={navigate}/>;
   else if (route === "/python/practice") content = <PythonTrainer navigate={navigate}/>;
   else if (pythonTaskMatch) content = <PythonTask challengeId={pythonTaskMatch[1]} navigate={navigate}/>;
+  else if (extraLessonMatch) content = <TrackLesson track={courseLessonTrack[extraLessonMatch[1]]} sectionId={extraLessonMatch[2]} topicId={extraLessonMatch[3]} lessonId={extraLessonMatch[4]} navigate={navigate} key={extraLessonMatch[4]}/>;
   else if (route === "/qa/project") content = <TrackProject track={qaProjectTrack} stageId="overview" navigate={navigate} key="ao"/>;
   else if (route === "/qa/project/setup") content = <TrackProject track={qaProjectTrack} stageId="setup" navigate={navigate} key="as"/>;
   else if (qaSprintMatch) content = <TrackProject track={qaProjectTrack} stageId={`sprint-${qaSprintMatch[1]}`} navigate={navigate} key={`a${qaSprintMatch[1]}`}/>;
@@ -226,7 +232,7 @@ export function App() {
   else if (route === "/trainer" || route === "/go/practice") content = <Trainer setPage={navigate}/>;
   else if (taskMatch) content = <GoTask challengeId={taskMatch[1]} navigate={navigate} key={taskMatch[1]}/>;
   else content = <CoursePage navigate={navigate}/>;
-  const immersive = route === "/youtube" || Boolean(ytLessonMatch) || route === "/kubernetes" || route === "/kubernetes/practice" || Boolean(k8sTaskMatch) || Boolean(k8sLessonMatch) || route === "/security" || route === "/security/practice" || Boolean(secTaskMatch) || Boolean(secLessonMatch) || Boolean(taskMatch) || Boolean(sqlTaskMatch) || Boolean(pythonTaskMatch) || Boolean(qaTaskMatch) || route === "/trainer" || route === "/go/practice" || route === "/sql" || route === "/sql/practice" || route === "/python" || route === "/python/practice" || route === "/product" || route === "/product/practice" || route === "/qa" || route === "/qa/practice" || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
+  const immersive = Boolean(extraLessonMatch) || route === "/youtube" || Boolean(ytLessonMatch) || route === "/kubernetes" || route === "/kubernetes/practice" || Boolean(k8sTaskMatch) || Boolean(k8sLessonMatch) || route === "/security" || route === "/security/practice" || Boolean(secTaskMatch) || Boolean(secLessonMatch) || Boolean(taskMatch) || Boolean(sqlTaskMatch) || Boolean(pythonTaskMatch) || Boolean(qaTaskMatch) || route === "/trainer" || route === "/go/practice" || route === "/sql" || route === "/sql/practice" || route === "/python" || route === "/python/practice" || route === "/product" || route === "/product/practice" || route === "/qa" || route === "/qa/practice" || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
   return <>{!immersive && <Header setPage={navigate}/>} {content}{!immersive && <Footer setPage={navigate}/>}</>;
 }
 
