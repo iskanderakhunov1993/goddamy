@@ -16,7 +16,7 @@
 - Фреймворк / язык: React 19 + Vite 6, JavaScript с проверкой TypeScript (`tsc --noEmit`, `checkJs`), CSS, Phosphor Icons.
 - Выполнение кода учеников в браузере: Pyodide (Python, в т.ч. SQL-примеры на sqlite3), sql.js (SQL-тренажёр), play.golang.org (Go).
 - Данные: `localStorage` как быстрый кэш + Supabase Postgres (`public.user_state`, миграции в `supabase/migrations/`), вход по ссылке на почту, необязательный.
-- Продакшен URL: https://godemy.vercel.app (Vercel, проект `godemy`). Домен godemy.ru привязан в Vercel, DNS не подтверждён — _уточнить у владельца_.
+- Продакшен URL: https://godemy.vercel.app (Vercel, проект `godemy`) — основной адрес по решению владельца. Домен godemy.ru привязан в Vercel, но пока не используется.
 - Деплой: вручную через `vercel --prod` (автодеплоя из GitHub нет). Только после явного «да» владельца.
 - Превью: Vercel preview на ветку — сейчас не настроено (Git-интеграции нет).
 - База данных: прод Supabase трогает только владелец; миграции — в `supabase/migrations/` (SQL показывать владельцу до применения).
