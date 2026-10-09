@@ -28,17 +28,26 @@ test("every sprint contains the universal learning sections", () => {
     assert.ok(sprint.criteria.length >= 4);
     assert.ok(sprint.hints.length >= 3);
     assert.ok(sprint.github.length >= 3);
-    assert.ok(sprint.story?.name);
+    // Подсказка спринта — без персонажей (AGENTS.md: «no storyline, no recurring characters»).
+    assert.ok(sprint.story?.label);
     assert.ok(sprint.story?.message);
-    assert.match(sprint.story?.avatar ?? "", /^\/characters\/avatar-/);
   }
 });
 
-test("key project stages have a Bit Tech story message", () => {
+test("key project stages have a guidance message", () => {
   for (const stage of ["project", "setup", "retrospective"]) {
-    assert.ok(storyBeats[stage].name);
+    assert.ok(storyBeats[stage].label);
     assert.ok(storyBeats[stage].message);
-    assert.match(storyBeats[stage].avatar, /^\/characters\/avatar-/);
+  }
+});
+
+test("course content has no fictional company, characters or avatars", () => {
+  // AGENTS.md: не возвращать вымышленную компанию, героев и их иллюстрации.
+  const content = JSON.stringify({ course, sprints, storyBeats, stages, setupTasks });
+  assert.doesNotMatch(content, /Bit Tech/i);
+  assert.doesNotMatch(content, /\/characters\/|avatar/i);
+  for (const beat of [...sprints.map((sprint) => sprint.story), ...Object.values(storyBeats)]) {
+    assert.equal(beat.name, undefined, "у подсказки не должно быть имени персонажа");
   }
 });
 

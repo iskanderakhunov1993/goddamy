@@ -11,7 +11,7 @@ export function EditorAuthGate({ children }) {
   const [sending, setSending] = useState(false);
 
   useEffect(() => {
-    if (!supabase) { setSession(null); return; }
+    if (!supabase) return; // без Supabase компонент сразу показывает «Вход не настроен» и session не читает
     supabase.auth.getSession().then(({ data }) => setSession(data.session || null));
     const { data: listener } = supabase.auth.onAuthStateChange((_event, nextSession) => setSession(nextSession));
     return () => listener.subscription.unsubscribe();
