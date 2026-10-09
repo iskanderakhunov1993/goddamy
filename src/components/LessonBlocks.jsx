@@ -46,6 +46,9 @@ const NOT_SELF_CONTAINED = new Set([
   "go-foundations-go-core-3-b1", "go-foundations-go-core-3-b3", "go-foundations-go-core-3-b6",
   "go-foundations-data-model-3-b4", "go-foundations-quality-5-b1", "go-foundations-database-basics-5-b3",
   "project-task-tracker-task-cli-2-b3", "project-task-tracker-task-cli-5-b1",
+  // фрагменты main: ждут аргументов командной строки или функций из других блоков
+  "project-task-tracker-task-cli-1-b1", "project-task-tracker-task-cli-4-b3", "project-task-tracker-task-cli-4-b5",
+  "project-task-tracker-task-storage-4-b5",
 ]);
 
 function buildRunnableSource(code, blockId) {
@@ -130,7 +133,8 @@ function CodeBlock({ block }) {
   const [run, setRun] = useState(null); // null | { busy } | { status, stdout, message }
   const isGo = !block.language || block.language === "go";
   const isShopSql = block.language === "sql" && block.run === "shop";
-  const isPython = block.language === "python" || isShopSql;
+  // run: false — пример запускается только на компьютере ученика (например, импортирует его модуль).
+  const isPython = (block.language === "python" && block.run !== false) || isShopSql;
   const runnableSource = isGo ? buildRunnableSource(block.code || "", block.id) : isShopSql ? shopQuerySource(block.code || "") : isPython ? block.code || "" : null;
 
   const copy = async () => {

@@ -5,7 +5,8 @@
 // Исходники: examples/qa-shop-solution (build.py собирает public/qa-shop/).
 
 const sh = (code) => ({ type: "code", language: "bash", code });
-const py = (code) => ({ type: "code", language: "python", code });
+// Примеры импортируют shop.py ученика, поэтому запускаются только у него, не в браузере.
+const py = (code) => ({ type: "code", language: "python", code, run: false });
 const sprintCheck = (n, areas) => ({ type: "callout", tone: "info", title: `Проверка спринта ${n}`, text: `Запусти \`python check.py\`. Спринт готов, когда в разделе «Спринт ${n}» пойманы баги по требованиям ${areas}, а на исправной версии все тесты проходят.` });
 const done = (n) => ({ type: "task", title: "Готово, если", text: `Отметь, когда check.py показывает ✓ по спринту ${n}.`, checklist: [`Спринт ${n} в check.py полностью зелёный`, "Для каждого найденного бага есть баг-репорт в bugs.md", "Сделан commit и push"] });
 
