@@ -8,10 +8,12 @@ const PYODIDE_CDN = `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`
 
 let pyodidePromise = null;
 
+/** @returns {Promise<void>} */
 function loadScript(src) {
   return new Promise((resolve, reject) => {
+    /** @type {HTMLScriptElement | null} */
     const existing = document.querySelector(`script[src="${src}"]`);
-    if (existing) { existing.addEventListener("load", resolve); if (existing.dataset.loaded) resolve(); return; }
+    if (existing) { existing.addEventListener("load", () => resolve()); if (existing.dataset.loaded) resolve(); return; }
     const script = document.createElement("script");
     script.src = src;
     script.onload = () => { script.dataset.loaded = "1"; resolve(); };

@@ -494,7 +494,7 @@ function StoryMessage({ story }) {
   </aside>;
 }
 
-function AutoCheck({ sprint }) {
+function AutoCheck({ sprint = null }) {
   return <ContentBlock eyebrow="АВТОПРОВЕРКА" title={sprint ? `Проверьте спринт ${sprint} у себя` : "Скрипт проверки check.go"} icon={<Terminal size={24}/>}>
     {sprint
       ? <p>Запустите проверку в папке проекта. Спринт готов, когда в разделе «Спринт {sprint}» все пункты отмечены ✓. Проверки следующих спринтов пока могут не проходить — это нормально.</p>
