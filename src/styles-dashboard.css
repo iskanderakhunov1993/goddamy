@@ -7,9 +7,9 @@ body { min-width: 0; }
 .course-hero-copy h1 { margin: 8px 0 12px; font-size: 32px; font-weight: 800; letter-spacing: -.01em; }
 .course-hero-copy > p { margin: 0 0 18px; max-width: 520px; color:#5b6072; font-size: 14.5px; line-height: 1.6; }
 .course-hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-.course-hero-actions .btn-primary { display: flex; align-items: center; gap: 8px; border:0; border-radius:10px; background:#4b3aeb; color:#fff; padding: 12px 20px; font-weight: 700; font-size: 14px; cursor: pointer; }
-.course-hero-actions .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
-.course-hero-actions .btn-ghost { display: flex; align-items: center; gap: 8px; border:1px solid var(--line); border-radius:10px; background:#fff; color:#141522; padding: 12px 18px; font-weight: 700; font-size: 14px; cursor: pointer; }
+.course-hero-actions .btn-primary, .school-actions .btn-primary, .cabinet-project .btn-primary { display: flex; align-items: center; gap: 8px; border:0; border-radius:10px; background:#4b3aeb; color:#fff; padding: 12px 20px; font-weight: 700; font-size: 14px; cursor: pointer; }
+.course-hero-actions .btn-primary:disabled, .school-actions .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+.course-hero-actions .btn-ghost, .school-actions .btn-ghost { display: flex; align-items: center; gap: 8px; border:1px solid var(--line); border-radius:10px; background:#fff; color:#141522; padding: 12px 18px; font-weight: 700; font-size: 14px; cursor: pointer; }
 .course-includes { position: relative; border:1px solid var(--line); border-radius:10px; background:#fff; padding: 20px; }
 .course-includes b { display: block; font-size: 13px; margin-bottom: 12px; }
 .course-includes ul { list-style: none; margin: 0; padding: 0; }

@@ -84,3 +84,9 @@ export function getActivitySummary(now = new Date()) {
 
   return { totalDays, currentStreak, bestStreak, last7Days, weeks };
 }
+
+// Дни (ГГГГ-ММ-ДД), в которые ученик решал задачи конкретного курса, по порядку.
+export function getCourseDays(courseSlug) {
+  const log = loadLog();
+  return Object.keys(log).filter((key) => (log[key] || []).includes(courseSlug)).sort();
+}

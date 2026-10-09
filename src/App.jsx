@@ -28,6 +28,7 @@ import { pythonLessons } from "./content/python/lessons.js";
 import { sqlLessons } from "./content/sql/lessons.js";
 import { qaLessons } from "./content/qa/lessons.js";
 import { schoolTrack } from "./content/school/curriculum.js";
+import { KidsLanding, ParentReport } from "./components/SchoolPages.jsx";
 
 function Logo({ onHome }) {
   return <button className="logo" onClick={onHome}><span>GO</span>DEMY</button>;
@@ -113,6 +114,8 @@ export function App() {
       "/sql/project/setup": "Подготовка проекта — SQL",
       "/python/project": "Проект «Учёт расходов» — Python",
       "/python/project/setup": "Подготовка проекта — Python",
+      "/kids": "Программирование для школьников — Godemy",
+      "/school/report": "Отчёт для родителей — Python для школьников",
       "/school": "Python для школьников — Godemy",
       "/school/practice": "Задачи из жизни — Python для школьников",
       "/youtube": "YouTube с нуля — Godemy",
@@ -191,6 +194,8 @@ export function App() {
   else if (route === "/python") content = <PythonCoursePage navigate={navigate}/>;
   else if (route === "/python/practice") content = <PythonTrainer navigate={navigate}/>;
   else if (pythonTaskMatch) content = <PythonTask challengeId={pythonTaskMatch[1]} navigate={navigate}/>;
+  else if (route === "/kids") content = <KidsLanding navigate={navigate}/>;
+  else if (route === "/school/report") content = <ParentReport navigate={navigate}/>;
   else if (route === "/school") content = <TrackCoursePage track={schoolTrack} navigate={navigate}/>;
   else if (route === "/school/practice") content = <TrackTrainer track={schoolTrack} navigate={navigate}/>;
   else if (schoolTaskMatch) content = <TrackTask track={schoolTrack} challengeId={schoolTaskMatch[1]} navigate={navigate} key={schoolTaskMatch[1]}/>;
@@ -241,7 +246,7 @@ export function App() {
   else if (route === "/trainer" || route === "/go/practice") content = <Trainer setPage={navigate}/>;
   else if (taskMatch) content = <GoTask challengeId={taskMatch[1]} navigate={navigate} key={taskMatch[1]}/>;
   else content = <CoursePage navigate={navigate}/>;
-  const immersive = route === "/school" || route === "/school/practice" || Boolean(schoolTaskMatch) || Boolean(schoolLessonMatch) || Boolean(extraLessonMatch) || route === "/youtube" || Boolean(ytLessonMatch) || route === "/kubernetes" || route === "/kubernetes/practice" || Boolean(k8sTaskMatch) || Boolean(k8sLessonMatch) || route === "/security" || route === "/security/practice" || Boolean(secTaskMatch) || Boolean(secLessonMatch) || Boolean(taskMatch) || Boolean(sqlTaskMatch) || Boolean(pythonTaskMatch) || Boolean(qaTaskMatch) || route === "/trainer" || route === "/go/practice" || route === "/sql" || route === "/sql/practice" || route === "/python" || route === "/python/practice" || route === "/product" || route === "/product/practice" || route === "/qa" || route === "/qa/practice" || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
+  const immersive = route === "/kids" || route === "/school/report" || route === "/school" || route === "/school/practice" || Boolean(schoolTaskMatch) || Boolean(schoolLessonMatch) || Boolean(extraLessonMatch) || route === "/youtube" || Boolean(ytLessonMatch) || route === "/kubernetes" || route === "/kubernetes/practice" || Boolean(k8sTaskMatch) || Boolean(k8sLessonMatch) || route === "/security" || route === "/security/practice" || Boolean(secTaskMatch) || Boolean(secLessonMatch) || Boolean(taskMatch) || Boolean(sqlTaskMatch) || Boolean(pythonTaskMatch) || Boolean(qaTaskMatch) || route === "/trainer" || route === "/go/practice" || route === "/sql" || route === "/sql/practice" || route === "/python" || route === "/python/practice" || route === "/product" || route === "/product/practice" || route === "/qa" || route === "/qa/practice" || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
   return <>{!immersive && <Header setPage={navigate}/>} {content}{!immersive && <Footer setPage={navigate}/>}</>;
 }
 

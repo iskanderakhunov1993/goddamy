@@ -1,0 +1,35 @@
+.school-page { min-height: 100vh; background: #eef1fb; color: #12141d; padding: 0 16px 64px; }
+.school-page > * { max-width: 880px; margin-left: auto; margin-right: auto; }
+.school-nav { display: flex; justify-content: space-between; gap: 12px; padding: 18px 0; }
+.school-nav button { display: inline-flex; align-items: center; gap: 6px; border: 0; background: none; color: #4b3aeb; font-weight: 600; cursor: pointer; padding: 6px 0; }
+.school-hero { padding: 28px 0 8px; }
+.school-hero small { font: 700 12px "Roboto Mono", monospace; color: #4b3aeb; letter-spacing: .04em; }
+.school-hero h1 { margin: 10px 0 12px; font-size: clamp(30px, 6vw, 48px); line-height: 1.08; overflow-wrap: anywhere; }
+.school-hero p { max-width: 680px; color: #3d4152; font-size: 17px; line-height: 1.6; }
+.school-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.school-actions button { display: inline-flex; align-items: center; gap: 8px; }
+.school-section { margin-top: 28px; padding: 22px; border: 1px solid #dfe1ee; border-radius: 16px; background: #fff; }
+.school-section h2 { margin: 0 0 14px; font-size: 22px; }
+.school-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.school-grid article { padding: 16px; border-radius: 12px; background: #f5f6fb; }
+.school-grid h3 { margin: 0 0 6px; font-size: 16px; }
+.school-grid p { margin: 0; color: #3d4152; line-height: 1.55; font-size: 15px; }
+.school-steps { margin: 0; padding-left: 20px; display: grid; gap: 10px; line-height: 1.55; }
+.school-facts ul, .school-report-group ul, .school-report-lessons { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.school-facts li, .school-report-group li, .school-report-lessons li { display: flex; align-items: flex-start; gap: 10px; line-height: 1.5; }
+.school-facts svg, .school-report-group li.done svg, .school-report-lessons li.done svg { color: #1b7a4b; flex: none; margin-top: 2px; }
+.school-report-group li svg, .school-report-lessons li svg { color: #9aa0b8; flex: none; margin-top: 2px; }
+.school-report-group { margin-top: 14px; }
+.school-report-group h3 { margin: 0 0 8px; font-size: 15px; color: #5b6072; }
+.school-report-group li span { flex: 1; min-width: 0; }
+.school-report-group li small { color: #5b6072; }
+.school-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 20px; }
+.school-stats div { padding: 18px; border-radius: 16px; background: #fff; border: 1px solid #dfe1ee; display: grid; gap: 4px; }
+.school-stats b { font-size: 28px; }
+.school-stats span { color: #5b6072; font-size: 14px; }
+.school-next { margin: 16px 0 0; font-weight: 600; }
+@media print {
+  .school-nav, .school-actions { display: none; }
+  .school-page { background: #fff; padding: 0; }
+  .school-section, .school-stats div { border-color: #ccc; break-inside: avoid; }
+}
