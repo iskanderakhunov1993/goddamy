@@ -13,6 +13,7 @@ const KNOWN_KEYS = [
   "godemy-lesson-feedback-v1",
   "godemy-enrolled-courses-v1",
   "godemy-practice-log-v1",
+  "godemy-task-checklist-v1",
 ];
 
 // Fire-and-forget: called from every local save function. Never throws —
