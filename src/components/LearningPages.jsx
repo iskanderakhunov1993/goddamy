@@ -249,7 +249,7 @@ function AccountSyncSection() {
   return <section className="profile-mini-section profile-account">
     <h3>Аккаунт</h3>
     {status === "signed-in" && <>
-      <p className="profile-mini-hint">Вы вошли как <b>{userEmail}</b>. Прогресс сохраняется в облаке и доступен с любого устройства.</p>
+      <p className="profile-mini-hint">Вход выполнен: <b>{userEmail}</b>. Прогресс сохраняется в облаке и доступен с любого устройства.</p>
       <button className="profile-mini-edit" onClick={handleSignOut}>Выйти</button>
     </>}
     {status === "sent" && <p className="profile-mini-hint">Ссылка для входа отправлена на <b>{email}</b>. Открой её на этом или любом другом устройстве — прогресс подтянется автоматически.</p>}
@@ -289,9 +289,9 @@ export function ProfilePage({ navigate }) {
     <div className="profile-content">
       <div className="profile-mini-layout">
         <aside className="profile-mini">
-          <img className="profile-mini-avatar" src="/characters/avatar-protagonist-neutral-v1.png" alt="Аватар стажёра"/>
-          <h2 className="profile-mini-name">{profile.name}</h2>
-          <p className="profile-mini-role">PRE-JUNIOR · GO BACKEND</p>
+          <div className="profile-mini-avatar" aria-hidden="true">{(profile.name || "Г").trim().charAt(0).toUpperCase()}</div>
+          <h1 className="profile-mini-name">{profile.name}</h1>
+          {enrolledCourses.length > 0 && <p className="profile-mini-role">{enrolledCourses.map((item) => item.title).join(" · ")}</p>}
           <button className="profile-mini-edit" onClick={() => setEditing((value) => !value)}>{editing ? "Готово" : "Редактировать профиль"}</button>
           {editing ? <form onSubmit={(event) => { event.preventDefault(); saveProfile(profile); setEditing(false); }}>
             <label>Имя<input value={profile.name} onChange={(event) => changeProfile("name", event.target.value)} maxLength={40}/></label>
@@ -300,8 +300,7 @@ export function ProfilePage({ navigate }) {
             <label>GitHub<input value={profile.github} onChange={(event) => changeProfile("github", event.target.value)} placeholder="https://github.com/username"/></label>
             <button className="profile-mini-save">Сохранить</button>
           </form> : <>
-            <p className="profile-mini-meta">Последняя активность: сегодня</p>
-            <p className="profile-mini-meta">В программе с августа 2026</p>
+            {activity.totalDays > 0 && <p className="profile-mini-meta">Дней с практикой: {activity.totalDays}</p>}
           </>}
         </aside>
         <div className="profile-mini-main">
@@ -311,7 +310,7 @@ export function ProfilePage({ navigate }) {
             {enrolledCourses.length ? enrolledCourses.map((item) => <button className="profile-mini-row" key={item.slug} onClick={() => navigate(item.path)}>
               <div><span className="profile-mini-row-label">Курс</span><b>{item.title}</b></div>
               <div className="profile-mini-row-right"><b>{item.percent}%</b><i className="profile-mini-row-bar"><span style={{ width: `${item.percent}%` }}/></i><ArrowRight size={16}/></div>
-            </button>) : <p className="profile-mini-hint">Вы ещё не начали ни один курс. <button className="inline" onClick={() => navigate("/#courses")}>Выбрать курс</button> и начать бесплатно.</p>}
+            </button>) : <p className="profile-mini-hint">Пока не начат ни один курс. <button className="inline" onClick={() => navigate("/#courses")}>Выбрать курс</button> и начать бесплатно.</p>}
           </section>
           <section className="profile-mini-section">
             <h3>Сертификат</h3>
@@ -320,12 +319,12 @@ export function ProfilePage({ navigate }) {
               : <p className="profile-mini-hint">{hasSubscription
                 ? "Подписка активна. Сертификат откроется после 100% прохождения курса."
                 : courseComplete
-                  ? <>Курс пройден. <button className="inline" onClick={() => navigate("/subscription")}>Оформите подписку</button>, чтобы скачать сертификат.</>
-                  : <><button className="inline" onClick={() => navigate("/subscription")}>Оформите подписку</button> — сертификат откроется после 100% курса.</>}</p>}
+                  ? <>Курс пройден. <button className="inline" onClick={() => navigate("/subscription")}>Оформи подписку</button>, чтобы скачать сертификат.</>
+                  : <><button className="inline" onClick={() => navigate("/subscription")}>Оформи подписку</button> — сертификат откроется после 100% курса.</>}</p>}
           </section>
           <section className="profile-mini-section">
             <h3>Серия дней</h3>
-            <p className="profile-mini-hint">{activity.currentStreak > 0 ? <>Сейчас <b>{activity.currentStreak}</b> {activity.currentStreak === 1 ? "день" : activity.currentStreak < 5 ? "дня" : "дней"} подряд · личный рекорд {activity.bestStreak}.</> : "Пройдите первый урок, чтобы начать считать дни подряд."}</p>
+            <p className="profile-mini-hint">{activity.currentStreak > 0 ? <>Сейчас <b>{activity.currentStreak}</b> {activity.currentStreak === 1 ? "день" : activity.currentStreak < 5 ? "дня" : "дней"} подряд · личный рекорд {activity.bestStreak}.</> : "Пройди первый урок, чтобы начать считать дни подряд."}</p>
           </section>
           <section className="profile-mini-section">
             <h3>Достижения ({unlockedAchievements.length} / {achievementDefs.length})</h3>
@@ -451,16 +450,16 @@ export function StoryLesson({ sectionId = "intro", topicId = "welcome", lessonId
       {lessonBlocks.length === 0 && <><section className="lesson-copy">
         <h2>Зачем это нужно на практике</h2>
         <p>Материал этого урока понадобится, чтобы сделать следующий небольшой шаг в проекте.</p>
-        <p>Сначала разберите принцип на нейтральном примере. Затем перенесите подход в проект самостоятельно — готового решения задачи здесь нет.</p>
-        <h2>После урока вы сможете:</h2>
+        <p>Сначала разбери принцип на нейтральном примере. Затем перенеси подход в проект самостоятельно — готового решения задачи здесь нет.</p>
+        <h2>После урока ты сможешь:</h2>
         <ul>{objectives.map((goal) => <li key={goal}>{goal};</li>)}</ul>
       </section>
 
       <section className="lesson-copy lesson-example">
         <small>ПОХОЖИЙ ПРИМЕР</small>
         <h2>Небольшой каталог</h2>
-        <p>Представьте небольшой каталог: список записей с названием, статусом и ответственным. Возьмите принцип из урока и примените его к этим данным.</p>
-        <p>Не копируйте предметную область в проект. Важно увидеть общий способ рассуждения и самостоятельно перенести его на задачи.</p>
+        <p>Представь небольшой каталог: список записей с названием, статусом и ответственным. Возьми принцип из урока и примени его к этим данным.</p>
+        <p>Не копируй предметную область в проект. Важно увидеть общий способ рассуждения и самостоятельно перенести его на задачи.</p>
       </section></>}
 
       <footer className="lesson-footer">
@@ -481,8 +480,8 @@ export function ProjectPage({ navigate }) {
       <header className="learning-header"><small>ПРОЕКТ 1 · 4 СПРИНТА</small><h1>{project.title}</h1><p>{project.description}</p><button className="primary" onClick={() => navigate("/go/task-tracker/setup")}>Начать подготовку <ArrowRight size={17}/></button></header>
       <StoryMessage story={storyBeats.project}/>
       <section className="situation-grid"><div><Target size={24}/><small>РАБОЧАЯ СИТУАЦИЯ</small><h2>{project.situation}</h2></div><div><Lightbulb size={24}/><small>ПРОБЛЕМА</small><p>{project.problem}</p></div></section>
-      <section><h2>Что вы создадите</h2><div className="requirements-grid">{project.requirements.map((item) => <span key={item}><CheckCircle size={18}/>{item}</span>)}</div></section>
-      <section><h2>Контракт команд</h2><p>Ваш Task Tracker должен понимать эти команды. Именно их проверяет скрипт check.go, который вы запускаете у себя после каждого спринта.</p><div className="contract-table">{cliContract.map(([command, text]) => <p key={command}><code className="inline-code">{command}</code><span>{text}</span></p>)}</div><ul>{contractRules.map((item) => <li key={item}>{item}</li>)}</ul></section>
+      <section><h2>Что ты создашь</h2><div className="requirements-grid">{project.requirements.map((item) => <span key={item}><CheckCircle size={18}/>{item}</span>)}</div></section>
+      <section><h2>Контракт команд</h2><p>Твой Task Tracker должен понимать эти команды. Именно их проверяет скрипт check.go, который ты запускаешь у себя после каждого спринта.</p><div className="contract-table">{cliContract.map(([command, text]) => <p key={command}><code className="inline-code">{command}</code><span>{text}</span></p>)}</div><ul>{contractRules.map((item) => <li key={item}>{item}</li>)}</ul></section>
       <section className="scope-grid"><div><h3>Входит в проект</h3><div className="tag-list">{project.stack.map((item) => <span key={item}>{item}</span>)}</div></div><div><h3>Не входит</h3><ul>{project.exclusions.map((item) => <li key={item}>{item}</li>)}</ul></div></section>
       <section><h2>Маршрут из четырёх спринтов</h2><div className="sprint-overview">{sprints.map((sprint) => <button key={sprint.number} onClick={() => navigate(`/go/task-tracker/sprint/${sprint.number}`)}><span>0{sprint.number}</span><b>{sprint.title}</b><small>{sprint.result}</small><ArrowRight size={17}/></button>)}</div></section>
       <section className="completion-panel"><div><RocketLaunch size={27}/><h2>Готовый результат</h2><p>{project.result}</p></div><div><h3>Критерии завершения</h3>{project.completionCriteria.map((item) => <p key={item}><Check size={15}/>{item}</p>)}</div><div><h3>Артефакты GitHub</h3>{project.artifacts.map((item) => <p key={item}><GithubLogo size={15}/>{item}</p>)}</div></section>
@@ -494,7 +493,7 @@ export function ProjectPage({ navigate }) {
 export function SetupPage({ navigate }) {
   return <LearningLayout current="setup" navigate={navigate}>
     <article className="learning-article">
-      <header className="learning-header"><small>ПОДГОТОВИТЕЛЬНЫЙ ЭТАП</small><h1>Настройте рабочее окружение</h1><p>Пройдите шаги по порядку. Раскрывайте инструкции, выполняйте команды и отмечайте только реально проверенные пункты.</p></header>
+      <header className="learning-header"><small>ПОДГОТОВИТЕЛЬНЫЙ ЭТАП</small><h1>Настрой рабочее окружение</h1><p>Пройди шаги по порядку. Раскрывай инструкции, выполняй команды и отмечай только реально проверенные пункты.</p></header>
       <StoryMessage story={storyBeats.setup}/>
       <Checklist items={setupTasks} title="12 шагов до первого push"/>
       <AutoCheck/>
@@ -517,13 +516,13 @@ function StoryMessage({ story }) {
 }
 
 function AutoCheck({ sprint = null }) {
-  return <ContentBlock eyebrow="АВТОПРОВЕРКА" title={sprint ? `Проверьте спринт ${sprint} у себя` : "Скрипт проверки check.go"} icon={<Terminal size={24}/>}>
+  return <ContentBlock eyebrow="АВТОПРОВЕРКА" title={sprint ? `Проверь спринт ${sprint} у себя` : "Скрипт проверки check.go"} icon={<Terminal size={24}/>}>
     {sprint
-      ? <p>Запустите проверку в папке проекта. Спринт готов, когда в разделе «Спринт {sprint}» все пункты отмечены ✓. Проверки следующих спринтов пока могут не проходить — это нормально.</p>
-      : <p>Скачайте check.go в корень своего репозитория. Он собирает ваше приложение, запускает его в пустой временной папке и проверяет контракт команд, хранение, обработку ошибок, тесты и README. Ваш tasks.json он не трогает.</p>}
+      ? <p>Запусти проверку в папке проекта. Спринт готов, когда в разделе «Спринт {sprint}» все пункты отмечены ✓. Проверки следующих спринтов пока могут не проходить — это нормально.</p>
+      : <p>Скачай check.go в корень своего репозитория. Он собирает твоё приложение, запускает его в пустой временной папке и проверяет контракт команд, хранение, обработку ошибок, тесты и README. Твой tasks.json он не трогает.</p>}
     <pre className="check-command"><code>go run check.go</code></pre>
     {!sprint && <p><a className="check-download" href="/task-tracker/check.go" download>Скачать check.go</a></p>}
-    <p className="check-note">Файл помечен <code className="inline-code">//go:build ignore</code>, поэтому не мешает <code className="inline-code">go build</code> и <code className="inline-code">go test</code>. Добавьте его в репозиторий — так ревьюер сможет повторить проверку.</p>
+    <p className="check-note">Файл помечен <code className="inline-code">//go:build ignore</code>, поэтому не мешает <code className="inline-code">go build</code> и <code className="inline-code">go test</code>. Добавь его в репозиторий — так ревьюер сможет повторить проверку.</p>
   </ContentBlock>;
 }
 
@@ -537,27 +536,27 @@ export function SprintPage({ number, navigate }) {
       <StoryMessage story={sprint.story}/>
       <ContentBlock eyebrow="РЕЗУЛЬТАТ" title="Что получится в конце"><p>{sprint.result}</p><div className="knowledge-list">{sprint.knowledge.map((item) => <span key={item}>{item}</span>)}</div></ContentBlock>
       <ContentBlock eyebrow="КОРОТКАЯ ТЕОРИЯ" title="Только то, что нужно для задачи" icon={<Code size={24}/>}><p>{sprint.theory}</p></ContentBlock>
-      <ContentBlock eyebrow="ПОХОЖИЙ ПРИМЕР" title={sprint.exampleTitle}><p>{sprint.example}</p><div className="example-note"><Lightbulb size={18}/><span>Перенесите принцип, но не предметную область. Готового решения Task Tracker здесь нет.</span></div></ContentBlock>
+      <ContentBlock eyebrow="ПОХОЖИЙ ПРИМЕР" title={sprint.exampleTitle}><p>{sprint.example}</p><div className="example-note"><Lightbulb size={18}/><span>Перенеси принцип, но не предметную область. Готового решения Task Tracker здесь нет.</span></div></ContentBlock>
       <Checklist items={sprint.tasks} title="Самостоятельные задачи"/>
       <ContentBlock eyebrow="ПРИЁМКА" title="Критерии готовности"><div className="criteria-list">{sprint.criteria.map((item) => <p key={item}><Circle size={17}/>{item}</p>)}</div></ContentBlock>
       <AutoCheck sprint={sprint.number}/>
-      <ContentBlock eyebrow="ПОДСКАЗКИ" title="Открывайте только когда застряли"><div className="hint-list">{sprint.hints.map((item, index) => <button key={item} onClick={() => setHint(hint === index ? null : index)}><span>Подсказка {index + 1}</span><b>{hint === index ? item : "Показать"}</b></button>)}</div></ContentBlock>
-      <ContentBlock eyebrow="САМОПРОВЕРКА" title="Объясните себе"><Checklist items={sprint.selfCheck}/></ContentBlock>
-      <ContentBlock eyebrow="GITHUB-ПРОЦЕСС" title="Доведите работу до репозитория" icon={<GithubLogo size={24}/>}><ol className="github-steps">{sprint.github.map((item) => <li key={item}>{item}</li>)}</ol></ContentBlock>
-      <section className="sprint-finish"><CheckCircle size={28}/><div><h2>Завершение спринта</h2><p>Отметьте обязательные задачи, проверьте критерии и только после этого переходите дальше.</p></div><button className="primary" onClick={() => navigate(stages[stages.findIndex((stage) => stage.id === current) + 1].path)}>Следующий этап <ArrowRight size={17}/></button></section>
+      <ContentBlock eyebrow="ПОДСКАЗКИ" title="Открывай, только когда застрянешь"><div className="hint-list">{sprint.hints.map((item, index) => <button key={item} onClick={() => setHint(hint === index ? null : index)}><span>Подсказка {index + 1}</span><b>{hint === index ? item : "Показать"}</b></button>)}</div></ContentBlock>
+      <ContentBlock eyebrow="САМОПРОВЕРКА" title="Объясни себе"><Checklist items={sprint.selfCheck}/></ContentBlock>
+      <ContentBlock eyebrow="GITHUB-ПРОЦЕСС" title="Доведи работу до репозитория" icon={<GithubLogo size={24}/>}><ol className="github-steps">{sprint.github.map((item) => <li key={item}>{item}</li>)}</ol></ContentBlock>
+      <section className="sprint-finish"><CheckCircle size={28}/><div><h2>Завершение спринта</h2><p>Отметь обязательные задачи, проверь критерии и только после этого переходи дальше.</p></div><button className="primary" onClick={() => navigate(stages[stages.findIndex((stage) => stage.id === current) + 1].path)}>Следующий этап <ArrowRight size={17}/></button></section>
       <PageNavigation current={current} navigate={navigate}/>
     </article>
   </LearningLayout>;
 }
 
 export function RetrospectivePage({ navigate }) {
-  const questions = ["Что вы создали?", "Что получилось лучше всего?", "Где возникли сложности?", "Какие темы нужно повторить?", "Что сделаете иначе в следующем проекте?"];
+  const questions = ["Что получилось создать?", "Что получилось лучше всего?", "Где возникли сложности?", "Какие темы нужно повторить?", "Что сделаешь иначе в следующем проекте?"];
   return <LearningLayout current="retrospective" navigate={navigate}>
     <article className="learning-article">
-      <header className="learning-header"><small>ФИНАЛ ПРОЕКТА</small><h1>Ретроспектива</h1><p>Зафиксируйте результат и превратите опыт разработки в понятные выводы.</p></header>
+      <header className="learning-header"><small>ФИНАЛ ПРОЕКТА</small><h1>Ретроспектива</h1><p>Зафиксируй результат и преврати опыт разработки в понятные выводы.</p></header>
       <StoryMessage story={storyBeats.retrospective}/>
       <form className="retrospective-form" onSubmit={(event) => event.preventDefault()}>
-        {questions.map((question) => <label key={question}><span>{question}</span><textarea rows={3} placeholder="Ваш ответ"/></label>)}
+        {questions.map((question) => <label key={question}><span>{question}</span><textarea rows={3} placeholder="Твой ответ"/></label>)}
         <label><span>Ссылка на GitHub-репозиторий</span><input type="url" placeholder="https://github.com/username/task-tracker"/></label>
         <label><span>Ссылка на GitHub release</span><input type="url" placeholder="https://github.com/username/task-tracker/releases/tag/v1.0.0"/></label>
         <p className="form-notice">Сохранение прогресса и завершение проекта появятся после подключения выбранного хранилища.</p>

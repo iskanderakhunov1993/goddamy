@@ -15,12 +15,12 @@ import { sqlLessons } from "../content/sql/lessons.js";
 export { getSqlChallenge, sqlChallenges };
 
 export const sqlModules = [
-  { n: "01", title: "Данные и реляционные базы", text: "Разберитесь, как устроены таблицы, строки, ключи и связи.", topics: ["Как хранятся данные", "Таблицы и типы", "Первичные ключи", "Связи между таблицами"] },
-  { n: "02", title: "Первые SELECT-запросы", text: "Получайте нужные столбцы и исключайте повторы.", topics: ["SELECT и FROM", "Псевдонимы", "DISTINCT", "Вычисляемые поля"] },
-  { n: "03", title: "Фильтрация и сортировка", text: "Находите нужные строки по условиям бизнес-задачи.", topics: ["WHERE", "AND, OR и NOT", "NULL, BETWEEN и IN", "LIKE", "ORDER BY"] },
-  { n: "04", title: "Агрегация и отчёты", text: "Собирайте показатели и проверяйте продуктовые гипотезы.", topics: ["COUNT, SUM и AVG", "GROUP BY", "HAVING", "CASE", "Отчёт по операциям"] },
-  { n: "05", title: "Связи и подзапросы", text: "Объединяйте данные из нескольких сущностей.", topics: ["INNER JOIN", "LEFT JOIN", "Несколько JOIN", "Подзапросы", "CTE"] },
-  { n: "06", title: "Рабочий SQL-проект", text: "Проведите исследование данных криптобанка и защитите результат.", topics: ["Бриф аналитика", "Декомпозиция запроса", "Проверка качества", "Оптимизация", "Итоговый отчёт"] },
+  { n: "01", title: "Данные и реляционные базы", text: "Разберись, как устроены таблицы, строки, ключи и связи.", topics: ["Как хранятся данные", "Таблицы и типы", "Первичные ключи", "Связи между таблицами"] },
+  { n: "02", title: "Первые SELECT-запросы", text: "Получай нужные столбцы и исключай повторы.", topics: ["SELECT и FROM", "Псевдонимы", "DISTINCT", "Вычисляемые поля"] },
+  { n: "03", title: "Фильтрация и сортировка", text: "Находи нужные строки по условиям бизнес-задачи.", topics: ["WHERE", "AND, OR и NOT", "NULL, BETWEEN и IN", "LIKE", "ORDER BY"] },
+  { n: "04", title: "Агрегация и отчёты", text: "Собирай показатели и проверяй продуктовые гипотезы.", topics: ["COUNT, SUM и AVG", "GROUP BY", "HAVING", "CASE", "Отчёт по операциям"] },
+  { n: "05", title: "Связи и подзапросы", text: "Объединяй данные из нескольких сущностей.", topics: ["INNER JOIN", "LEFT JOIN", "Несколько JOIN", "Подзапросы", "CTE"] },
+  { n: "06", title: "Рабочий SQL-проект", text: "Проведи исследование данных криптобанка и защити результат.", topics: ["Бриф аналитика", "Декомпозиция запроса", "Проверка качества", "Оптимизация", "Итоговый отчёт"] },
 ];
 
 function SqlContextNav({ navigate, active }) {
@@ -35,7 +35,7 @@ export function SqlTrainer({ navigate }) {
   const [query, setQuery] = useState(""); const [level, setLevel] = useState("Все"); const [category, setCategory] = useState("Все");
   const categories = ["Все", ...new Set(sqlChallenges.map((item) => item.category))];
   const filtered = useMemo(() => sqlChallenges.filter((item) => (level === "Все" || item.level === level) && (category === "Все" || item.category === category) && item.title.toLowerCase().includes(query.toLowerCase())), [query, level, category]);
-  return <main className="go-practice-shell sql-practice-shell"><SqlContextNav navigate={navigate} active="practice"/><div className="go-trainer container"><header className="go-trainer-header"><div><p className="academy-kicker">ПРАКТИКА · SQL</p><h1>SQL-тренажёр</h1><p>Пишите настоящие запросы против живой базы криптобанка — движок выполняет SQL прямо в браузере.</p></div><div className="trainer-progress-note"><CheckCircle size={20}/><span><b>Практика курса</b><small>Каждая задача связана с темой и будущим итоговым отчётом.</small></span></div></header><section className="go-trainer-filters"><div className="trainer-filter-row"><div className="trainer-levels">{["Все", "Лёгкая", "Средняя", "Сложная"].map((item) => <button className={level === item ? "active" : ""} onClick={() => setLevel(item)} key={item}>{item}</button>)}</div><label><MagnifyingGlass size={18}/><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Поиск SQL-задачи"/></label></div><div className="trainer-categories"><SlidersHorizontal size={17}/>{categories.map((item) => <button onClick={() => setCategory(item)} className={category === item ? "active" : ""} key={item}>{item}</button>)}</div></section><section className="go-task-list">{filtered.map((item, index) => <button onClick={() => navigate(`/sql/practice/${item.id}`)} key={item.id}><span className={`academy-dot level-${item.level}`}/><b>{String(index + 1).padStart(2, "0")}. {item.title}</b><em>{item.category}</em><small>{item.level} · {item.minutes} мин</small><ArrowRight size={18}/></button>)}</section></div></main>;
+  return <main className="go-practice-shell sql-practice-shell"><SqlContextNav navigate={navigate} active="practice"/><div className="go-trainer container"><header className="go-trainer-header"><div><p className="academy-kicker">ПРАКТИКА · SQL</p><h1>SQL-тренажёр</h1><p>Пиши настоящие запросы против живой базы криптобанка — движок выполняет SQL прямо в браузере.</p></div><div className="trainer-progress-note"><CheckCircle size={20}/><span><b>Практика курса</b><small>Каждая задача связана с темой и будущим итоговым отчётом.</small></span></div></header><section className="go-trainer-filters"><div className="trainer-filter-row"><div className="trainer-levels">{["Все", "Лёгкая", "Средняя", "Сложная"].map((item) => <button className={level === item ? "active" : ""} onClick={() => setLevel(item)} key={item}>{item}</button>)}</div><label><MagnifyingGlass size={18}/><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Поиск SQL-задачи"/></label></div><div className="trainer-categories"><SlidersHorizontal size={17}/>{categories.map((item) => <button onClick={() => setCategory(item)} className={category === item ? "active" : ""} key={item}>{item}</button>)}</div></section><section className="go-task-list">{filtered.map((item, index) => <button onClick={() => navigate(`/sql/practice/${item.id}`)} key={item.id}><span className={`academy-dot level-${item.level}`}/><b>{String(index + 1).padStart(2, "0")}. {item.title}</b><em>{item.category}</em><small>{item.level} · {item.minutes} мин</small><ArrowRight size={18}/></button>)}</section></div></main>;
 }
 
 function ResultTable({ columns, rows, emptyLabel }) {
@@ -103,7 +103,7 @@ export function SqlTask({ challengeId, navigate }) {
       ? <><header><b>{tab}</b><span>{tablePreview ? `${tablePreview.rows.length} строк(и)` : "предпросмотр"}</span></header><ResultTable columns={tablePreview?.columns || []} rows={tablePreview?.rows || []} emptyLabel="Нет данных для предпросмотра."/></>
       : <>
           <header><b>Результат</b><span>{run.status === "idle" ? "Предпросмотр" : run.status === "syntax-error" ? "Ошибка запроса" : `${run.rows.length} строки`}</span></header>
-          {run.status === "idle" && <p>{dbError || "Выполните запрос, чтобы увидеть данные."}</p>}
+          {run.status === "idle" && <p>{dbError || "Выполни запрос, чтобы увидеть данные."}</p>}
           {run.status === "syntax-error" && <p className="sql-error-text">{run.message}</p>}
           {(run.status === "ran" || run.status === "success" || run.status === "mismatch") && <ResultTable columns={run.columns} rows={run.rows} emptyLabel="Запрос выполнен, но ничего не вернул."/>}
         </>}

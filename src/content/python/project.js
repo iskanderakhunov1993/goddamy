@@ -8,7 +8,7 @@ const sprintCheck = (n) => ({ type: "callout", tone: "info", title: `Прове�
 
 const overview = { blocks: [
   { type: "heading", level: 2, text: "Задача" },
-  { type: "paragraph", text: "Вы пишете консольное приложение для учёта личных расходов: добавить трату, посмотреть список, удалить ошибочную запись, получить отчёт за месяц и выгрузить данные в CSV для таблицы. Приложение работает **у вас на компьютере**, а готовность каждого спринта проверяет скрипт `check.py`." },
+  { type: "paragraph", text: "Ты пишешь консольное приложение для учёта личных расходов: добавить трату, посмотреть список, удалить ошибочную запись, получить отчёт за месяц и выгрузить данные в CSV для таблицы. Приложение работает **у тебя на компьютере**, а готовность каждого спринта проверяет скрипт `check.py`." },
   { type: "heading", level: 2, text: "Контракт команд" },
   sh("python expenses.py add <сумма> <категория> [описание] [--date ГГГГ-ММ-ДД]\npython expenses.py list\npython expenses.py delete <id>\npython expenses.py summary [--month ГГГГ-ММ]\npython expenses.py export <файл.csv>"),
   { type: "list", items: [
@@ -30,12 +30,12 @@ const overview = { blocks: [
 const setup = { blocks: [
   { type: "heading", level: 2, text: "Подготовка" },
   { type: "list", items: [
-    "Установите Python 3.10 или новее с python.org и проверьте: `python --version` (на macOS и Linux может быть `python3`).",
-    "Создайте папку `expenses`, в ней пустой `expenses.py`, и репозиторий на GitHub.",
-    "Скачайте `check.py` в ту же папку и запустите его — сейчас почти все проверки красные, это нормально.",
+    "Установи Python 3.10 или новее с python.org и проверь: `python --version` (на macOS и Linux может быть `python3`).",
+    "Создай папку `expenses`, в ней пустой `expenses.py`, и репозиторий на GitHub.",
+    "Скачай `check.py` в ту же папку и запусти его — сейчас почти все проверки красные, это нормально.",
   ] },
   sh("mkdir expenses && cd expenses\ngit init\npython check.py"),
-  { type: "callout", tone: "warning", title: "Не подглядывайте в check.py за ответом", text: "Скрипт открыт специально: в нём видно, что именно проверяется. Но решение он не подскажет — только поведение, которого ждёт пользователь." },
+  { type: "callout", tone: "warning", title: "Не подглядывай в check.py за ответом", text: "Скрипт открыт специально: в нём видно, что именно проверяется. Но решение он не подскажет — только поведение, которого ждёт пользователь." },
 ] };
 
 const sprints = [
@@ -49,7 +49,7 @@ const sprints = [
         "`list`: понятное сообщение, если расходов нет.",
       ] },
       py("import argparse\n\nparser = argparse.ArgumentParser(prog=\"expenses\")\nsub = parser.add_subparsers(dest=\"command\", required=True)\nadd = sub.add_parser(\"add\")\nadd.add_argument(\"amount\")\nadd.add_argument(\"category\")\nadd.add_argument(\"description\", nargs=\"?\", default=\"\")\nargs = parser.parse_args([\"add\", \"250\", \"еда\", \"обед\"])\nprint(args.command, args.amount, args.category, args.description)"),
-      { type: "callout", tone: "tip", title: "Ошибки без Traceback", text: "Заведите своё исключение `class AppError(Exception)`, бросайте его при неверном вводе, а в `if __name__ == \"__main__\":` ловите, печатайте сообщение в `sys.stderr` и делайте `sys.exit(1)`." },
+      { type: "callout", tone: "tip", title: "Ошибки без Traceback", text: "Заведи своё исключение `class AppError(Exception)`, бросай его при неверном вводе, а в `if __name__ == \"__main__\":` лови, печатай сообщение в `sys.stderr` и делай `sys.exit(1)`." },
       sprintCheck(1),
       { type: "task", title: "Готово, если", text: "Отметь, когда check.py показывает ✓ по всему спринту.", checklist: ["Спринт 1 в check.py полностью зелёный", "Сделан commit и push"] },
     ] },
@@ -57,8 +57,8 @@ const sprints = [
     blocks: [
       { type: "list", items: [
         "`delete <id>`: неизвестный id — ошибка, а не тихий успех.",
-        "Повреждённый `expenses.json`: перехватите `json.JSONDecodeError`, сообщите и остановитесь **до** записи — иначе пользователь потеряет данные.",
-        "Пишите файл атомарно: сначала во временный, потом `os.replace(tmp, path)`.",
+        "Повреждённый `expenses.json`: перехвати `json.JSONDecodeError`, сообщи и остановись **до** записи — иначе пользователь потеряет данные.",
+        "Пиши файл атомарно: сначала во временный, потом `os.replace(tmp, path)`.",
       ] },
       py("import json\n\ntry:\n    json.loads(\"{сломано\")\nexcept json.JSONDecodeError as error:\n    print(\"файл повреждён:\", error)"),
       sprintCheck(2),
@@ -67,9 +67,9 @@ const sprints = [
   { number: 3, title: "Даты и отчёты", time: "3–4 часа", goal: "Считать расходы по категориям и месяцам.", result: "summary с фильтром по месяцу и точными суммами.",
     blocks: [
       { type: "list", items: [
-        "`add ... --date 2026-03-15`: проверяйте формат через `datetime.strptime(text, \"%Y-%m-%d\")`.",
+        "`add ... --date 2026-03-15`: проверяй формат через `datetime.strptime(text, \"%Y-%m-%d\")`.",
         "`summary`: суммы по категориям и строка `Итого`. С `--month 2026-03` — только этот месяц; неверный месяц — ошибка.",
-        "Деньги считайте через `Decimal`, а не `float`: иначе 0.1 + 0.2 даст 0.30000000000000004.",
+        "Деньги считай через `Decimal`, а не `float`: иначе 0.1 + 0.2 даст 0.30000000000000004.",
       ] },
       py("from decimal import Decimal\n\nprint(0.1 + 0.2)\nprint(Decimal(\"0.1\") + Decimal(\"0.2\"))\nprint(f\"{Decimal('150'):.2f}\")"),
       sprintCheck(3),
@@ -81,7 +81,7 @@ const sprints = [
         "`export report.csv` через `csv.DictWriter` с колонками `id,date,category,amount,description`.",
         "Тесты в файле `test_expenses.py` на `unittest`: следующий id, отказ от неверных сумм, сумма за месяц. Запуск: `python -m unittest`.",
         "README: что делает приложение и пример каждой команды. `.gitignore`: `expenses.json` и `__pycache__/`.",
-        "Положите `check.py` в репозиторий, чтобы проверку мог повторить любой.",
+        "Положи `check.py` в репозиторий, чтобы проверку мог повторить любой.",
       ] },
       sh("python -m unittest\npython check.py\ngit tag v1.0.0 && git push --tags"),
       sprintCheck(4),
@@ -94,7 +94,7 @@ const base = "/python";
 const project = {
   title: "Проект · Учёт расходов",
   shortTitle: "Учёт расходов",
-  summary: "Консольное приложение на Python за четыре спринта. Пишете у себя, проверяете скриптом check.py — 27 автоматических проверок.",
+  summary: "Консольное приложение на Python за четыре спринта. Пишешь у себя, проверяешь скриптом check.py — 27 автоматических проверок.",
   includes: "Проект «Учёт расходов» с автопроверкой check.py",
   downloads: ["check.py"],
   downloadBase: "/python-expenses",

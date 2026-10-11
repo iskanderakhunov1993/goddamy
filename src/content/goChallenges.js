@@ -5,13 +5,13 @@ export const goChallenges = [
     category: "Слайсы",
     level: "Лёгкая",
     minutes: 8,
-    description: "Напишите функцию, которая складывает только чётные значения слайса.",
+    description: "Напиши функцию, которая складывает только чётные значения слайса.",
     starter: `package main
 
 import "fmt"
 
 func SumEven(nums []int) int {
-	// ваш код
+	// твой код
 	return 0
 }`,
     harness: `func main() {
@@ -32,7 +32,7 @@ func SumEven(nums []int) int {
 	}
 	return sum
 }`,
-    hint: "Используйте range и проверку n % 2 == 0, накапливая сумму в отдельной переменной.",
+    hint: "Используй range и проверку n % 2 == 0, накапливая сумму в отдельной переменной.",
   },
   {
     id: "word-frequency",
@@ -40,7 +40,7 @@ func SumEven(nums []int) int {
     category: "Map",
     level: "Лёгкая",
     minutes: 12,
-    description: "Посчитайте, сколько раз каждое слово встретилось в сообщении пользователя.",
+    description: "Посчитай, сколько раз каждое слово встретилось в сообщении пользователя.",
     starter: `package main
 
 import (
@@ -50,7 +50,7 @@ import (
 
 func WordFrequency(words []string) map[string]int {
 	result := make(map[string]int)
-	// ваш код
+	// твой код
 	return result
 }`,
     harness: `func main() {
@@ -86,7 +86,7 @@ func WordFrequency(words []string) map[string]int {
     category: "Структуры",
     level: "Лёгкая",
     minutes: 14,
-    description: "Найдите задачу в слайсе структур и измените её статус.",
+    description: "Найди задачу в слайсе структур и измени её статус.",
     starter: `package main
 
 import (
@@ -100,7 +100,7 @@ type Task struct {
 }
 
 func SetStatus(tasks []Task, id int, status string) error {
-	// ваш код
+	// твой код
 	return nil
 }`,
     harness: `func main() {
@@ -132,7 +132,7 @@ func SetStatus(tasks []Task, id int, status string) error {
 	}
 	return errors.New("task not found")
 }`,
-    hint: "Итерируйтесь по индексу (for i := range tasks), если хотите изменить элемент слайса на месте.",
+    hint: "Итерируйся по индексу (for i := range tasks), если хочешь изменить элемент слайса на месте.",
   },
   {
     id: "expense-total",
@@ -140,7 +140,7 @@ func SetStatus(tasks []Task, id int, status string) error {
     category: "Map",
     level: "Средняя",
     minutes: 18,
-    description: "Соберите суммы расходов по категориям для еженедельного отчёта.",
+    description: "Собери суммы расходов по категориям для еженедельного отчёта.",
     starter: `package main
 
 import (
@@ -154,7 +154,7 @@ type Expense struct {
 }
 
 func Totals(items []Expense) map[string]int {
-	// ваш код
+	// твой код
 	return nil
 }`,
     harness: `func main() {
@@ -188,7 +188,7 @@ func Totals(items []Expense) map[string]int {
 	}
 	return totals
 }`,
-    hint: "Сначала создайте map через make, затем накапливайте totals[it.Category] += it.Amount.",
+    hint: "Сначала создай map через make, затем накапливай totals[it.Category] += it.Amount.",
   },
   {
     id: "safe-parse",
@@ -196,7 +196,7 @@ func Totals(items []Expense) map[string]int {
     category: "Ошибки",
     level: "Средняя",
     minutes: 16,
-    description: "Проверьте пользовательскую команду и верните понятную ошибку вместо panic.",
+    description: "Проверь пользовательскую команду и верни понятную ошибку вместо panic.",
     starter: `package main
 
 import (
@@ -206,7 +206,7 @@ import (
 )
 
 func ParseCommand(input string) (string, error) {
-	// ваш код
+	// твой код
 	return "", nil
 }`,
     harness: `func main() {
@@ -230,7 +230,7 @@ func ParseCommand(input string) (string, error) {
 	}
 	return trimmed, nil
 }`,
-    hint: "Обрежьте пробелы через strings.TrimSpace и опишите пустой ввод через errors.New.",
+    hint: "Обрежь пробелы через strings.TrimSpace и опиши пустой ввод через errors.New.",
   },
   {
     id: "json-backup",
@@ -238,7 +238,7 @@ func ParseCommand(input string) (string, error) {
     category: "JSON",
     level: "Средняя",
     minutes: 20,
-    description: "Сериализуйте список задач и корректно сообщите о повреждённом файле.",
+    description: "Сериализуй список задач и корректно сообщи о повреждённом файле.",
     starter: `package main
 
 import (
@@ -247,7 +247,7 @@ import (
 )
 
 func LoadTasks(data []byte) ([]string, error) {
-	// ваш код
+	// твой код
 	return nil, nil
 }`,
     harness: `func main() {
@@ -270,7 +270,7 @@ func LoadTasks(data []byte) ([]string, error) {
 	}
 	return tasks, nil
 }`,
-    hint: "Используйте json.Unmarshal(data, &tasks) и оборачивайте ошибку через fmt.Errorf с %w.",
+    hint: "Используй json.Unmarshal(data, &tasks) и оборачивай ошибку через fmt.Errorf с %w.",
   },
   {
     id: "http-status",
@@ -278,7 +278,7 @@ func LoadTasks(data []byte) ([]string, error) {
     category: "HTTP",
     level: "Средняя",
     minutes: 18,
-    description: "Верните JSON-ответ и правильный статус для создания расхода.",
+    description: "Верни JSON-ответ и правильный статус для создания расхода.",
     starter: `package main
 
 import (
@@ -288,7 +288,7 @@ import (
 )
 
 func CreateExpense(w http.ResponseWriter, r *http.Request) {
-	// ваш код
+	// твой код
 }`,
     harness: `func main() {
 	req := httptest.NewRequest(http.MethodPost, "/expenses", nil)
@@ -310,7 +310,7 @@ func CreateExpense(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(\`{"status":"created"}\`))
 }`,
-    hint: "Для созданного ресурса используйте w.WriteHeader(http.StatusCreated) — это 201.",
+    hint: "Для созданного ресурса используй w.WriteHeader(http.StatusCreated) — это 201.",
   },
   {
     id: "worker-pool",
@@ -318,7 +318,7 @@ func CreateExpense(w http.ResponseWriter, r *http.Request) {
     category: "Конкурентность",
     level: "Сложная",
     minutes: 28,
-    description: "Распределите обработку ссылок между несколькими воркерами.",
+    description: "Распредели обработку ссылок между несколькими воркерами.",
     starter: `package main
 
 import (
@@ -328,7 +328,7 @@ import (
 )
 
 func Process(jobs []string, workers int) []string {
-	// ваш код
+	// твой код
 	return nil
 }`,
     harness: `func main() {
@@ -363,7 +363,7 @@ func Process(jobs []string, workers int) []string {
 	wg.Wait()
 	return results
 }`,
-    hint: "Пишите результат по индексу results[i] — тогда порядок не зависит от того, какой воркер каким job'ом занялся.",
+    hint: "Пиши результат по индексу results[i] — тогда порядок не зависит от того, какой воркер каким job'ом занялся.",
   },
   {
     id: "request-timeout",
@@ -371,7 +371,7 @@ func Process(jobs []string, workers int) []string {
     category: "Context",
     level: "Сложная",
     minutes: 24,
-    description: "Добавьте deadline к операции, чтобы сервис не зависал на внешнем API.",
+    description: "Добавь deadline к операции, чтобы сервис не зависал на внешнем API.",
     starter: `package main
 
 import (
@@ -381,7 +381,7 @@ import (
 )
 
 func Fetch(ctx context.Context, url string) error {
-	// ваш код
+	// твой код
 	return nil
 }`,
     harness: `func main() {
@@ -406,7 +406,7 @@ func Fetch(ctx context.Context, url string) error {
 		return ctx.Err()
 	}
 }`,
-    hint: "Создайте дочерний контекст через context.WithTimeout, не забудьте defer cancel(), и слушайте ctx.Done() в select.",
+    hint: "Создай дочерний контекст через context.WithTimeout, не забудь defer cancel(), и слушай ctx.Done() в select.",
   },
 ];
 

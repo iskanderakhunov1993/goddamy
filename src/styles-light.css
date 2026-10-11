@@ -1,0 +1,153 @@
+/* Единый светлый стиль с индиго (решение владельца, 2026-10-11).
+   Этот файл подключается последним и задаёт токены и общий вид шапки, первого
+   экрана, тренажёра и типографики. Старые правила в других файлах постепенно
+   переводятся на эти токены; новые стили писать только через них. */
+:root {
+  --g-ink: #12141d;
+  --g-ink-2: #3d4152;
+  --g-muted: #5b6072;
+  --g-line: #dfe1ee;
+  --g-bg: #eef1fb;
+  --g-surface: #fff;
+  --g-surface-2: #f5f6fb;
+  --g-accent: #4b3aeb;
+  --g-accent-hover: #3b2bd0;
+  --g-accent-soft: #e9e6ff;
+  --g-ok: #1b7a4b;
+  --g-ok-soft: #e3f4ea;
+  --g-danger: #b3261e;
+  --g-danger-soft: #fdecea;
+  --g-r-sm: 8px;
+  --g-r-md: 12px;
+  --g-r-lg: 16px;
+  --g-s-1: 4px; --g-s-2: 8px; --g-s-3: 12px; --g-s-4: 16px; --g-s-5: 24px; --g-s-6: 32px; --g-s-7: 48px; --g-s-8: 64px;
+  --g-fs-xs: 12px; --g-fs-sm: 14px; --g-fs-base: 16px; --g-fs-lg: 18px; --g-fs-xl: 22px;
+  --g-fs-h2: clamp(24px, 3vw, 30px);
+  --g-fs-h1: clamp(30px, 4.2vw, 44px);
+  --g-fs-display: clamp(36px, 5.4vw, 60px);
+  --g-tap: 44px;
+}
+
+::selection { background: var(--g-accent-soft); color: var(--g-ink); }
+:focus-visible { outline: 2px solid var(--g-accent); outline-offset: 2px; }
+
+/* ---------- Шапка и подвал ---------- */
+header.site-header { background: rgba(255, 255, 255, .92); border-bottom: 1px solid var(--g-line); box-shadow: none; }
+.logo { color: var(--g-ink); min-height: var(--g-tap); cursor: pointer; }
+.logo span, footer .logo span { color: var(--g-accent); }
+header.site-header nav button, .header-actions > button { color: var(--g-ink-2); min-height: var(--g-tap); font-size: var(--g-fs-sm); }
+header.site-header nav button:hover, .header-actions > button:hover { color: var(--g-accent); }
+.header-actions { gap: 6px; }
+.header-actions > button:not(.mobile-menu) { min-width: var(--g-tap); display: inline-grid; place-items: center; }
+@media (max-width: 900px) { .header-actions > .mobile-menu { min-width: var(--g-tap); display: inline-grid; place-items: center; } }
+.header-actions > .login { border: 0 !important; background: var(--g-accent) !important; color: #fff !important; padding: 0 18px !important; border-radius: var(--g-r-sm) !important; font-weight: 700; margin-left: 8px; }
+.header-actions > .login:hover { background: var(--g-accent-hover) !important; color: #fff !important; }
+.mobile-nav-panel { background: var(--g-surface); }
+.mobile-nav-panel button { background: var(--g-surface-2); border-radius: var(--g-r-sm); color: var(--g-ink); }
+@media (max-width: 900px) { .site-header .mobile-nav-panel { box-shadow: 0 16px 28px rgba(18, 20, 29, .12); } }
+footer p { color: var(--g-muted); font-size: var(--g-fs-sm); }
+footer div button { min-height: 36px; font-size: var(--g-fs-sm); color: var(--g-ink-2); cursor: pointer; }
+footer div button:hover { color: var(--g-accent); }
+footer small { color: var(--g-muted); font-size: var(--g-fs-xs); }
+footer > div { flex-wrap: wrap; row-gap: 4px; }
+
+/* ---------- Первый экран лендинга ---------- */
+.landing-hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); gap: var(--g-s-8); align-items: center; padding: 72px 42px 56px; }
+.landing-hero h1 { margin: 0 0 var(--g-s-5); max-width: 17ch; font-size: var(--g-fs-display); font-weight: 800; line-height: 1.04; letter-spacing: -.03em; color: var(--g-ink); text-wrap: balance; }
+.landing-hero-copy > p { max-width: 52ch; margin: 0 0 var(--g-s-6); font-size: var(--g-fs-lg); line-height: 1.6; color: var(--g-ink-2); }
+.landing-hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--g-s-3) var(--g-s-5); }
+.landing-primary { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 54px; padding: 0 28px; border: 0; border-radius: var(--g-r-md); background: var(--g-accent); color: #fff; font-size: var(--g-fs-base); font-weight: 700; cursor: pointer; transition: background .15s ease, transform .15s cubic-bezier(.16, 1, .3, 1); }
+.landing-primary:hover { background: var(--g-accent-hover); }
+.landing-primary:active { transform: translateY(1px); }
+.landing-link { min-height: var(--g-tap); padding: 0; border: 0; background: none; color: var(--g-accent); font-size: var(--g-fs-base); font-weight: 700; cursor: pointer; }
+.landing-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+.landing-steps { counter-reset: step; list-style: none; margin: 0; padding: var(--g-s-5); display: grid; gap: var(--g-s-5); border: 1px solid var(--g-line); border-radius: var(--g-r-lg); background: var(--g-surface); }
+.landing-steps li { counter-increment: step; display: grid; grid-template-columns: 32px minmax(0, 1fr); column-gap: var(--g-s-3); }
+.landing-steps li::before { content: counter(step); grid-row: span 2; width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; background: var(--g-accent-soft); color: var(--g-accent); font-weight: 800; font-size: var(--g-fs-sm); }
+.landing-steps b { font-size: var(--g-fs-base); color: var(--g-ink); }
+.landing-steps span { font-size: var(--g-fs-sm); line-height: 1.5; color: var(--g-muted); }
+.universal-courses { padding-top: 40px; }
+.universal-courses > h2 { margin-top: 0; font-size: var(--g-fs-h1); }
+.universal-subscription > div:first-child h2 { font-size: var(--g-fs-h1); }
+@media (max-width: 860px) {
+  .landing-hero { grid-template-columns: 1fr; gap: var(--g-s-6); padding: 40px 0 32px; }
+  .landing-hero h1 { max-width: none; }
+  .landing-primary { width: 100%; }
+}
+
+/* ---------- Общая типографика и мелочи ---------- */
+.academy-kicker, .course-hero small, .learning-header > small, .content-block > small, .profile-header small, .certificates-header small, .sprint-goal small, .story-message small { font-size: var(--g-fs-xs); }
+.course-hero h1 { font-size: var(--g-fs-h1); letter-spacing: -.03em; line-height: 1.08; text-wrap: balance; }
+.learning-header h1 { font-size: var(--g-fs-h1); letter-spacing: -.03em; line-height: 1.08; text-wrap: balance; }
+.story-lesson h1, .profile-header h1, .certificates-header h1, .school-hero h1, .go-trainer-header h1,
+.course-dashboard-security .course-hero h1 { font-size: var(--g-fs-h1); letter-spacing: -.03em; line-height: 1.1; text-wrap: balance; }
+.story-lesson h2 { font-size: var(--g-fs-h2); letter-spacing: -.02em; }
+.learning-article section > h2, .content-block h2 { font-size: var(--g-fs-h2); letter-spacing: -.02em; }
+.learning-article p, .learning-article li { max-width: 70ch; }
+.profile-content p { max-width: 70ch; }
+.content-block { margin-top: var(--g-s-7); padding-bottom: var(--g-s-6); }
+.dashboard-rail nav button, .dashboard-rail > button:last-child, .story-side button { width: var(--g-tap); height: var(--g-tap); }
+.checkout-submit { min-height: 48px; }
+.lesson-code-actions button { min-height: 36px; }
+.lesson-feedback, .checkout-toggle button, .go-practice-link, .go-info-link, .sec-topic li button, .certificate-grid article button, .profile-mini-edit { min-height: var(--g-tap); }
+footer div button { min-height: 40px; }
+@media (max-width: 720px) {
+  .content-block { margin-top: var(--g-s-6); padding-bottom: var(--g-s-5); }
+  .learning-header { padding-bottom: var(--g-s-6); }
+}
+
+/* ---------- Код в уроках ---------- */
+.lesson-code-block { background: var(--g-surface); border: 1px solid var(--g-line); }
+.lesson-code-block pre code { color: var(--g-ink); }
+
+/* ---------- Тренажёр: общий для Go, SQL, Python, безопасности, Kubernetes и школьного курса ---------- */
+.sql-task-shell > header { background: var(--g-surface); border-bottom: 1px solid var(--g-line); }
+.sql-task-shell > header button { min-height: var(--g-tap); }
+.sql-task-brief { background: var(--g-bg); padding: var(--g-s-7) clamp(20px, 3.4vw, 56px); }
+.sql-task-brief h1 { font-size: clamp(24px, 2.6vw, 32px); letter-spacing: -.02em; line-height: 1.15; margin: 10px 0 16px; text-wrap: balance; }
+.sql-task-brief > p { max-width: 62ch; color: var(--g-ink-2); line-height: 1.6; }
+.sql-task-shell .academy-kicker, .python-task-shell .academy-kicker { color: var(--g-muted); }
+.sql-task-brief > button { min-height: var(--g-tap); color: var(--g-accent); font-weight: 700; }
+.sql-task-brief > button:hover { text-decoration: underline; text-underline-offset: 4px; }
+.sql-task-brief aside { border-left: 0; border-radius: var(--g-r-md); background: var(--g-accent-soft); padding: var(--g-s-4); color: var(--g-ink); }
+.sql-editor { background: var(--g-surface); color: var(--g-ink); border-left: 1px solid var(--g-line); }
+.sql-editor-top { border-bottom: 1px solid var(--g-line); color: var(--g-ink); }
+.sql-editor textarea { background: var(--g-surface); color: var(--g-ink); font: 15px/1.7 "Roboto Mono", monospace; caret-color: var(--g-accent); }
+.sql-editor textarea:focus-visible { outline: 2px solid var(--g-accent); outline-offset: -2px; }
+.sql-runbar { display: flex; align-items: center; justify-content: flex-end; gap: var(--g-s-3); padding: 0 var(--g-s-4); border-top: 1px solid var(--g-line); border-bottom: 1px solid var(--g-line); background: var(--g-surface-2); }
+.sql-runbar button { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border: 1px solid transparent; border-radius: var(--g-r-sm); background: none; color: var(--g-ink-2); font-size: var(--g-fs-sm); font-weight: 700; cursor: pointer; }
+.sql-runbar button:first-child { margin-right: auto; padding: 0 8px; font-weight: 600; color: var(--g-muted); }
+.sql-runbar button:first-child:hover { color: var(--g-ink); }
+.sql-runbar .secondary { border-color: var(--g-line); background: var(--g-surface); color: var(--g-ink); }
+.sql-runbar .secondary:hover { border-color: var(--g-accent); color: var(--g-accent); }
+.sql-runbar .primary { background: var(--g-accent); color: #fff; }
+.sql-runbar .primary:hover { background: var(--g-accent-hover); }
+.sql-runbar button:disabled { opacity: .55; cursor: progress; }
+.sql-result-tabs { background: var(--g-surface); border-bottom: 1px solid var(--g-line); }
+.sql-result-tabs button { min-height: 40px; color: var(--g-muted); font-size: var(--g-fs-sm); font-weight: 600; }
+.sql-result-tabs button.active { color: var(--g-accent); border-bottom: 2px solid var(--g-accent); }
+.sql-result { background: var(--g-surface-2); color: var(--g-ink); }
+.sql-result.success { background: var(--g-ok-soft); }
+.sql-result.error { background: var(--g-danger-soft); }
+.sql-result header span { color: var(--g-muted); }
+.sql-result > p { color: var(--g-ink-2); }
+.sql-error-text { color: var(--g-danger); font: 13px/1.6 "Roboto Mono", monospace; }
+.sql-plain-text { color: var(--g-ink); }
+.sql-verdict.success { color: var(--g-ok); }
+.sql-verdict.error { color: var(--g-danger); }
+@media (max-width: 800px) {
+  .sql-task-brief { padding: var(--g-s-5) var(--g-s-4); }
+  .sql-editor { border-left: 0; border-top: 1px solid var(--g-line); }
+  .sql-runbar { padding: var(--g-s-2) var(--g-s-3); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-primary, .go-module-card { transition: none; }
+}
+
+/* ---------- Поверхности: белые карточки вместо серых, которые выглядели отключёнными ---------- */
+.story-message, .plan-box, .summary-box { background: var(--g-surface); border: 1px solid var(--g-line); }
+.dashboard-rail, .story-side { background: var(--g-surface); border-right: 1px solid var(--g-line); }
+@media (max-width: 720px) { .dashboard-rail, .story-side { border-right: 0; border-bottom: 1px solid var(--g-line); } }
+.dashboard-rail nav button.active { background: var(--g-accent-soft); color: var(--g-accent); }
+.stage-sidebar { background: var(--g-surface); border-right: 1px solid var(--g-line); }

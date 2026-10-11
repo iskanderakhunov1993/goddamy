@@ -76,13 +76,13 @@ export function GoTask({ challengeId, navigate }) {
           </div>
           <div className={`sql-result ${resultTone}`}>
             {tab === "harness"
-              ? <><header><b>main() тренажёра</b><span>только для чтения</span></header><pre className="sql-error-text" style={{ color: "#b8efdb" }}>{challenge.harness}</pre></>
+              ? <><header><b>main() тренажёра</b><span>только для чтения</span></header><pre className="sql-error-text sql-plain-text">{challenge.harness}</pre></>
               : <>
                   <header><b>Результат</b><span>{busy ? "Выполняется…" : run.status === "idle" ? "Предпросмотр" : run.status}</span></header>
                   {busy && <p>Компилируем и запускаем на play.golang.org…</p>}
-                  {!busy && run.status === "idle" && <p>Нажмите «Выполнить», чтобы увидеть вывод программы.</p>}
+                  {!busy && run.status === "idle" && <p>Нажми «Выполнить», чтобы увидеть вывод программы.</p>}
                   {!busy && (run.status === "compile-error" || run.status === "runtime-error" || run.status === "network-error") && <pre className="sql-error-text">{run.message}</pre>}
-                  {!busy && (run.status === "ran" || run.status === "success" || run.status === "mismatch") && <pre className="sql-error-text" style={{ color: "#eaf4f0" }}>{run.stdout || "(пустой вывод)"}</pre>}
+                  {!busy && (run.status === "ran" || run.status === "success" || run.status === "mismatch") && <pre className="sql-error-text sql-plain-text">{run.stdout || "(пустой вывод)"}</pre>}
                 </>}
             {run.status === "success" && <div className="sql-verdict success"><CheckCircle size={18}/> Верно — вывод совпал с эталонным решением.</div>}
             {run.status === "mismatch" && <div className="sql-verdict error"><XCircle size={18}/> Код скомпилировался, но вывод пока не совпадает. {challenge.hint}</div>}

@@ -40,7 +40,7 @@ export function QaTrainer({ navigate }) {
           <div>
             <p className="academy-kicker">ПРАКТИКА · QA</p>
             <h1>QA-тренажёр</h1>
-            <p>Разбирайте рабочие кейсы: приоритизация, тест-дизайн, баг-репорты, API и регрессия — с проверкой ответа.</p>
+            <p>Разбирай рабочие кейсы: приоритизация, тест-дизайн, баг-репорты, API и регрессия — с проверкой ответа.</p>
           </div>
           <div className="trainer-progress-note">
             <CheckCircle size={20}/>
@@ -161,7 +161,7 @@ function BugReportForm({ challenge, state, setState }) {
       </div>
       {state.status !== "idle" && (
         <div className={`qa-result ${state.status}`}>
-          <header>{state.status === "success" ? <CheckCircle size={18}/> : <XCircle size={18}/>}<b>{state.status === "success" ? "Все поля заполнены" : "Заполните все поля и выберите severity"}</b></header>
+          <header>{state.status === "success" ? <CheckCircle size={18}/> : <XCircle size={18}/>}<b>{state.status === "success" ? "Все поля заполнены" : "Заполни все поля и выбери severity"}</b></header>
           <p>{challenge.explanation}</p>
           <div className="qa-model-answer">
             <small>ПРИМЕР СИЛЬНОГО РЕПОРТА</small>
