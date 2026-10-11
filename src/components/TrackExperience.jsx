@@ -258,13 +258,13 @@ export function TrackTask({ track, challengeId, navigate }) {
         </div>
         <div className={`sql-result ${tone}`}>
           {tab === "harness"
-            ? <><header><b>{practice.harnessHeader}</b><span>только для чтения</span></header><pre className="sql-error-text" style={{ color: "#b8efdb" }}>{challenge.harness}</pre></>
+            ? <><header><b>{practice.harnessHeader}</b><span>только для чтения</span></header><pre className="sql-error-text sql-plain-text">{challenge.harness}</pre></>
             : <>
                 <header><b>Результат</b><span>{busy ? "Выполняется…" : run.status === "idle" ? "Предпросмотр" : run.status}</span></header>
                 {busy && <p>{loadMessage}</p>}
                 {!busy && run.status === "idle" && <p>{practice.idleHint}</p>}
                 {!busy && ["compile-error", "runtime-error", "network-error"].includes(run.status) && <pre className="sql-error-text">{run.message}</pre>}
-                {!busy && ["ran", "success", "mismatch"].includes(run.status) && <pre className="sql-error-text" style={{ color: "#eaf4f0" }}>{run.stdout || "(пустой вывод)"}</pre>}
+                {!busy && ["ran", "success", "mismatch"].includes(run.status) && <pre className="sql-error-text sql-plain-text">{run.stdout || "(пустой вывод)"}</pre>}
               </>}
           {run.status === "success" && <div className="sql-verdict success"><CheckCircle size={18}/> {practice.successText} {nextChallenge && <button className="sec-next" onClick={() => navigate(`${track.base}/practice/${nextChallenge.id}`)}>Следующая задача <ArrowRight size={14}/></button>}</div>}
           {run.status === "mismatch" && <div className="sql-verdict error"><XCircle size={18}/> {practice.failText} {challenge.hint}</div>}

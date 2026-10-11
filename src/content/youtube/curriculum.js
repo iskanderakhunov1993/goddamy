@@ -32,7 +32,7 @@ export const youtubeTrack = {
   base,
   kicker: "YOUTUBE ДЛЯ НОВИЧКОВ",
   title: "YouTube с нуля",
-  description: "Короткая теория по справке и блогу YouTube и проект: за четыре спринта вы публикуете пять полностью оформленных видео на своём канале.",
+  description: "Короткая теория по справке и блогу YouTube и проект: за четыре спринта ты публикуешь пять полностью оформленных видео на своём канале.",
   curriculum,
   flatLessons,
   lessonPath: (item) => `${base}/lesson/${item.section.id}/${item.topic.id}/${item.id}`,

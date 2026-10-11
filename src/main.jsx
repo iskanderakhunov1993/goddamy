@@ -4,6 +4,7 @@ import { App } from "./App.jsx";
 import { supabase } from "./lib/supabaseClient.js";
 import { syncOnSignIn } from "./lib/cloudSync.js";
 import "./styles.css";
+import "./styles-light.css";
 
 async function bootstrap() {
   // A returning signed-in user: pull their cloud state into localStorage

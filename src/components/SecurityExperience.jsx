@@ -245,13 +245,13 @@ export function SecurityTask({ challengeId, navigate }) {
         </div>
         <div className={`sql-result ${tone}`}>
           {tab === "harness"
-            ? <><header><b>Обычный ввод и атака</b><span>только для чтения</span></header><pre className="sql-error-text" style={{ color: "#b8efdb" }}>{challenge.harness}</pre></>
+            ? <><header><b>Обычный ввод и атака</b><span>только для чтения</span></header><pre className="sql-error-text sql-plain-text">{challenge.harness}</pre></>
             : <>
                 <header><b>Результат</b><span>{busy ? "Выполняется…" : run.status === "idle" ? "Предпросмотр" : run.status}</span></header>
                 {busy && <p>{loadMessage}</p>}
-                {!busy && run.status === "idle" && <p>Нажмите «Выполнить», чтобы увидеть, что делает код при обычном вводе и при атаке.</p>}
+                {!busy && run.status === "idle" && <p>Нажми «Выполнить», чтобы увидеть, что делает код при обычном вводе и при атаке.</p>}
                 {!busy && ["compile-error", "runtime-error", "network-error"].includes(run.status) && <pre className="sql-error-text">{run.message}</pre>}
-                {!busy && ["ran", "success", "mismatch"].includes(run.status) && <pre className="sql-error-text" style={{ color: "#eaf4f0" }}>{run.stdout || "(пустой вывод)"}</pre>}
+                {!busy && ["ran", "success", "mismatch"].includes(run.status) && <pre className="sql-error-text sql-plain-text">{run.stdout || "(пустой вывод)"}</pre>}
               </>}
           {run.status === "success" && <div className="sql-verdict success"><CheckCircle size={18}/> Атака отражена, обычный ввод работает. {nextChallenge && <button className="sec-next" onClick={() => navigate(`/security/practice/${nextChallenge.id}`)}>Следующая задача <ArrowRight size={14}/></button>}</div>}
           {run.status === "mismatch" && <div className="sql-verdict error"><XCircle size={18}/> Код выполнился, но результат отличается от безопасного. {challenge.hint}</div>}

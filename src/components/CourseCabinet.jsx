@@ -81,7 +81,7 @@ export function CourseCabinet({ navigate, course }) {
         </div>
       </section>
       {course.project && <section className="cabinet-project">
-        <div><small>ПРОЕКТ НА ВАШЕМ КОМПЬЮТЕРЕ</small><h2>{course.project.title}</h2><p>{course.project.summary}</p></div>
+        <div><small>ПРОЕКТ НА ТВОЁМ КОМПЬЮТЕРЕ</small><h2>{course.project.title}</h2><p>{course.project.summary}</p></div>
         <button className="btn-primary" onClick={() => navigate(course.project.path)}>Открыть проект <ArrowRight size={18}/></button>
       </section>}
       {lessons && <CourseLessons lessons={lessons} navigate={navigate}/>}

@@ -12,13 +12,11 @@ import { sqlLessons } from "../content/sql/lessons.js";
 import { qaLessons } from "../content/qa/lessons.js";
 import { lessonsLabel } from "../lib/plural.js";
 import { getGoChallenge, goChallenges } from "../content/goChallenges.js";
-import { saveProfileName } from "../lib/profile.js";
 import "../styles-academy.css";
 
 export { getGoChallenge, goChallenges };
 
 export function PublicGoLanding({ navigate }) {
-  const [name, setName] = useState("");
   const tracks = [
     { title: "Go Backend", status: "Курс доступен", description: "Пройди путь от первой строки до своего приложения Task Tracker с тестами и релизом на GitHub. Ещё два проекта в разработке.", icon: <GoLogoTile/>, level: "Для начинающих", meta: `${lessonsLabel(courseStats.authoredLessons)} · проект`, action: () => navigate("/go") },
     { title: "SQL", status: "Курс доступен", description: "Запросы выполняются прямо в уроке, тренажёр работает на настоящей базе, а в проекте ты пишешь 12 запросов к базе магазина на своём компьютере.", icon: <Database size={20}/>, level: "Для начинающих", meta: `${lessonsLabel(sqlLessons.flatLessons.length)} · проект`, action: () => navigate("/sql") },
@@ -32,34 +30,31 @@ export function PublicGoLanding({ navigate }) {
     { title: "Docker", status: "Скоро", description: "Упакуй приложение в контейнер и разверни его в любой среде.", icon: <Cube size={20}/>, level: "—", meta: "Программа готовится" },
   ];
   return <main className="universal-landing">
-    <section className="universal-hero container">
-      <div className="universal-hero-grid">
-        <div className="universal-hero-copy">
-          <h1><span className="hero-box white">Осваивай</span><span className="hero-box yellow">/IT-профессию</span></h1>
-          <p>Короткая теория, тренажёр с настоящей проверкой кода и проект, который ты делаешь на своём компьютере. Начни с Go, Python, SQL или QA.</p>
-          <div className="universal-hero-actions"><button onClick={() => navigate("/go")}>Начать с Go <ArrowRight size={20}/></button><button onClick={() => navigate("/#courses")}>Выбрать направление</button></div>
-          <div className="universal-subscription-note"><Stack size={20}/><span>Курсы и тренажёры бесплатны</span></div>
+    <section className="landing-hero container">
+      <div className="landing-hero-copy">
+        <h1>Осваивай IT‑профессию на практике</h1>
+        <p>Короткая теория, тренажёр с настоящей проверкой кода и проект, который ты делаешь на своём компьютере. Курсы и тренажёры бесплатны.</p>
+        <div className="landing-hero-actions">
+          <button className="landing-primary" onClick={() => navigate("/go")}>Начать с Go <ArrowRight size={20}/></button>
+          <button className="landing-link" onClick={() => navigate("/#courses")}>Выбрать другое направление</button>
         </div>
-        <form className="universal-signup" onSubmit={(event) => { event.preventDefault(); if (name.trim()) saveProfileName(name.trim()); navigate("/go"); }}>
-          <b>Как тебя зовут?</b>
-          <input placeholder="Имя" value={name} onChange={(event) => setName(event.target.value)}/>
-          <button type="submit">Начать <ArrowRight size={16}/></button>
-        </form>
       </div>
+      <ol className="landing-steps" aria-label="Как устроено обучение">
+        <li><b>Короткая теория</b><span>Только то, что нужно для следующей задачи.</span></li>
+        <li><b>Практика с проверкой</b><span>Код запускается, и ты сразу видишь результат.</span></li>
+        <li><b>Проект на твоём компьютере</b><span>Скрипт проверяет работу и честно показывает, что готово.</span></li>
+      </ol>
     </section>
 
     <section className="universal-courses container" id="courses">
-      <p className="academy-kicker">НАПРАВЛЕНИЯ</p><h2>Выбери<br/>направление</h2>
-      <ul className="universal-course-pills">{tracks.map((track) => <li key={track.title}><button onClick={() => track.action ? track.action() : navigate("/#courses")}>{track.title}</button></li>)}</ul>
+      <h2>Выбери направление</h2>
       <ul className="universal-course-list">{tracks.map((track) => <li key={track.title}><button disabled={!track.action} onClick={track.action} className={track.action ? "available" : "coming"}>
         <div className="universal-track-icon">{track.icon}</div>
         <div className="universal-track-copy"><small>{track.status}</small><h3>{track.title}</h3><p>{track.description}</p><div className="universal-track-meta"><span>{track.level}</span><span>{track.meta}</span></div></div>
       </button></li>)}</ul>
     </section>
 
-    <section className="universal-practice" id="practice"><div className="container"><div><p className="academy-kicker">ТОЛЬКО ВАЖНОЕ</p><h2>Не смотри, как работают другие. Делай сам.</h2></div><ol><li><b>Короткая теория</b><p>Только знания, нужные для следующей задачи.</p></li><li><b>Практика с проверкой</b><p>Тренажёр сразу показывает, что получилось.</p></li><li><b>Проект и сертификат</b><p>Результат можно открыть и показать другим.</p></li></ol></div></section>
-
-    <section className="universal-subscription container" id="subscription"><div><p className="academy-kicker">ПОДПИСКА</p><h2>Учёба бесплатна. Подписка — только за сертификат</h2><p>Уроки, тренажёры и проекты открыты без оплаты. Подписка нужна для одного: скачать сертификат, когда пройдёшь курс целиком.</p><button className="universal-subscription-link" onClick={() => navigate("/certificates")}>Посмотреть сертификаты <ArrowRight size={16}/></button></div><div className="universal-subscription-card"><CheckCircle size={31}/><h3>Что остаётся бесплатным</h3><ul><li>Все уроки</li><li>Тренажёры с проверкой кода</li><li>Проекты и скрипты их проверки</li></ul><button onClick={() => navigate("/subscription")}>Что даёт подписка <ArrowRight size={18}/></button><small>Подписка открывает только скачивание сертификата</small></div></section>
+    <section className="universal-subscription container" id="subscription"><div><h2>Учёба бесплатна. Подписка — только за сертификат</h2><p>Уроки, тренажёры и проекты открыты без оплаты. Подписка нужна для одного: скачать сертификат, когда пройдёшь курс целиком.</p><button className="universal-subscription-link" onClick={() => navigate("/certificates")}>Посмотреть сертификаты <ArrowRight size={16}/></button></div><div className="universal-subscription-card"><CheckCircle size={31}/><h3>Что остаётся бесплатным</h3><ul><li>Все уроки</li><li>Тренажёры с проверкой кода</li><li>Проекты и скрипты их проверки</li></ul><button onClick={() => navigate("/subscription")}>Что даёт подписка <ArrowRight size={18}/></button><small>Подписка открывает только скачивание сертификата</small></div></section>
   </main>;
 }
 
@@ -80,7 +75,7 @@ export function GoTrainer({ navigate }) {
   return <main className="go-practice-shell"><nav className="course-context-nav" aria-label="Разделы курса Go"><button onClick={() => navigate("/go")}><ArrowRight size={16}/> Курс Go Backend</button><div><button onClick={() => navigate("/go")}>Программа</button><button className="active" aria-current="page">Практика</button></div></nav><div className="go-trainer container">
     <header className="go-trainer-header"><div><p className="academy-kicker">ПРАКТИКА · GO</p><h1>Тренажёр Go-задач</h1><p>Короткие упражнения, которые готовят к проекту курса.</p></div><div className="trainer-progress-note"><CheckCircle size={20}/><span><b>Начни с малого</b><small>Решённые задачи учитываются в серии дней в профиле.</small></span></div></header>
     <section className="go-trainer-filters" aria-label="Фильтры задач"><div className="trainer-filter-row"><div className="trainer-levels">{["Все", "Лёгкая", "Средняя", "Сложная"].map((item) => <button className={level === item ? "active" : ""} onClick={() => setLevel(item)} key={item}><i className={`level-${item}`}/>{item}{item !== "Все" && <small>{goChallenges.filter((challenge) => challenge.level === item).length}</small>}</button>)}</div><label><MagnifyingGlass size={18}/><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Поиск задачи" aria-label="Поиск задачи"/></label></div><div className="trainer-categories"><SlidersHorizontal size={17}/>{categories.map((item) => <button onClick={() => setCategory(item)} className={category === item ? "active" : ""} key={item}>{item}</button>)}</div></section>
-    <section className="go-task-list" aria-live="polite">{filtered.length ? filtered.map((item, index) => <button onClick={() => navigate(`/go/practice/${item.id}`)} key={item.id}><span className={`academy-dot level-${item.level}`}/><b>{String(index + 1).padStart(2, "0")}. {item.title}</b><em>{item.category}</em><small>{item.level} · {item.minutes} мин</small><ArrowRight size={18}/></button>) : <div className="trainer-empty"><BracketsCurly size={26}/><b>Подходящих задач пока нет</b><p>Снимите один из фильтров или измените запрос.</p></div>}</section>
+    <section className="go-task-list" aria-live="polite">{filtered.length ? filtered.map((item, index) => <button onClick={() => navigate(`/go/practice/${item.id}`)} key={item.id}><span className={`academy-dot level-${item.level}`}/><b>{String(index + 1).padStart(2, "0")}. {item.title}</b><em>{item.category}</em><small>{item.level} · {item.minutes} мин</small><ArrowRight size={18}/></button>) : <div className="trainer-empty"><BracketsCurly size={26}/><b>Подходящих задач пока нет</b><p>Сними один из фильтров или измени запрос.</p></div>}</section>
     <section className="trainer-project-callout"><Stack size={25}/><div><b>Не знаешь, с чего начать?</b><p>Пройди модуль «Старт», а затем реши первые три лёгкие задачи.</p></div><button onClick={() => navigate("/go")}>К программе <ArrowRight size={17}/></button></section>
   </div></main>;
 }
