@@ -439,7 +439,7 @@ export function StoryLesson({ sectionId = "intro", topicId = "welcome", lessonId
     </aside>
     <article className="story-lesson lesson-reader">
       <header>
-        <div>{current.section.title} <span/> {current.topic.title} · Урок {lessonIndex + 1}/{current.topic.lessons.length}</div>
+        <div className="lesson-crumb"><span>{current.section.title}</span><CaretRight size={12} aria-hidden="true"/><span>{current.topic.title}</span><span className="lesson-crumb-count">Урок {lessonIndex + 1} из {current.topic.lessons.length}</span></div>
         <i>{current.topic.lessons.map((item) => <b className={completedIds.has(item.id) || item.id === current.id ? "complete" : ""} key={item.id}/>)}</i>
       </header>
       <h1>{current.title}</h1>

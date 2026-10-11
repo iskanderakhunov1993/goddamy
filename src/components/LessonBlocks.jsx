@@ -3,6 +3,7 @@ import { getCheckedItems, toggleCheckedItem } from "../lib/taskChecklist.js";
 import { runGoProgram } from "../lib/goPlayground.js";
 import { runPythonProgram } from "../lib/pyodidePlayground.js";
 import { SHOP_DB_PY } from "../lib/shopDbPython.js";
+import { highlight } from "../lib/highlight.js";
 
 // A code block is runnable as-is only if it's a complete program, or if it's
 // a plain sequence of statements with no top-level func/type declaration —
@@ -165,7 +166,7 @@ function CodeBlock({ block }) {
         <button type="button" onClick={copy}>{copied ? "Скопировано" : "Копировать"}</button>
       </span>
     </figcaption>
-    <pre><code>{block.code || ""}</code></pre>
+    <pre><code>{highlight(block.code || "", block.language || "go").map((token, index) => token.kind ? <span className={`tok-${token.kind}`} key={index}>{token.text}</span> : token.text)}</code></pre>
     {run && !run.busy && <div className={`lesson-code-output ${run.status === "ok" ? "success" : "error"}`}>
       <pre>{run.status === "ok" ? (run.stdout || "(пустой вывод)") : run.message}</pre>
     </div>}
@@ -179,7 +180,7 @@ function QuizBlock({ block }) {
   const options = (block.options || []).filter(Boolean);
   const correctIndex = options.findIndex((option) => option.startsWith("*"));
   const isCorrect = checked && selected === correctIndex;
-  return <section className="lesson-mini-quiz"><small>ПРОВЕРЬТЕ СЕБЯ</small><h3>{block.question}</h3>{options.map((option, index) => <label className={checked && index === correctIndex ? "correct" : checked && selected === index ? "wrong" : ""} key={index}><input type="radio" name={`quiz-${block.id}`} checked={selected === index} onChange={() => { setSelected(index); setChecked(false); }}/><span/>{option.replace(/^\*/, "")}</label>)}<button type="button" disabled={selected === null} onClick={() => { setChecked(true); saveQuizAnswer(block.id, selected); }}>Проверить ответ</button>{checked && <p className={isCorrect ? "quiz-result success" : "quiz-result"}>{isCorrect ? "Верно. " : "Пока нет. "}{block.explanation}</p>}</section>;
+  return <section className="lesson-mini-quiz"><small>ПРОВЕРЬ СЕБЯ</small><h3>{block.question}</h3>{options.map((option, index) => <label className={checked && index === correctIndex ? "correct" : checked && selected === index ? "wrong" : ""} key={index}><input type="radio" name={`quiz-${block.id}`} checked={selected === index} onChange={() => { setSelected(index); setChecked(false); }}/><span/>{option.replace(/^\*/, "")}</label>)}<button type="button" disabled={selected === null} onClick={() => { setChecked(true); saveQuizAnswer(block.id, selected); }}>Проверить ответ</button>{checked && <p className={isCorrect ? "quiz-result success" : "quiz-result"}>{isCorrect ? "Верно. " : "Пока нет. "}{block.explanation}</p>}</section>;
 }
 
 function TaskBlock({ block }) {

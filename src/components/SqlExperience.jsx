@@ -11,6 +11,7 @@ import { compareResults, createSeededDatabase, runQuery } from "../lib/sqlEngine
 import { recordPractice } from "../lib/activity.js";
 import { sqlProjectTrack } from "../content/sql/project.js";
 import { sqlLessons } from "../content/sql/lessons.js";
+import { plural } from "../lib/plural.js";
 
 export { getSqlChallenge, sqlChallenges };
 
@@ -102,7 +103,7 @@ export function SqlTask({ challengeId, navigate }) {
     {tab !== "result"
       ? <><header><b>{tab}</b><span>{tablePreview ? `${tablePreview.rows.length} строк(и)` : "предпросмотр"}</span></header><ResultTable columns={tablePreview?.columns || []} rows={tablePreview?.rows || []} emptyLabel="Нет данных для предпросмотра."/></>
       : <>
-          <header><b>Результат</b><span>{run.status === "idle" ? "Предпросмотр" : run.status === "syntax-error" ? "Ошибка запроса" : `${run.rows.length} строки`}</span></header>
+          <header><b>Результат</b><span>{run.status === "idle" ? "Предпросмотр" : run.status === "syntax-error" ? "Ошибка запроса" : `${run.rows.length} ${plural(run.rows.length, "строка", "строки", "строк")}`}</span></header>
           {run.status === "idle" && <p>{dbError || "Выполни запрос, чтобы увидеть данные."}</p>}
           {run.status === "syntax-error" && <p className="sql-error-text">{run.message}</p>}
           {(run.status === "ran" || run.status === "success" || run.status === "mismatch") && <ResultTable columns={run.columns} rows={run.rows} emptyLabel="Запрос выполнен, но ничего не вернул."/>}

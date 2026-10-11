@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import {
-  ArrowLeft, ArrowRight, BookOpen, Check, CheckCircle, Code, House, MagnifyingGlass, Play, ShieldCheck,
+  ArrowLeft, CaretRight, ArrowRight, BookOpen, Check, CheckCircle, Code, House, MagnifyingGlass, Play, ShieldCheck,
   SlidersHorizontal, UserCircle, XCircle,
 } from "@phosphor-icons/react";
 import "../styles-sql.css";
@@ -17,6 +17,7 @@ import { getCompletedCount, getCompletedLessonIds, markLessonComplete } from "..
 import { getLessonFeedback, setLessonFeedback } from "../lib/lessonFeedback.js";
 import { recordPractice } from "../lib/activity.js";
 import { lessonsLabel } from "../lib/plural.js";
+import { runStatusLabel } from "../lib/runStatus.js";
 
 function withInlineCode(text) {
   return text.split(/(`[^`]+`)/g).filter(Boolean).map((part, index) =>
@@ -139,7 +140,7 @@ export function SecurityLesson({ sectionId, topicId, lessonId, navigate }) {
     </aside>
     <article className="story-lesson lesson-reader">
       <header>
-        <div>{current.section.title} <span/> {current.topic.title} · Урок {lessonIndex + 1}/{current.topic.lessons.length}</div>
+        <div className="lesson-crumb"><span>{current.section.title}</span><CaretRight size={12} aria-hidden="true"/><span>{current.topic.title}</span><span className="lesson-crumb-count">Урок {lessonIndex + 1} из {current.topic.lessons.length}</span></div>
         <i>{current.topic.lessons.map((item) => <b className={completedIds.has(item.id) || item.id === current.id ? "complete" : ""} key={item.id}/>)}</i>
       </header>
       <h1>{current.title}</h1>
@@ -247,7 +248,7 @@ export function SecurityTask({ challengeId, navigate }) {
           {tab === "harness"
             ? <><header><b>Обычный ввод и атака</b><span>только для чтения</span></header><pre className="sql-error-text sql-plain-text">{challenge.harness}</pre></>
             : <>
-                <header><b>Результат</b><span>{busy ? "Выполняется…" : run.status === "idle" ? "Предпросмотр" : run.status}</span></header>
+                <header><b>Результат</b><span>{busy ? "Выполняется…" : runStatusLabel(run.status)}</span></header>
                 {busy && <p>{loadMessage}</p>}
                 {!busy && run.status === "idle" && <p>Нажми «Выполнить», чтобы увидеть, что делает код при обычном вводе и при атаке.</p>}
                 {!busy && ["compile-error", "runtime-error", "network-error"].includes(run.status) && <pre className="sql-error-text">{run.message}</pre>}
