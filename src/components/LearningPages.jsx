@@ -4,7 +4,7 @@ import "../styles-lesson-blocks.css";
 import {
   ArrowLeft, ArrowRight, Check, CheckCircle, Circle, Code,
   GithubLogo, Lightbulb, RocketLaunch, Target, BookOpen, House,
-  List, X, CaretRight, UserCircle, PencilSimple, Flame, ArrowUpRight,
+  List, X, CaretRight, CaretDown, UserCircle, PencilSimple, Flame, ArrowUpRight,
   Certificate, Terminal
 } from "@phosphor-icons/react";
 import { cliContract, contractRules, project, setupTasks, sprints, stages, storyBeats } from "../content/goCourse.js";
@@ -22,6 +22,7 @@ import { achievementDefs, getUnlockedAchievements } from "../lib/achievements.js
 import { downloadCertificate } from "../lib/certificate.js";
 import { lessonsLabel, topicsLabel } from "../lib/plural.js";
 import { getLessonFeedback, setLessonFeedback } from "../lib/lessonFeedback.js";
+import { getCheckedItems, toggleCheckedItem } from "../lib/taskChecklist.js";
 import { getCurrentUser, signInWithEmail, signOut } from "../lib/auth.js";
 import "../styles-profile.css";
 
@@ -71,9 +72,15 @@ function PageNavigation({ current, navigate }) {
   </nav>;
 }
 
-function Checklist({ items, title = "Чек-лист" }) {
-  const [checked, setChecked] = useState([]);
-  const toggle = (id) => setChecked((state) => state.includes(id) ? state.filter((item) => item !== id) : [...state, id]);
+// storageId включает сохранение отметок (localStorage + синхронизация аккаунта);
+// без него чек-лист живёт только до обновления страницы.
+function Checklist({ items, title = "Чек-лист", storageId = null }) {
+  const [checked, setChecked] = useState(() => (storageId ? getCheckedItems(storageId) : []));
+  // Запись в хранилище — вне функции обновления состояния: в StrictMode React вызывает её дважды.
+  const toggle = (id) => {
+    if (storageId) setChecked(toggleCheckedItem(storageId, id));
+    else setChecked((state) => state.includes(id) ? state.filter((item) => item !== id) : [...state, id]);
+  };
   return <section className="interactive-checklist">
     <div className="checklist-heading"><h2>{title}</h2><span>{checked.length} из {items.length}</span></div>
     <ProgressBar value={Math.round((checked.length / items.length) * 100)} label="Выполнено"/>
@@ -495,7 +502,7 @@ export function SetupPage({ navigate }) {
     <article className="learning-article">
       <header className="learning-header"><small>ПОДГОТОВИТЕЛЬНЫЙ ЭТАП</small><h1>Настрой рабочее окружение</h1><p>Пройди шаги по порядку. Раскрывай инструкции, выполняй команды и отмечай только реально проверенные пункты.</p></header>
       <StoryMessage story={storyBeats.setup}/>
-      <Checklist items={setupTasks} title="12 шагов до первого push"/>
+      <Checklist items={setupTasks} title="12 шагов до первого push" storageId="go-task-tracker-setup"/>
       <AutoCheck/>
       <PageNavigation current="setup" navigate={navigate}/>
     </article>
@@ -526,24 +533,60 @@ function AutoCheck({ sprint = null }) {
   </ContentBlock>;
 }
 
+// Раскрывающийся блок страницы спринта: справочный материал не заслоняет задачи.
+function SprintDetails({ title, note = "", children }) {
+  return <details className="sprint-details">
+    <summary><span><b>{title}</b>{note && <small>{note}</small>}</span><CaretDown size={18} aria-hidden="true"/></summary>
+    <div className="sprint-details-body">{children}</div>
+  </details>;
+}
+
 export function SprintPage({ number, navigate }) {
   const sprint = sprints.find((item) => item.number === number) || sprints[0];
   const current = `sprint-${sprint.number}`;
-  const [hint, setHint] = useState(null);
   return <LearningLayout current={current} navigate={navigate}>
     <article className="learning-article sprint-page">
-      <header className="learning-header"><small>СПРИНТ {sprint.number} ИЗ 4</small><h1>{sprint.title}</h1><p>{sprint.situation}</p><div className="sprint-goal"><Target size={21}/><span><small>ЦЕЛЬ</small><b>{sprint.goal}</b></span></div></header>
-      <StoryMessage story={sprint.story}/>
-      <ContentBlock eyebrow="РЕЗУЛЬТАТ" title="Что получится в конце"><p>{sprint.result}</p><div className="knowledge-list">{sprint.knowledge.map((item) => <span key={item}>{item}</span>)}</div></ContentBlock>
-      <ContentBlock eyebrow="КОРОТКАЯ ТЕОРИЯ" title="Только то, что нужно для задачи" icon={<Code size={24}/>}><p>{sprint.theory}</p></ContentBlock>
-      <ContentBlock eyebrow="ПОХОЖИЙ ПРИМЕР" title={sprint.exampleTitle}><p>{sprint.example}</p><div className="example-note"><Lightbulb size={18}/><span>Перенеси принцип, но не предметную область. Готового решения Task Tracker здесь нет.</span></div></ContentBlock>
-      <Checklist items={sprint.tasks} title="Самостоятельные задачи"/>
-      <ContentBlock eyebrow="ПРИЁМКА" title="Критерии готовности"><div className="criteria-list">{sprint.criteria.map((item) => <p key={item}><Circle size={17}/>{item}</p>)}</div></ContentBlock>
-      <AutoCheck sprint={sprint.number}/>
-      <ContentBlock eyebrow="ПОДСКАЗКИ" title="Открывай, только когда застрянешь"><div className="hint-list">{sprint.hints.map((item, index) => <button key={item} onClick={() => setHint(hint === index ? null : index)}><span>Подсказка {index + 1}</span><b>{hint === index ? item : "Показать"}</b></button>)}</div></ContentBlock>
-      <ContentBlock eyebrow="САМОПРОВЕРКА" title="Объясни себе"><Checklist items={sprint.selfCheck}/></ContentBlock>
-      <ContentBlock eyebrow="GITHUB-ПРОЦЕСС" title="Доведи работу до репозитория" icon={<GithubLogo size={24}/>}><ol className="github-steps">{sprint.github.map((item) => <li key={item}>{item}</li>)}</ol></ContentBlock>
-      <section className="sprint-finish"><CheckCircle size={28}/><div><h2>Завершение спринта</h2><p>Отметь обязательные задачи, проверь критерии и только после этого переходи дальше.</p></div><button className="primary" onClick={() => navigate(stages[stages.findIndex((stage) => stage.id === current) + 1].path)}>Следующий этап <ArrowRight size={17}/></button></section>
+      <header className="learning-header">
+        <small>СПРИНТ {sprint.number} ИЗ 4</small>
+        <h1>{sprint.title}</h1>
+        <p>{sprint.situation}</p>
+        <div className="sprint-goal"><Target size={21}/><span><small>ЦЕЛЬ</small><b>{sprint.goal}</b></span></div>
+        <p className="sprint-result"><b>В конце спринта:</b> {sprint.result}</p>
+      </header>
+
+      <Checklist items={sprint.tasks} title="Что сделать" storageId={`go-task-tracker-sprint-${sprint.number}-tasks`}/>
+
+      <section className="sprint-check">
+        <h2>Как понять, что готово</h2>
+        <ul className="sprint-criteria">{sprint.criteria.map((item) => <li key={item}><CheckCircle size={18}/>{item}</li>)}</ul>
+        <p>Запусти проверку в папке проекта. Спринт готов, когда в разделе «Спринт {sprint.number}» все пункты отмечены ✓. Проверки следующих спринтов пока могут не проходить.</p>
+        <pre className="check-command"><code>go run check.go</code></pre>
+        <p className="check-note">Скрипт скачивается на шаге <button className="inline" onClick={() => navigate("/go/task-tracker/setup")}>«Подготовка»</button>.</p>
+      </section>
+
+      <div className="sprint-more">
+        <h2>Если нужна помощь</h2>
+        <StoryMessage story={sprint.story}/>
+        <SprintDetails title="Короткая теория" note="Только то, что нужно для задач">
+          <p>{sprint.theory}</p>
+          <div className="knowledge-list">{sprint.knowledge.map((item) => <span key={item}>{item}</span>)}</div>
+        </SprintDetails>
+        <SprintDetails title={`Похожий пример: ${sprint.exampleTitle}`} note="Тот же принцип на другой задаче">
+          <p>{sprint.example}</p>
+          <p className="check-note">Перенеси принцип, но не предметную область. Готового решения Task Tracker здесь нет.</p>
+        </SprintDetails>
+        <SprintDetails title="Подсказки" note="Открывай по одной, когда застрянешь">
+          {sprint.hints.map((item, index) => <details className="sprint-hint" key={item}><summary>Подсказка {index + 1}</summary><p>{item}</p></details>)}
+        </SprintDetails>
+        <SprintDetails title="Проверь, что понял" note="Объясни себе своими словами">
+          <ul className="sprint-plain-list">{sprint.selfCheck.map((item) => <li key={item}>{item}</li>)}</ul>
+        </SprintDetails>
+        <SprintDetails title="Как оформить работу в GitHub" note={`${sprint.github.length} шага`}>
+          <ol className="github-steps">{sprint.github.map((item) => <li key={item}>{item}</li>)}</ol>
+        </SprintDetails>
+      </div>
+
+      <section className="sprint-finish"><CheckCircle size={28}/><div><h2>Завершение спринта</h2><p>Отметь задачи, добейся зелёной проверки и переходи дальше.</p></div><button className="primary" onClick={() => navigate(stages[stages.findIndex((stage) => stage.id === current) + 1].path)}>Следующий этап <ArrowRight size={17}/></button></section>
       <PageNavigation current={current} navigate={navigate}/>
     </article>
   </LearningLayout>;
