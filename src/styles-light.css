@@ -151,3 +151,41 @@ footer div button { min-height: 40px; }
 @media (max-width: 720px) { .dashboard-rail, .story-side { border-right: 0; border-bottom: 1px solid var(--g-line); } }
 .dashboard-rail nav button.active { background: var(--g-accent-soft); color: var(--g-accent); }
 .stage-sidebar { background: var(--g-surface); border-right: 1px solid var(--g-line); }
+
+/* ---------- Подсветка синтаксиса в блоках кода ---------- */
+.tok-keyword { color: var(--g-accent); font-weight: 600; }
+.tok-string { color: var(--g-ok); }
+.tok-number { color: #9a4a00; }
+.tok-comment { color: var(--g-muted); font-style: italic; }
+
+/* ---------- Хлебные крошки урока ---------- */
+.lesson-crumb { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; color: var(--g-ink-2); }
+.lesson-crumb svg { flex: none; color: var(--g-muted); }
+.lesson-crumb-count { margin-left: auto; color: var(--g-muted); font-variant-numeric: tabular-nums; }
+
+/* ---------- Подсказки к иконкам боковой панели (на десктопе, по наведению и фокусу) ---------- */
+@media (min-width: 721px) and (hover: hover) {
+  .dashboard-rail button[aria-label], .story-side button[aria-label] { position: relative; }
+  .dashboard-rail button[aria-label]::after, .story-side button[aria-label]::after {
+    content: attr(aria-label); position: absolute; left: calc(100% + 10px); top: 50%; transform: translateY(-50%);
+    padding: 6px 10px; border-radius: var(--g-r-sm); background: var(--g-ink); color: #fff; font: 600 12px/1.2 Manrope, system-ui, sans-serif;
+    white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .12s ease; z-index: 30;
+  }
+  .dashboard-rail button[aria-label]:hover::after, .dashboard-rail button[aria-label]:focus-visible::after,
+  .story-side button[aria-label]:hover::after, .story-side button[aria-label]:focus-visible::after { opacity: 1; }
+}
+
+/* ---------- Карточки модулей Go на телефоне: без пустого экрана под одну иконку ---------- */
+@media (max-width: 720px) {
+  .go-module-card { min-height: 0; padding: var(--g-s-4); display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: var(--g-s-3); align-items: start; }
+  .go-module-card .go-module-icon { width: 36px; height: 36px; grid-row: span 3; }
+  .go-module-card h3 { margin: 0; font-size: var(--g-fs-base); }
+  .go-module-card .go-module-status { margin-top: var(--g-s-3); }
+  .go-module-card:hover { transform: none; }
+}
+
+/* ---------- Контраст мелкого текста ---------- */
+.academy-hub-paths p { color: var(--g-ink-2); }
+.certificate-grid article button:disabled { color: var(--g-muted); opacity: 1; }
+.lesson-code-actions button { border: 1px solid var(--g-line); border-radius: var(--g-r-sm); background: var(--g-surface); color: var(--g-ink-2); font-weight: 600; cursor: pointer; }
+.lesson-code-actions button:hover { border-color: var(--g-accent); color: var(--g-accent); }

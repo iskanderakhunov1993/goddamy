@@ -4,6 +4,7 @@ import { getGoChallenge } from "../content/goChallenges.js";
 import { checkSolution, runGoProgram, assembleSource } from "../lib/goPlayground.js";
 import { recordPractice } from "../lib/activity.js";
 import "../styles-sql.css";
+import { runStatusLabel } from "../lib/runStatus.js";
 
 export function GoTask({ challengeId, navigate }) {
   const challenge = getGoChallenge(challengeId);
@@ -78,7 +79,7 @@ export function GoTask({ challengeId, navigate }) {
             {tab === "harness"
               ? <><header><b>main() тренажёра</b><span>только для чтения</span></header><pre className="sql-error-text sql-plain-text">{challenge.harness}</pre></>
               : <>
-                  <header><b>Результат</b><span>{busy ? "Выполняется…" : run.status === "idle" ? "Предпросмотр" : run.status}</span></header>
+                  <header><b>Результат</b><span>{busy ? "Выполняется…" : runStatusLabel(run.status)}</span></header>
                   {busy && <p>Компилируем и запускаем на play.golang.org…</p>}
                   {!busy && run.status === "idle" && <p>Нажми «Выполнить», чтобы увидеть вывод программы.</p>}
                   {!busy && (run.status === "compile-error" || run.status === "runtime-error" || run.status === "network-error") && <pre className="sql-error-text">{run.message}</pre>}

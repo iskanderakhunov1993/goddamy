@@ -9,6 +9,7 @@ import { checkSolution, runPythonProgram, assembleSource } from "../lib/pyodideP
 import { recordPractice } from "../lib/activity.js";
 import { pythonProjectTrack } from "../content/python/project.js";
 import { pythonLessons } from "../content/python/lessons.js";
+import { runStatusLabel } from "../lib/runStatus.js";
 
 export const pythonModules = [
   { n: "01", title: "Старт и базовый синтаксис", text: "Настрой Python, запусти первую программу и освой переменные.", topics: ["Среда и первый запуск", "Переменные", "Числа и строки", "Ввод и вывод", "Функции"] },
@@ -185,7 +186,7 @@ export function PythonTask({ challengeId, navigate }) {
           {tab === "harness"
             ? <><header><b>Тестовый вызов</b><span>только для чтения</span></header><pre className="sql-error-text sql-plain-text">{challenge.harness}</pre></>
             : <>
-                <header><b>Результат</b><span>{busy ? "Выполняется…" : run.status === "idle" ? "Предпросмотр" : run.status}</span></header>
+                <header><b>Результат</b><span>{busy ? "Выполняется…" : runStatusLabel(run.status)}</span></header>
                 {busy && <p>{loadMessage}</p>}
                 {!busy && run.status === "idle" && <p>Нажми «Выполнить», чтобы увидеть вывод программы.</p>}
                 {!busy && (run.status === "compile-error" || run.status === "runtime-error" || run.status === "network-error") && <pre className="sql-error-text">{run.message}</pre>}
