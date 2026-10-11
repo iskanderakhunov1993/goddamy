@@ -295,14 +295,15 @@ body { min-width: 0; }
 
 /* Go course page — minimal card style */
 .go-info-card { display: flex; flex-direction: column; border-radius: 14px; background: #fff; padding: 26px 28px; margin-bottom: 14px; }
-.go-info-link { align-self: flex-start; font-size: 13px; color: var(--muted); text-decoration: none; }
-.go-info-link:hover { color: var(--ink); }
+.go-info-link { align-self: flex-start; display: inline-flex; align-items: center; gap: 5px; min-height: 32px; padding: 0; border: 0; background: none; font: inherit; font-size: 13px; font-weight: 600; color: #4b3aeb; cursor: pointer; }
+.go-info-link:hover { text-decoration: underline; text-underline-offset: 4px; }
 .go-info-card h1 { margin: 8px 0 20px; font-size: 30px; font-weight: 800; letter-spacing: -.01em; }
 .go-progress-row { display: flex; align-items: center; gap: 20px; }
 .go-progress-track { flex: 1; height: 10px; background: #e5e6ea; border-radius: 99px; overflow: hidden; }
-.go-progress-track > span { display: block; height: 100%; background: #22c55e; border-radius: inherit; }
-.go-continue-btn { flex: none; border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 13px 22px; font-weight: 700; font-size: 14px; color: var(--ink); cursor: pointer; }
-.go-continue-btn:hover { border-color: var(--ink); }
+.go-progress-track > span { display: block; height: 100%; background: #4b3aeb; border-radius: inherit; }
+.go-continue-btn { flex: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; border: 0; background: #4b3aeb; border-radius: 10px; padding: 13px 22px; font-weight: 700; font-size: 14px; color: #fff; cursor: pointer; }
+.go-continue-btn:hover { background: #3b2bd0; }
+.go-continue-btn:disabled { opacity: .5; cursor: not-allowed; }
 .go-info-footer { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 9px; }
 .go-progress-caption { font-size: 12.5px; color: var(--muted); }
 .go-practice-link { display: flex; align-items: center; gap: 6px; flex: none; border: 0; background: transparent; padding: 0; color: #4b3aeb; font-weight: 700; font-size: 12.5px; cursor: pointer; }
@@ -323,16 +324,11 @@ body { min-width: 0; }
 .go-module-card:hover .go-module-icon { color: #4b3aeb; }
 .go-module-card h3 { margin: 20px 0 0; font-size: 18px; font-weight: 700; letter-spacing: -.01em; transition: color .2s ease; }
 .go-module-card:hover h3 { color: #4b3aeb; }
-.go-module-meta { display: block; max-height: 0; margin-top: 0; font-size: 12.5px; color: var(--muted); opacity: 0; overflow: hidden; transition: max-height .22s ease, opacity .18s ease, margin-top .22s ease; }
-.go-module-card:hover .go-module-meta { max-height: 20px; margin-top: 6px; opacity: 1; }
+.go-module-meta { display: block; margin-top: 6px; font-size: 12.5px; color: var(--muted); }
 .go-module-status { margin-top: 20px; }
 .go-module-status > span { display: block; margin-bottom: 8px; font-size: 12.5px; color: var(--muted); }
 .go-module-bar { height: 2px; background: #e5e6ea; }
-.go-module-bar > i { display: block; height: 100%; background: var(--ink); }
-.go-module-bar.full > i { width: 100%; }
-.go-module-bar.current > i { width: 18%; }
-.go-module-bar.upcoming { background: transparent; }
-.go-module-bar.upcoming > i { display: none; }
+.go-module-bar > i { display: block; height: 100%; background: #4b3aeb; }
 
 @media (max-width: 900px) {
   .go-syllabus-grid { grid-template-columns: 1fr 1fr; }
@@ -345,3 +341,8 @@ body { min-width: 0; }
   .go-goal-btn { width: 100%; margin-left: 0; }
   .go-syllabus-grid { grid-template-columns: 1fr; }
 }
+
+.go-module-card.in-progress .go-module-icon { opacity: .45; }
+.go-module-card.in-progress .go-module-status > span { color: #8a5a00; font-weight: 600; }
+.go-module-card.in-progress .go-module-bar { background: transparent; }
+.outline-list > button:disabled { cursor: default; opacity: .6; }

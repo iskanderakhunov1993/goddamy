@@ -5,7 +5,7 @@ import { securityFlatLessons, securityLessonPath } from "../content/security/cur
 import { securityChallenges } from "../content/security/challenges.js";
 
 const STATIC_ENTRIES = [
-  { kind: "Курс", title: "Go Backend Internship", subtitle: "141 урок · Task Tracker, Expense Tracker, URL Shortener", path: "/go" },
+  { kind: "Курс", title: "Go Backend", subtitle: "Основы Go и проект Task Tracker", path: "/go" },
   { kind: "Курс", title: "SQL для работы с данными", subtitle: "Тренажёр доступен, уроки в разработке", path: "/sql" },
   { kind: "Курс", title: "Python", subtitle: "Тренажёр доступен, уроки в разработке", path: "/python" },
   { kind: "Курс", title: "Product Management", subtitle: "Программа готовится", path: "/product" },

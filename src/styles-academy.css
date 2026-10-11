@@ -334,7 +334,7 @@
   line-height: 1.06;
   letter-spacing: -0.052em;
 }
-.universal-subscription > div:first-child > p:last-child,
+.universal-subscription > div:first-child > p:last-of-type,
 .universal-certificate p:last-child {
   max-width: 620px;
   color:#181a25;
@@ -1585,3 +1585,6 @@
     margin-top: 34px;
   }
 }
+
+.universal-subscription-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; padding: 12px 0; border: 0; background: none; color: #4b3aeb; font: inherit; font-weight: 700; cursor: pointer; }
+.universal-subscription-link:hover { text-decoration: underline; text-underline-offset: 4px; }

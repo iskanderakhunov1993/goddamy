@@ -4,17 +4,18 @@ import "../styles-lesson-blocks.css";
 import {
   ArrowLeft, ArrowRight, Check, CheckCircle, Circle, Code,
   GithubLogo, Lightbulb, RocketLaunch, Target, BookOpen, House,
-  List, X, CaretRight, UserCircle, PencilSimple, Flame,
+  List, X, CaretRight, UserCircle, PencilSimple, Flame, ArrowUpRight,
   Certificate, Terminal
 } from "@phosphor-icons/react";
 import { cliContract, contractRules, project, setupTasks, sprints, stages, storyBeats } from "../content/goCourse.js";
-import { courseCurriculum } from "../content/courseCurriculum.js";
+import { authoredLessonIds, courseCurriculum, courseStats, readyModuleIds } from "../content/courseCurriculum.js";
+import { ALLOWED_EDITOR_EMAIL } from "../lib/supabaseClient.js";
 import { courseLessonPath, findLesson, flattenCourse, loadCourseDraft } from "../content/courseDraft.js";
 import { LessonBlocks } from "./LessonBlocks.jsx";
 import { ModuleGlyph } from "./CourseCabinet.jsx";
 import { getActivitySummary } from "../lib/activity.js";
 import { enrollCourse, getEnrolledCourses } from "../lib/enrollment.js";
-import { getCompletedCount, getCompletedLessonIds, isLessonComplete, markLessonComplete } from "../lib/progress.js";
+import { getCompletedCount, getCompletedLessonIds, markLessonComplete } from "../lib/progress.js";
 import { activateSubscription, hasActiveSubscription } from "../lib/subscription.js";
 import { loadProfile, saveProfile } from "../lib/profile.js";
 import { achievementDefs, getUnlockedAchievements } from "../lib/achievements.js";
@@ -114,6 +115,7 @@ function CourseOutline({ course = courseCurriculum, initialSectionId = null, onC
   const title = topic?.title || section?.title || "Основы Go";
   const items = topic?.lessons || section?.topics || course;
   const isLessonView = Boolean(topic);
+  const completed = new Set(getCompletedLessonIds("go"));
   return <div className="course-modal-backdrop" role="presentation" onMouseDown={onClose}>
     <section className="course-modal" role="dialog" aria-modal="true" aria-labelledby="course-outline-title" onMouseDown={(event) => event.stopPropagation()}>
       <button className="modal-close" onClick={onClose} aria-label="Закрыть программу"><X size={26}/></button>
@@ -124,13 +126,17 @@ function CourseOutline({ course = courseCurriculum, initialSectionId = null, onC
       <div className="outline-list">
         {items.map((item, index) => {
           const label = item.title;
-          const complete = index === 0;
-          return <button key={label} onClick={() => {
+          // Отметки считаются из реального прогресса; ненаписанные уроки и модули помечены, а не выдаются за готовые.
+          const lessons = isLessonView ? [item] : section ? item.lessons : item.topics.flatMap((entry) => entry.lessons);
+          const written = lessons.filter((entry) => authoredLessonIds.has(entry.id));
+          const ready = written.length > 0;
+          const complete = ready && written.every((entry) => completed.has(entry.id));
+          return <button key={item.id || label} disabled={isLessonView && !ready} onClick={() => {
             if (isLessonView) { onClose(); navigate(courseLessonPath({ ...item, section, topic })); }
             else if (section) setSelection((state) => ({ ...state, topic: item.id }));
             else setSelection({ section: item.id, topic: null });
           }}>
-            <span>{String(index + 1).padStart(2, "0")}</span><b>{label}</b>{complete ? <Check size={17}/> : <Circle size={17}/>}<CaretRight size={17}/>
+            <span>{String(index + 1).padStart(2, "0")}</span><b>{label}</b>{!ready ? <em>В разработке</em> : complete ? <Check size={17} aria-label="Пройдено"/> : <Circle size={17}/>}{!(isLessonView && !ready) && <CaretRight size={17}/>}
           </button>;
         })}
       </div>
@@ -141,48 +147,59 @@ function CourseOutline({ course = courseCurriculum, initialSectionId = null, onC
 export function CoursePage({ navigate }) {
   const [course] = useState(loadCourseDraft);
   const dashboardStages = createDashboardStages(course);
-  const courseLessons = flattenCourse(course);
+  // Прогресс считается только по написанным урокам: шаблонные слоты программы уроками не считаются.
+  const courseLessons = flattenCourse(course).filter((item) => authoredLessonIds.has(item.id));
   const [outlineSection, setOutlineSection] = useState(null);
   const closeOutline = () => setOutlineSection(null);
   const [activity] = useState(getActivitySummary);
-  const completedCount = getCompletedCount("go");
+  const completedIds = new Set(getCompletedLessonIds("go"));
+  const completedCount = courseLessons.filter((item) => completedIds.has(item.id)).length;
   const percent = courseLessons.length ? Math.round((completedCount / courseLessons.length) * 100) : 0;
-  const nextLesson = courseLessons.find((item) => !isLessonComplete("go", item.id)) || courseLessons[0];
+  const nextLesson = courseLessons.find((item) => !completedIds.has(item.id)) || courseLessons[0];
   const continueToLesson = () => { if (nextLesson) { enrollCourse("go"); navigate(courseLessonPath(nextLesson)); } };
+  const modulesInProgress = courseStats.modules - courseStats.readyModules;
+  // Редактор курса — инструмент владельца: показываем его только вошедшему редактору.
+  const [isEditor, setIsEditor] = useState(false);
+  useEffect(() => {
+    getCurrentUser().then((user) => setIsEditor(Boolean(user?.email && ALLOWED_EDITOR_EMAIL && user.email.toLowerCase() === ALLOWED_EDITOR_EMAIL.toLowerCase())));
+  }, []);
   return <main className="course-dashboard">
-    <aside className="dashboard-rail" aria-label="Навигация кабинета"><button className="dashboard-logo" onClick={() => navigate("/")}><span>GO</span>DEMY</button><nav><button aria-label="Главная" onClick={() => navigate("/")}><House size={20}/></button><button className="active" aria-label="Мой курс" onClick={() => navigate("/go")}><BookOpen size={20}/></button><button aria-label="Практика курса Go" onClick={() => navigate("/go/practice")}><Code size={20}/></button><button aria-label="Программа курса" onClick={() => setOutlineSection("root")}><List size={20}/></button><button aria-label="Редактор курса" onClick={() => navigate("/course-editor")}><PencilSimple size={20}/></button></nav><button aria-label="Профиль" onClick={() => navigate("/profile")}><UserCircle size={21}/></button></aside>
+    <aside className="dashboard-rail" aria-label="Навигация кабинета"><button className="dashboard-logo" onClick={() => navigate("/")}><span>GO</span>DEMY</button><nav><button aria-label="Главная" onClick={() => navigate("/")}><House size={20}/></button><button className="active" aria-label="Мой курс" onClick={() => navigate("/go")}><BookOpen size={20}/></button><button aria-label="Практика курса Go" onClick={() => navigate("/go/practice")}><Code size={20}/></button><button aria-label="Программа курса" onClick={() => setOutlineSection("root")}><List size={20}/></button>{isEditor && <button aria-label="Редактор курса" onClick={() => navigate("/course-editor")}><PencilSimple size={20}/></button>}</nav><button aria-label="Профиль" onClick={() => navigate("/profile")}><UserCircle size={21}/></button></aside>
     <div className="dashboard-content">
       <section className="go-info-card">
-        <button className="go-info-link" onClick={() => setOutlineSection("root")}>О курсе ↗</button>
-        <h1>Go Backend Internship</h1>
+        <button className="go-info-link" onClick={() => setOutlineSection("root")}>Вся программа <ArrowUpRight size={14}/></button>
+        <h1>Go Backend</h1>
         <div className="go-progress-row">
-          <div className="go-progress-track"><span style={{ width: `${percent}%` }}/></div>
-          <button className="go-continue-btn" disabled={!courseLessons.length} onClick={continueToLesson}>{completedCount > 0 ? "Продолжить" : "Начать бесплатно"}</button>
+          <div className="go-progress-track" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent} aria-label="Прогресс курса"><span style={{ width: `${percent}%` }}/></div>
+          <button className="go-continue-btn" disabled={!courseLessons.length} onClick={continueToLesson}>{completedCount > 0 ? "Продолжить" : "Начать бесплатно"} <ArrowRight size={17}/></button>
         </div>
         <div className="go-info-footer">
-          <span className="go-progress-caption">Прогресс курса · {completedCount} / {courseLessons.length} уроков</span>
+          <span className="go-progress-caption">Пройдено {completedCount} из {lessonsLabel(courseLessons.length)}{modulesInProgress > 0 ? ` · ещё ${modulesInProgress} ${modulesInProgress === 1 ? "модуль" : "модуля"} в разработке` : ""}</span>
           <button className="go-practice-link" onClick={() => navigate("/go/practice")}><Code size={15}/> Практика Go</button>
         </div>
       </section>
       <section className="go-goal-card">
         <div className="go-goal-icon"><Flame size={22}/></div>
-        <div><b>{activity.currentStreak > 0 ? `Сейчас у тебя ${activity.currentStreak} ${activity.currentStreak === 1 ? "день" : activity.currentStreak < 5 ? "дня" : "дней"} практики подряд` : "Давайте поставим цель"}</b><p>{activity.currentStreak > 0 ? "Стрики мягкие: пауза не обнуляет прогресс." : "Выбери 2 учебных вечера в неделю — так проще не бросить."}</p></div>
-        <button className="go-goal-btn" onClick={() => navigate("/profile")}>Открыть кабинет</button>
+        <div><b>{activity.currentStreak > 0 ? `Сейчас у тебя ${activity.currentStreak} ${activity.currentStreak === 1 ? "день" : activity.currentStreak < 5 ? "дня" : "дней"} практики подряд` : "Поставь цель"}</b><p>{activity.currentStreak > 0 ? "Стрики мягкие: пауза не обнуляет прогресс." : "Выбери 2 учебных вечера в неделю — так проще не бросить."}</p></div>
+        <button className="go-goal-btn" onClick={() => navigate("/profile")}>Открыть профиль</button>
       </section>
       <section className="dashboard-program">
         <h2 className="course-syllabus-heading">Программа курса</h2>
         <div className="go-syllabus-grid">{dashboardStages.map((stage, index) => {
-          const status = stage.state === "locked" ? "upcoming" : index === 0 ? "current" : "full";
-          const statusLabel = stage.state === "locked" ? "Предстоит" : index === 0 ? "Текущий курс" : "Доступен";
+          const moduleLessons = course.find((item) => item.id === stage.id)?.topics.flatMap((entry) => entry.lessons) || [];
+          const ready = readyModuleIds.has(stage.id);
+          const done = moduleLessons.filter((item) => completedIds.has(item.id)).length;
+          const modulePercent = ready && moduleLessons.length ? Math.round((done / moduleLessons.length) * 100) : 0;
+          const statusLabel = !ready ? "В разработке" : done >= moduleLessons.length ? "Пройден" : done > 0 ? `${done} из ${lessonsLabel(moduleLessons.length)}` : lessonsLabel(moduleLessons.length);
           const minutes = stage.lessons * 10;
           const timeLabel = minutes >= 60 ? `≈ ${Math.round(minutes / 60)} ч` : `≈ ${minutes} мин`;
-          return <button className="go-module-card" key={stage.id} onClick={() => setOutlineSection(stage.id)}>
+          return <button className={`go-module-card ${ready ? "" : "in-progress"}`} key={stage.id} onClick={() => setOutlineSection(stage.id)}>
             <ModuleGlyph course="go" index={index}/>
             <h3>{stage.title}</h3>
-            <span className="go-module-meta">{topicsLabel(stage.topics)} · {timeLabel}</span>
+            <span className="go-module-meta">{ready ? `${topicsLabel(stage.topics)} · ${timeLabel}` : "План модуля, уроки ещё пишутся"}</span>
             <div className="go-module-status">
               <span>{statusLabel}</span>
-              <div className={`go-module-bar ${status}`}><i/></div>
+              <div className="go-module-bar"><i style={{ width: `${modulePercent}%` }}/></div>
             </div>
           </button>;
         })}</div>
@@ -195,7 +212,7 @@ export function CoursePage({ navigate }) {
 // Только курсы с написанными уроками: прогресс считается по пройденным урокам,
 // поэтому курс без уроков показывал бы вечные 0%.
 const PROFILE_COURSE_CATALOG = {
-  go: { title: "Go Backend Internship", path: "/go" },
+  go: { title: "Go Backend", path: "/go" },
 };
 
 function AccountSyncSection() {
@@ -333,13 +350,13 @@ export function CertificatesPage({ navigate }) {
   const hasSubscription = hasActiveSubscription();
   const [profile] = useState(loadProfile);
   const certificates = [
-    { title: "Go Junior Developer", status: goPercent >= 100 ? "Завершён" : "В процессе", progress: `${goCompleted} из ${goLessonCount} уроков`, percent: goPercent, description: "Подтверждает прохождение курса Go Backend: три проекта, тесты, GitHub-артефакты и финальная ретроспектива.", action: "Открыть курс", path: "/go", ready: goPercent >= 100 && hasSubscription },
-    { title: "Python Junior Developer", status: "Скоро", progress: "Курс готовится", percent: 0, description: "Уроки курса пока не написаны — программа в разработке.", action: "Программа скоро", path: null, ready: false },
-    { title: "SQL Junior Developer", status: "Скоро", progress: "Курс готовится", percent: 0, description: "Уроки курса пока не написаны — программа в разработке.", action: "Программа скоро", path: null, ready: false },
+    { title: "Go Junior Developer", status: goPercent >= 100 ? "Завершён" : goCompleted > 0 ? "В процессе" : "Не начат", progress: `${goCompleted} из ${goLessonCount} уроков`, percent: goPercent, description: `Выдаётся за курс Go Backend целиком. Сейчас написано ${lessonsLabel(courseStats.authoredLessons)} из ${courseStats.lessons} и один проект из трёх, поэтому сертификат откроется, когда курс будет дописан.`, action: "Открыть курс", path: "/go", ready: goPercent >= 100 && hasSubscription },
+    { title: "Python Junior Developer", status: "Скоро", progress: "Курс дописывается", percent: 0, description: "Уроки, тренажёр и проект уже открыты. Сертификат появится, когда программа будет дописана целиком.", action: "Программа скоро", path: null, ready: false },
+    { title: "SQL Junior Developer", status: "Скоро", progress: "Курс дописывается", percent: 0, description: "Уроки, тренажёр и проект уже открыты. Сертификат появится, когда программа будет дописана целиком.", action: "Программа скоро", path: null, ready: false },
     { title: "Agile", status: "Скоро", progress: "Курс готовится", percent: 0, description: "Подтвердит понимание итеративной разработки, работы с ценностью, обратной связью и изменениями.", action: "Программа скоро", path: null, ready: false },
     { title: "Scrum", status: "Скоро", progress: "Курс готовится", percent: 0, description: "Подтвердит понимание ролей, событий и артефактов Scrum через симуляцию командных спринтов.", action: "Программа скоро", path: null, ready: false },
   ];
-  return <main className="certificates-shell"><section className="certificates-content"><div className="certificates-header"><small>GODEMY · ДОСТИЖЕНИЯ</small><h1>Сертификаты за курсы</h1><p>Сертификат выдаётся после завершения полноценного курса, подписки и итоговой проверки. Тренажёры и отдельные проекты помогают учиться, но не создают отдельный сертификат.</p></div><div className="certificate-grid">{certificates.map((item) => <article key={item.title}><div className="certificate-lock"><Certificate size={26}/><span>{item.status}</span></div><h2>{item.title}</h2><p>{item.description}</p><div className="certificate-progress"><b>{item.progress}</b><i><span style={{ width: `${item.percent}%` }}/></i></div>{item.ready
+  return <main className="certificates-shell"><section className="certificates-content"><div className="certificates-header"><small>GODEMY · ДОСТИЖЕНИЯ</small><h1>Сертификаты за курсы</h1><p>Сертификат выдаётся за курс, пройденный целиком, и скачивается по подписке. Сами курсы, тренажёры и проекты бесплатны. Пока ни один курс не дописан до конца, поэтому получить сертификат ещё нельзя.</p></div><div className="certificate-grid">{certificates.map((item) => <article key={item.title}><div className="certificate-lock"><Certificate size={26}/><span>{item.status}</span></div><h2>{item.title}</h2><p>{item.description}</p><div className="certificate-progress"><b>{item.progress}</b><i><span style={{ width: `${item.percent}%` }}/></i></div>{item.ready
     ? <button onClick={() => downloadCertificate({ name: profile.name, courseTitle: item.title })}>Скачать сертификат <ArrowRight size={17}/></button>
     : <button disabled={!item.path} onClick={() => item.path && navigate(item.path)}>{item.action} {item.path && <ArrowRight size={17}/>}</button>}</article>)}</div><section className="certificate-how"><h2>Как получить сертификат</h2><ol><li>Заверши обязательные модули и практические задания курса.</li><li>Оформи подписку Godemy.</li><li>Сертификат в формате PNG станет доступен для скачивания здесь и в профиле.</li></ol><button onClick={() => navigate("/profile")}>К профилю <ArrowLeft size={17}/></button></section></section></main>;
 }
@@ -355,7 +372,7 @@ export function SubscriptionPage() {
   const goComplete = goLessonCount > 0 && getCompletedCount("go") >= goLessonCount;
   const confirmSubscription = () => { activateSubscription(); setConfirmed(true); };
   return <main className="profile-shell"><div className="profile-content checkout-content">
-    <div className="profile-header"><div><small>GODEMY · ПОДПИСКА</small><h1>Один тариф, полный доступ ко всем курсам</h1></div></div>
+    <div className="profile-header"><div><small>GODEMY · ПОДПИСКА</small><h1>Подписка открывает сертификат</h1></div></div>
     <div className="checkout-grid">
       <div className="plan-box">
         <div className="checkout-toggle">
@@ -365,13 +382,18 @@ export function SubscriptionPage() {
         <div className="checkout-price"><b>{monthlyPrice}</b><span>/ месяц</span></div>
         {period === "year" && <p className="checkout-price-note">{totalToday} за год, списывается сразу</p>}
         <ul className="checkout-features">
-          <li><Check size={17}/> Все практические IT-курсы</li>
-          <li><Check size={17}/> Тренажёр с проверкой в каждом курсе</li>
-          <li><Check size={17}/> Сертификат об окончании курса</li>
+          <li><Check size={17}/> Скачивание сертификата за пройденный курс</li>
         </ul>
+        <p className="checkout-free-title">Бесплатно и без подписки</p>
+        <ul className="checkout-features checkout-free">
+          <li><Check size={17}/> Все уроки</li>
+          <li><Check size={17}/> Тренажёры с проверкой кода</li>
+          <li><Check size={17}/> Проекты и скрипты их проверки</li>
+        </ul>
+        <p className="checkout-availability">Сертификат выдаётся за курс целиком. В курсе Go пока написано {lessonsLabel(courseStats.authoredLessons)} из {courseStats.lessons}, поэтому сертификат откроется, когда курс будет дописан.</p>
       </div>
       <div className="summary-box">
-        <div className="summary-row"><span>Godemy Unlimited</span><span>{monthlyPrice} / мес</span></div>
+        <div className="summary-row"><span>Подписка Godemy</span><span>{monthlyPrice} / мес</span></div>
         <div className="summary-row"><span>Период</span><span>{periodLabel}</span></div>
         <div className="summary-total"><span>Сегодня</span><span>{totalToday}</span></div>
         {confirmed

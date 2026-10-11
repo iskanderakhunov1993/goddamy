@@ -9,6 +9,7 @@ const lesson = (section, topic, index, title, context) => {
     return {
       id,
       title,
+      authored: true,
       summary: custom.summary,
       objectives: custom.objectives,
       blocks: custom.blocks.map((block, blockIndex) => ({ id: `${id}-b${blockIndex}`, ...block })),
@@ -17,6 +18,7 @@ const lesson = (section, topic, index, title, context) => {
   return {
     id,
     title,
+    authored: false,
     summary: context.summary || `Разберём «${title}» и сразу свяжем тему с работой над проектом.`,
     objectives: [
       `Объяснить, зачем в проекте нужен подход «${title}»`,
@@ -44,7 +46,7 @@ const makeModule = (id, title, phase, summary, context, topics) => {
 };
 
 export const courseExperience = {
-    title: "Go Backend Internship",
+  title: "Go Backend",
   promise: "Практическая программа, которая помогает собрать базу для старта на позиции Junior Go Developer.",
   projects: [
     { id: "task-tracker", moduleId: "project-task-tracker", title: "Task Tracker CLI", level: "Проект 1", stack: ["Go", "Git", "GitHub", "JSON", "Unit tests"], result: "Консольное приложение для управления задачами с сохранением в JSON и GitHub Release.", checks: ["Сборка", "CRUD задач", "JSON", "Тесты", "README", "Release"] },
@@ -95,7 +97,7 @@ export const courseCurriculum = [
     ["shortener-delivery", "Docker и CI", ["Dockerfile Go-сервиса", "Docker Compose с PostgreSQL", "Healthcheck и логи", "GitHub Actions для Go", "Автопроверка commit"]],
     ["shortener-release", "Финальная поставка", ["Безопасность конфигурации", "Нагрузочные риски", "OpenAPI и README", "Release кандидата", "Ретроспектива URL Shortener"]],
   ]),
-  makeModule("graduation", "Релиз, портфолио и завершение стажировки", "ФИНАЛ", "Собери артефакты, пройди финальную проверку и получи сертификат Godemy.", { message: "Ценность разработчика видна в результате: понятный код, проверяемый сервис, прозрачная история изменений и способность объяснить принятые решения." }, [
+  makeModule("graduation", "Релиз и портфолио", "ФИНАЛ", "Собери артефакты, пройди финальную проверку и получи сертификат Godemy.", { message: "Ценность разработчика видна в результате: понятный код, проверяемый сервис, прозрачная история изменений и способность объяснить принятые решения." }, [
     ["team-flow", "Командный процесс", ["Issue как договорённость", "Ветка под задачу", "Pull Request и описание", "Саморевью перед merge", "Как отвечать на feedback"]],
     ["release-practice", "Готовность к поставке", ["Definition of Done", "Чистый клон репозитория", "Проверка Docker Compose", "Проверка CI", "План отката и известные ограничения"]],
     ["portfolio", "Три проекта в портфолио", ["Карточка Task Tracker", "Карточка Expense Tracker", "Карточка URL Shortener", "Демонстрация проекта", "Описание навыков без преувеличений"]],
@@ -108,10 +110,18 @@ export const flatLessons = courseCurriculum.flatMap((section) =>
   section.topics.flatMap((courseTopic) => courseTopic.lessons.map((item) => ({ ...item, topic: courseTopic, section }))),
 );
 
+// Написанные уроки — те, у которых есть авторский текст в lessonContent. Остальные
+// слоты программы пока показывают шаблон, и выдавать их за готовые уроки нельзя.
+export const authoredLessons = flatLessons.filter((item) => item.authored);
+export const authoredLessonIds = new Set(authoredLessons.map((item) => item.id));
+export const readyModuleIds = new Set(authoredLessons.map((item) => item.section.id));
+
 export const courseStats = {
   modules: courseCurriculum.length,
   topics: courseCurriculum.reduce((sum, section) => sum + section.topics.length, 0),
   lessons: flatLessons.length,
+  authoredLessons: authoredLessons.length,
+  readyModules: readyModuleIds.size,
 };
 
 export function getLesson(sectionId, topicId, lessonId) {

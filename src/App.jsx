@@ -43,7 +43,7 @@ function Header({ setPage }) {
       <Logo onHome={() => nav("home")} />
       <nav>
         <button onClick={() => nav("/#courses")}>Курсы</button>
-        <button className="hide-mobile" onClick={() => nav("/#certificate")}>Сертификаты</button>
+        <button className="hide-mobile" onClick={() => nav("/certificates")}>Сертификаты</button>
         <button className="hide-mobile" onClick={() => nav("/#subscription")}>Подписка</button>
       </nav>
       <div className="header-actions">
@@ -55,7 +55,7 @@ function Header({ setPage }) {
       {searchOpen && <SearchOverlay navigate={nav} onClose={() => setSearchOpen(false)}/>}
       {menuOpen && <nav className="mobile-nav-panel" aria-label="Мобильная навигация">
         <button onClick={() => { nav("/#courses"); setMenuOpen(false); }}>Курсы</button>
-        <button onClick={() => { nav("/#certificate"); setMenuOpen(false); }}>Сертификаты</button>
+        <button onClick={() => { nav("/certificates"); setMenuOpen(false); }}>Сертификаты</button>
         <button onClick={() => { nav("/#subscription"); setMenuOpen(false); }}>Подписка</button>
         <button onClick={() => { nav("/go"); setMenuOpen(false); }}>Начать</button>
       </nav>}
@@ -85,7 +85,7 @@ export function App() {
   }, []);
   useEffect(() => {
     const titleByRoute = {
-      "/": "Godemy — практические IT-курсы по подписке",
+      "/": "Godemy — бесплатные IT-курсы с практикой",
       "/academy": "Godemy — курс и тренажёр Go",
       "/go": "Курс Go с нуля до Junior — Godemy",
       "/go/practice": "Практика курса Go — Godemy",
@@ -148,7 +148,7 @@ export function App() {
       : sqlTask ? `${getSqlChallenge(sqlTask[1]).title} — Godemy`
       : pythonTask ? `${getPythonChallenge(pythonTask[1]).title} — Godemy`
       : qaTask ? `${getQaChallenge(qaTask[1]).title} — Godemy`
-      : titleByRoute[route] || "Godemy — обучение Go";
+      : titleByRoute[route] || "Godemy — бесплатные IT-курсы с практикой";
   }, [route]);
   const navigate = (target) => {
     const routes = { home: "/", course: "/go", trainer: "/go/practice", lesson: "/lesson", task: "/go/practice" };
