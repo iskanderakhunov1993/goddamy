@@ -774,7 +774,7 @@ export const sprintBookmarksApi = {
       {
         type: "code",
         language: "yaml",
-        code: "name: Godemy check\n\non:\n  push:\n\njobs:\n  check:\n    runs-on: ubuntu-latest\n    timeout-minutes: 5\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-go@v5\n        with:\n          go-version: stable\n      - run: go run check.go"
+        code: "name: Godemy check\n\non:\n  push:\n\njobs:\n  check:\n    runs-on: ubuntu-latest\n    timeout-minutes: 5\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-go@v5\n        with:\n          go-version: stable\n          cache: false\n      - run: go run check.go"
       },
       {
         type: "list",
