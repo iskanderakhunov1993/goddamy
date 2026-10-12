@@ -9,6 +9,8 @@ import { EditorAuthGate } from "./components/EditorAuthGate.jsx";
 import { AcademyHub, PublicGoLanding, GoTrainer } from "./components/AcademyExperience.jsx";
 import { GoTask } from "./components/GoTask.jsx";
 import { getGoChallenge } from "./content/goChallenges.js";
+import { GoSprintPage } from "./components/SprintExperience.jsx";
+import { getGoSprint } from "./content/goSprints.js";
 import { SqlCoursePage, SqlTask, SqlTrainer } from "./components/SqlExperience.jsx";
 import { getSqlChallenge } from "./content/sqlChallenges.js";
 import { PythonCoursePage, PythonTask, PythonTrainer, getPythonChallenge } from "./components/PythonExperience.jsx";
@@ -128,6 +130,7 @@ export function App() {
     };
     const sprint = route.match(/^\/go\/task-tracker\/sprint\/([1-4])$/);
     const courseLesson = route.match(/^\/go\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
+    const bootcampSprint = getGoSprint(route.match(/^\/go\/sprint\/([^/]+)/)?.[1]);
     const goTask = route.match(/^\/(?:task|go\/practice)\/([^/]+)$/);
     const sqlTask = route.match(/^\/sql\/practice\/([^/]+)$/);
     const pythonTask = route.match(/^\/python\/practice\/([^/]+)$/);
@@ -142,6 +145,7 @@ export function App() {
       : secSprint ? `Спринт ${secSprint[1]} · Проект «Заметки» — Godemy`
       : secLesson ? "Урок · Основы кибербезопасности — Godemy"
       : secTask ? `${getSecurityChallenge(secTask[1]).title} — Godemy`
+      : bootcampSprint ? `Спринт ${bootcampSprint.number} · ${bootcampSprint.project} — Godemy`
       : courseLesson ? "Урок курса Основы Go — Godemy"
       : sprint ? `Спринт ${sprint[1]} · Task Tracker — Godemy`
       : goTask ? `${getGoChallenge(goTask[1]).title} — Godemy`
@@ -166,6 +170,8 @@ export function App() {
   };
   const sprintMatch = route.match(/^\/go\/task-tracker\/sprint\/([1-4])$/);
   const lessonMatch = route.match(/^\/go\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
+  const goSprintMatch = route.match(/^\/go\/sprint\/([^/]+)(?:\/([^/]+))?$/);
+  const goSprint = goSprintMatch ? getGoSprint(goSprintMatch[1]) : null;
   const taskMatch = route.match(/^\/(?:task|go\/practice)(?:\/([^/]+))?$/);
   const sqlTaskMatch = route.match(/^\/sql\/practice\/([^/]+)$/);
   const pythonTaskMatch = route.match(/^\/python\/practice\/([^/]+)$/);
@@ -241,6 +247,7 @@ export function App() {
   else if (route === "/course-editor") content = <EditorAuthGate><CourseEditor navigate={navigate}/></EditorAuthGate>;
   else if (route === "/terms") content = <TermsPage navigate={navigate}/>;
   else if (route === "/privacy") content = <PrivacyPage navigate={navigate}/>;
+  else if (goSprint) content = <GoSprintPage sprint={goSprint} stageId={goSprintMatch[2]} navigate={navigate} key={`${goSprint.id}-${goSprintMatch[2] || "task"}`}/>;
   else if (lessonMatch) content = <StoryLesson sectionId={lessonMatch[1]} topicId={lessonMatch[2]} lessonId={lessonMatch[3]} navigate={navigate}/>;
   else if (route === "/lesson") content = <StoryLesson navigate={navigate}/>;
   else if (route === "/trainer" || route === "/go/practice") content = <Trainer setPage={navigate}/>;

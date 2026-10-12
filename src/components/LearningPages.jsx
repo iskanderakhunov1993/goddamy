@@ -11,6 +11,8 @@ import { cliContract, contractRules, project, setupTasks, sprints, stages, story
 import { authoredLessonIds, courseCurriculum, courseStats, readyModuleIds } from "../content/courseCurriculum.js";
 import { ALLOWED_EDITOR_EMAIL } from "../lib/supabaseClient.js";
 import { courseLessonPath, findLesson, flattenCourse, loadCourseDraft } from "../content/courseDraft.js";
+import { getGoSprintByModule, sprintPath } from "../content/goSprints.js";
+import "../styles-sprint.css";
 import { LessonBlocks } from "./LessonBlocks.jsx";
 import { ModuleGlyph } from "./CourseCabinet.jsx";
 import { getActivitySummary } from "../lib/activity.js";
@@ -33,14 +35,15 @@ export function ProgressBar({ value, label = "Общий прогресс" }) {
   </div>;
 }
 
-export function LearningLayout({ current, navigate, children }) {
-  const activeIndex = stages.findIndex((stage) => stage.id === current);
+// По умолчанию — этапы проекта Task Tracker; спринты буткемпа передают свои шаги.
+export function LearningLayout({ current, navigate, children, layoutStages = stages, eyebrow = "ПРОЕКТ 1", title = "Task Tracker", ariaLabel = "Этапы проекта" }) {
+  const activeIndex = layoutStages.findIndex((stage) => stage.id === current);
   return <div className="learning-layout">
-    <aside className="stage-sidebar" aria-label="Этапы проекта">
+    <aside className="stage-sidebar" aria-label={ariaLabel}>
       <button className="stage-course-link" onClick={() => navigate("/go")}><ArrowLeft size={16}/> К курсу</button>
-      <small>ПРОЕКТ 1</small>
-      <h2>Task Tracker</h2>
-      <nav>{stages.map((stage) =>
+      <small>{eyebrow}</small>
+      <h2>{title}</h2>
+      <nav>{layoutStages.map((stage) =>
         <button
           key={stage.id}
           className={stage.id === current ? "active" : ""}
@@ -53,9 +56,9 @@ export function LearningLayout({ current, navigate, children }) {
       )}</nav>
     </aside>
     <div className="mobile-stage-nav">
-      <span>{activeIndex + 1} / {stages.length}</span>
-      <select aria-label="Текущий этап" value={current} onChange={(event) => navigate(stages.find((stage) => stage.id === event.target.value).path)}>
-        {stages.map((stage) => <option value={stage.id} key={stage.id}>{stage.title}</option>)}
+      <span>{activeIndex + 1} / {layoutStages.length}</span>
+      <select aria-label="Текущий этап" value={current} onChange={(event) => navigate(layoutStages.find((stage) => stage.id === event.target.value).path)}>
+        {layoutStages.map((stage) => <option value={stage.id} key={stage.id}>{stage.title}</option>)}
       </select>
     </div>
     <main className="learning-main">{children}</main>
@@ -74,7 +77,7 @@ function PageNavigation({ current, navigate }) {
 
 // storageId включает сохранение отметок (localStorage + синхронизация аккаунта);
 // без него чек-лист живёт только до обновления страницы.
-function Checklist({ items, title = "Чек-лист", storageId = null }) {
+export function Checklist({ items, title = "Чек-лист", storageId = null }) {
   const [checked, setChecked] = useState(() => (storageId ? getCheckedItems(storageId) : []));
   // Запись в хранилище — вне функции обновления состояния: в StrictMode React вызывает её дважды.
   const toggle = (id) => {
@@ -118,6 +121,7 @@ function CourseOutline({ course = courseCurriculum, initialSectionId = null, onC
   const [selection, setSelection] = useState({ section: initialSectionId || null, topic: null });
   const section = course.find((item) => item.id === selection.section);
   const topic = section?.topics.find((item) => item.id === selection.topic);
+  const sprint = section ? getGoSprintByModule(section.id) : null;
   const goBack = () => setSelection((state) => state.topic !== null ? { ...state, topic: null } : { section: null, topic: null });
   const title = topic?.title || section?.title || "Основы Go";
   const items = topic?.lessons || section?.topics || course;
@@ -130,6 +134,7 @@ function CourseOutline({ course = courseCurriculum, initialSectionId = null, onC
       {section && <button className="outline-back" onClick={goBack}><ArrowLeft size={15}/> Назад к {topic ? "темам" : "курсу"}</button>}
       <h2 id="course-outline-title">{title}</h2>
       <p>{isLessonView ? "Уроки" : section ? "Темы курса" : "Разделы курса"}</p>
+      {section && !topic && sprint && <button className="outline-sprint" onClick={() => { onClose(); navigate(sprintPath(sprint)); }}><span>Задача спринта: {sprint.project}<small>Задача от тимлида, доска, проверка и сдача по ссылке</small></span><ArrowRight size={18}/></button>}
       <div className="outline-list">
         {items.map((item, index) => {
           const label = item.title;
@@ -432,10 +437,17 @@ export function StoryLesson({ sectionId = "intro", topicId = "welcome", lessonId
     setFeedbackState({ id: current.id, value: next });
     setLessonFeedback(current.id, next);
   };
-  const openLesson = (item) => {
+  // Теория спринта начинается с задачи и заканчивается работой над проектом,
+  // поэтому на границах модуля-спринта урок ведёт на страницу спринта.
+  const ownSprint = getGoSprintByModule(current.section.id);
+  const nextSprint = next && next.section.id !== current.section.id ? getGoSprintByModule(next.section.id) : null;
+  const leavingSprint = ownSprint && (!next || next.section.id !== current.section.id);
+  const forwardPath = leavingSprint ? sprintPath(ownSprint, "build") : nextSprint ? sprintPath(nextSprint) : next ? courseLessonPath(next) : "/go/task-tracker";
+  const forwardLabel = leavingSprint ? "К проекту спринта" : nextSprint ? "К задаче спринта" : next ? "К следующему уроку" : "К проекту";
+  const openLesson = (item, path = null) => {
     markLessonComplete("go", current.id);
     setCompletedIds((ids) => new Set(ids).add(current.id));
-    navigate(item ? courseLessonPath(item) : "/go/task-tracker");
+    navigate(path || (item ? courseLessonPath(item) : "/go/task-tracker"));
   };
 
   return <main className="story-lesson-shell">
@@ -475,7 +487,7 @@ export function StoryLesson({ sectionId = "intro", topicId = "welcome", lessonId
           <button className={`lesson-feedback ${feedback === "confusing" ? "active" : ""}`} aria-pressed={feedback === "confusing"} onClick={() => sendFeedback("confusing")}>Непонятно</button>
           {feedback && <span className="lesson-feedback-thanks">Спасибо, учли</span>}
         </div>
-        <div className="lesson-pager">{previous && <button onClick={() => openLesson(previous)}><ArrowLeft size={17}/> Назад</button>}<button className="story-next" onClick={() => openLesson(next)}>{next ? "К следующему уроку" : "К проекту"} <ArrowRight size={17}/></button></div>
+        <div className="lesson-pager">{previous && <button onClick={() => openLesson(previous)}><ArrowLeft size={17}/> Назад</button>}<button className="story-next" onClick={() => openLesson(next, forwardPath)}>{forwardLabel} <ArrowRight size={17}/></button></div>
       </footer>
     </article>
   </main>;
@@ -534,7 +546,7 @@ function AutoCheck({ sprint = null }) {
 }
 
 // Раскрывающийся блок страницы спринта: справочный материал не заслоняет задачи.
-function SprintDetails({ title, note = "", children }) {
+export function SprintDetails({ title, note = "", children }) {
   return <details className="sprint-details">
     <summary><span><b>{title}</b>{note && <small>{note}</small>}</span><CaretDown size={18} aria-hidden="true"/></summary>
     <div className="sprint-details-body">{children}</div>

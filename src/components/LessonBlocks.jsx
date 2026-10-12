@@ -4,6 +4,8 @@ import { runGoProgram } from "../lib/goPlayground.js";
 import { runPythonProgram } from "../lib/pyodidePlayground.js";
 import { SHOP_DB_PY } from "../lib/shopDbPython.js";
 import { highlight } from "../lib/highlight.js";
+import { verifyFirstRepo } from "../lib/githubCheck.js";
+import { RepoSubmission } from "./RepoSubmission.jsx";
 
 // A code block is runnable as-is only if it's a complete program, or if it's
 // a plain sequence of statements with no top-level func/type declaration —
@@ -95,6 +97,7 @@ export function LessonBlocks({ blocks }) {
     if (block.type === "callout") return <aside className={`lesson-callout ${block.tone || "info"}`} key={block.id}><b>{block.title}</b><p><InlineText text={block.text}/></p></aside>;
     if (block.type === "quiz") return <QuizBlock block={block} key={block.id}/>;
     if (block.type === "task") return <TaskBlock block={block} key={block.id}/>;
+    if (block.type === "submission") return <section className="lesson-submission" key={block.id}><h3>{block.title}</h3><p><InlineText text={block.text}/></p><RepoSubmission id={block.submissionId || block.id} verify={verifyFirstRepo} buttonLabel="Проверить" doneText="Результат принят."/></section>;
     if (block.type === "divider") return <hr className="lesson-divider" key={block.id}/>;
     return null;
   })}</section>;
@@ -134,9 +137,9 @@ function CodeBlock({ block }) {
   const [run, setRun] = useState(null); // null | { busy } | { status, stdout, message }
   const isGo = !block.language || block.language === "go";
   const isShopSql = block.language === "sql" && block.run === "shop";
-  // run: false — пример запускается только на компьютере ученика (например, импортирует его модуль).
+  // run: false — пример запускается только на компьютере ученика (например, импортирует его модуль или слушает порт).
   const isPython = (block.language === "python" && block.run !== false) || isShopSql;
-  const runnableSource = isGo ? buildRunnableSource(block.code || "", block.id) : isShopSql ? shopQuerySource(block.code || "") : isPython ? block.code || "" : null;
+  const runnableSource = isGo ? (block.run === false ? null : buildRunnableSource(block.code || "", block.id)) : isShopSql ? shopQuerySource(block.code || "") : isPython ? block.code || "" : null;
 
   const copy = async () => {
     try {

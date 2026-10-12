@@ -1,0 +1,42 @@
+<svg width="800" height="300" viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="300" fill="#ffffff"/>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#4b3aeb"/></marker>
+    <marker id="r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#b3261e"/></marker>
+  </defs>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <rect x="20" y="50" width="160" height="100" rx="12" fill="#f5f6fb" stroke="#dfe1ee"/>
+    <text x="100" y="84" font-size="12" font-weight="700" fill="#5b6072" text-anchor="middle" letter-spacing="1">ЗАПРОС</text>
+    <text x="100" y="112" font-family="Menlo, Consolas, monospace" font-size="14" fill="#12141d" text-anchor="middle">GET /books/7</text>
+
+    <rect x="220" y="50" width="170" height="100" rx="12" fill="#e9e6ff" stroke="#4b3aeb" stroke-width="1.5"/>
+    <text x="305" y="84" font-size="15" font-weight="700" fill="#12141d" text-anchor="middle">Маршрутизатор</text>
+    <text x="305" y="108" font-size="12" fill="#5b6072" text-anchor="middle">сверяет метод и путь</text>
+    <text x="305" y="128" font-family="Menlo, Consolas, monospace" font-size="12" fill="#4b3aeb" text-anchor="middle">ServeMux</text>
+
+    <rect x="430" y="50" width="170" height="100" rx="12" fill="#f5f6fb" stroke="#dfe1ee"/>
+    <text x="515" y="84" font-size="15" font-weight="700" fill="#12141d" text-anchor="middle">Хэндлер</text>
+    <text x="515" y="108" font-size="12" fill="#5b6072" text-anchor="middle">проверяет запрос,</text>
+    <text x="515" y="124" font-size="12" fill="#5b6072" text-anchor="middle">пишет ответ</text>
+
+    <rect x="640" y="50" width="140" height="100" rx="12" fill="#f5f6fb" stroke="#dfe1ee"/>
+    <text x="710" y="84" font-size="15" font-weight="700" fill="#12141d" text-anchor="middle">Хранилище</text>
+    <text x="710" y="108" font-size="12" fill="#5b6072" text-anchor="middle">данные</text>
+    <text x="710" y="124" font-size="12" fill="#5b6072" text-anchor="middle">и мьютекс</text>
+
+    <line x1="180" y1="100" x2="214" y2="100" stroke="#4b3aeb" stroke-width="2.5" marker-end="url(#a)"/>
+    <line x1="390" y1="100" x2="424" y2="100" stroke="#4b3aeb" stroke-width="2.5" marker-end="url(#a)"/>
+    <line x1="600" y1="100" x2="634" y2="100" stroke="#4b3aeb" stroke-width="2.5" marker-end="url(#a)"/>
+
+    <line x1="265" y1="150" x2="265" y2="204" stroke="#b3261e" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#r)"/>
+    <line x1="345" y1="150" x2="345" y2="204" stroke="#b3261e" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#r)"/>
+    <rect x="150" y="210" width="150" height="62" rx="10" fill="#fdecea" stroke="#f3c5c0"/>
+    <text x="225" y="236" font-size="15" font-weight="700" fill="#b3261e" text-anchor="middle">404</text>
+    <text x="225" y="256" font-size="12" fill="#12141d" text-anchor="middle">такого пути нет</text>
+    <rect x="312" y="210" width="170" height="62" rx="10" fill="#fdecea" stroke="#f3c5c0"/>
+    <text x="397" y="236" font-size="15" font-weight="700" fill="#b3261e" text-anchor="middle">405</text>
+    <text x="397" y="256" font-size="12" fill="#12141d" text-anchor="middle">путь есть, метод не тот</text>
+    <text x="640" y="246" font-size="12" fill="#5b6072" text-anchor="middle">Эти два ответа маршрутизатор</text>
+    <text x="640" y="262" font-size="12" fill="#5b6072" text-anchor="middle">отправляет без твоего кода</text>
+  </g>
+</svg>

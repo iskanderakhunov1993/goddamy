@@ -1,0 +1,35 @@
+<svg width="800" height="250" viewBox="0 0 800 250" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="250" fill="#ffffff"/>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#4b3aeb"/></marker>
+  </defs>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <rect x="16" y="50" width="164" height="150" rx="12" fill="#f5f6fb" stroke="#dfe1ee"/>
+    <circle cx="44" cy="80" r="14" fill="#4b3aeb"/><text x="44" y="85" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">1</text>
+    <text x="32" y="122" font-size="15" font-weight="700" fill="#12141d">Твой push</text>
+    <text x="32" y="146" font-family="Menlo, Consolas, monospace" font-size="12" fill="#4b3aeb">git push</text>
+    <text x="32" y="172" font-size="12" fill="#5b6072">код уходит на GitHub</text>
+
+    <rect x="216" y="50" width="174" height="150" rx="12" fill="#e9e6ff" stroke="#4b3aeb" stroke-width="1.5"/>
+    <circle cx="244" cy="80" r="14" fill="#4b3aeb"/><text x="244" y="85" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">2</text>
+    <text x="232" y="122" font-size="15" font-weight="700" fill="#12141d">GitHub Actions</text>
+    <text x="232" y="146" font-family="Menlo, Consolas, monospace" font-size="12" fill="#4b3aeb">go run check.go</text>
+    <text x="232" y="172" font-size="12" fill="#5b6072">на чистой машине</text>
+
+    <rect x="426" y="50" width="164" height="150" rx="12" fill="#e3f4ea" stroke="#b9e0c8"/>
+    <circle cx="454" cy="80" r="14" fill="#1b7a4b"/><text x="454" y="85" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">3</text>
+    <text x="442" y="122" font-size="15" font-weight="700" fill="#12141d">Результат</text>
+    <text x="442" y="146" font-size="13" font-weight="700" fill="#1b7a4b">✓ проверка прошла</text>
+    <text x="442" y="172" font-size="12" fill="#5b6072">значок рядом с commit</text>
+
+    <rect x="626" y="50" width="158" height="150" rx="12" fill="#f5f6fb" stroke="#dfe1ee"/>
+    <circle cx="654" cy="80" r="14" fill="#4b3aeb"/><text x="654" y="85" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">4</text>
+    <text x="642" y="122" font-size="15" font-weight="700" fill="#12141d">Сдача</text>
+    <text x="642" y="146" font-size="12" fill="#5b6072">ссылка на репозиторий</text>
+    <text x="642" y="164" font-size="12" fill="#5b6072">на странице спринта</text>
+
+    <line x1="180" y1="125" x2="210" y2="125" stroke="#4b3aeb" stroke-width="2.5" marker-end="url(#a)"/>
+    <line x1="390" y1="125" x2="420" y2="125" stroke="#4b3aeb" stroke-width="2.5" marker-end="url(#a)"/>
+    <line x1="590" y1="125" x2="620" y2="125" stroke="#4b3aeb" stroke-width="2.5" marker-end="url(#a)"/>
+  </g>
+</svg>
