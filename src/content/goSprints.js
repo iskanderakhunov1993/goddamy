@@ -216,7 +216,7 @@ export const goSprints = [
     ],
 
     next: {
-      title: "Спринт 2 · Task Tracker CLI",
+      title: "Модуль 5 · Спринт 2 · Task Tracker CLI",
       text: "Следующий проект совсем другой: консольное приложение без сети. Команды, аргументы, хранение в файле и релиз на GitHub.",
       path: "/go/lesson/project-task-tracker/task-discovery/project-task-tracker-task-discovery-1",
     },

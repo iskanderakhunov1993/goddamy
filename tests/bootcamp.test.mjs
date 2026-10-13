@@ -17,11 +17,11 @@ test("the course runs foundation modules first, then numbered sprints", () => {
     "МОДУЛЬ 1 Старт",
     "МОДУЛЬ 2 Как работают команды",
     "МОДУЛЬ 3 База Go и инженерный подход",
-    "СПРИНТ 1 Первый HTTP-сервер",
-    "СПРИНТ 2 Task Tracker CLI",
-    "СПРИНТ 3 Expense Tracker",
-    "СПРИНТ 4 URL Shortener API",
-    "ФИНАЛ Релиз и портфолио",
+    "МОДУЛЬ 4 · СПРИНТ 1 Первый HTTP-сервер",
+    "МОДУЛЬ 5 · СПРИНТ 2 Task Tracker CLI",
+    "МОДУЛЬ 6 · СПРИНТ 3 Expense Tracker",
+    "МОДУЛЬ 7 · СПРИНТ 4 URL Shortener API",
+    "МОДУЛЬ 8 Релиз и портфолио",
   ]);
   assert.equal(goSprints[0].number, 1);
   assert.equal(getGoSprintByModule(courseCurriculum[3].id), goSprints[0]);

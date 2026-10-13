@@ -26,16 +26,18 @@
 
 | № | Спринт | Проект | Что нового | Задача на roadmap.sh | Статус |
 |---|---|---|---|---|---|
-| Спринт 1 | Первый HTTP-сервер | Bookmarks API | net/http, маршруты, JSON API, коды ответа, sync.Mutex, httptest, GitHub Actions | [blogging-platform-api](https://roadmap.sh/projects/blogging-platform-api) | **готов** в формате спринта, 11 уроков, 41 проверка |
-| Спринт 2 | Консольное приложение | Task Tracker CLI | аргументы командной строки, файлы, JSON, unit-тесты, релиз | [task-tracker](https://roadmap.sh/projects/task-tracker) | написан в прежнем формате (подготовка и 4 этапа, 26 проверок); перевести в формат спринта |
-| Спринт 3 | Сервис с базой данных | Expense Tracker | PostgreSQL, SQL, миграции, слой хранения, Docker Compose для базы | [expense-tracker-api](https://roadmap.sh/projects/expense-tracker-api) | план |
-| Спринт 4 | Поставка сервиса | URL Shortener API | Docker, middleware, логирование, healthcheck, полный CI | [url-shortening-service](https://roadmap.sh/projects/url-shortening-service) | план |
-| Спринт 5 | Клиент чужого API | GitHub Activity CLI | http.Client, таймауты и context, разбор чужого JSON, ошибки сети | [github-user-activity](https://roadmap.sh/projects/github-user-activity) | план |
-| Спринт 6 | Кэш и внешние сервисы | Weather API | кэш со сроком жизни, конфигурация через окружение, ограничение частоты запросов | [weather-api-wrapper-service](https://roadmap.sh/projects/weather-api-wrapper-service) | план |
-| Спринт 7 | Реальное время | Broadcast Server | WebSocket, горутины и каналы, корректная остановка | [broadcast-server](https://roadmap.sh/projects/broadcast-server) | план |
-| Спринт 8 | Финальный сервис | Бронирование билетов | вход по токену, роли, транзакции | [movie-reservation-system](https://roadmap.sh/projects/movie-reservation-system) | план |
+| Модуль 4 · Спринт 1 | Первый HTTP-сервер | Bookmarks API | net/http, маршруты, JSON API, коды ответа, sync.Mutex, httptest, GitHub Actions | [blogging-platform-api](https://roadmap.sh/projects/blogging-platform-api) | **готов** в формате спринта, 11 уроков, 41 проверка |
+| Модуль 5 · Спринт 2 | Консольное приложение | Task Tracker CLI | аргументы командной строки, файлы, JSON, unit-тесты, релиз | [task-tracker](https://roadmap.sh/projects/task-tracker) | написан в прежнем формате (подготовка и 4 этапа, 26 проверок); перевести в формат спринта |
+| Модуль 6 · Спринт 3 | Сервис с базой данных | Expense Tracker | PostgreSQL, SQL, миграции, слой хранения, Docker Compose для базы | [expense-tracker-api](https://roadmap.sh/projects/expense-tracker-api) | план |
+| Модуль 7 · Спринт 4 | Поставка сервиса | URL Shortener API | Docker, middleware, логирование, healthcheck, полный CI | [url-shortening-service](https://roadmap.sh/projects/url-shortening-service) | план |
+| Модуль 8 · Спринт 5 | Клиент чужого API | GitHub Activity CLI | http.Client, таймауты и context, разбор чужого JSON, ошибки сети | [github-user-activity](https://roadmap.sh/projects/github-user-activity) | план |
+| Модуль 9 · Спринт 6 | Кэш и внешние сервисы | Weather API | кэш со сроком жизни, конфигурация через окружение, ограничение частоты запросов | [weather-api-wrapper-service](https://roadmap.sh/projects/weather-api-wrapper-service) | план |
+| Модуль 10 · Спринт 7 | Реальное время | Broadcast Server | WebSocket, горутины и каналы, корректная остановка | [broadcast-server](https://roadmap.sh/projects/broadcast-server) | план |
+| Модуль 11 · Спринт 8 | Финальный сервис | Бронирование билетов | вход по токену, роли, транзакции | [movie-reservation-system](https://roadmap.sh/projects/movie-reservation-system) | план |
 
-После спринтов — модуль «Релиз и портфолио»: оформление репозиториев и сертификат.
+После спринтов — последний модуль «Релиз и портфолио»: оформление репозиториев и сертификат. Сейчас в кабинете это Модуль 8; когда появятся спринты 5–8, он сдвинется.
+
+Нумерация сквозная: каждый спринт — это модуль. Модуль 4 — Спринт 1, Модуль 5 — Спринт 2 и так далее.
 
 Спринты 3 и 4 уже стоят в кабинете как модули-заглушки «В разработке». Спринты 3, 4 и 8 требуют PostgreSQL и Docker в проверке: в GitHub Actions они доступны как сервисы, локально ученику понадобится Docker.
 

@@ -18,31 +18,31 @@
     <text x="588" y="76" font-size="15" font-weight="700" fill="#12141d">Модуль 3 · База Go</text>
     <text x="588" y="98" font-size="12" fill="#5b6072">язык, файлы, тесты</text>
 
-    <text x="24" y="168" font-size="12" font-weight="700" fill="#5b6072" letter-spacing="1">СПРИНТЫ: ОДИН СПРИНТ — ОДИН ПРОЕКТ</text>
+    <text x="24" y="168" font-size="12" font-weight="700" fill="#5b6072" letter-spacing="1">СПРИНТЫ: ОДИН МОДУЛЬ — ОДИН СПРИНТ — ОДИН ПРОЕКТ</text>
     <rect x="24" y="182" width="368" height="78" rx="12" fill="#f5f6fb" stroke="#dfe1ee"/>
-    <circle cx="52" cy="212" r="14" fill="#4b3aeb"/><text x="52" y="217" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">1</text>
-    <text x="76" y="210" font-size="15" font-weight="700" fill="#12141d">Спринт 1 · Первый HTTP-сервер</text>
-    <text x="76" y="232" font-size="12" fill="#5b6072">Bookmarks API, net/http, GitHub Actions</text>
+    <circle cx="52" cy="212" r="14" fill="#4b3aeb"/><text x="52" y="217" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">4</text>
+    <text x="76" y="210" font-size="15" font-weight="700" fill="#12141d">Модуль 4 · Спринт 1</text>
+    <text x="76" y="232" font-size="12" fill="#5b6072">Первый HTTP-сервер: Bookmarks API, net/http</text>
 
     <rect x="408" y="182" width="368" height="78" rx="12" fill="#f5f6fb" stroke="#dfe1ee"/>
-    <circle cx="436" cy="212" r="14" fill="#4b3aeb"/><text x="436" y="217" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">2</text>
-    <text x="460" y="210" font-size="15" font-weight="700" fill="#12141d">Спринт 2 · Task Tracker CLI</text>
-    <text x="460" y="232" font-size="12" fill="#5b6072">консольное приложение, JSON, релиз</text>
+    <circle cx="436" cy="212" r="14" fill="#4b3aeb"/><text x="436" y="217" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">5</text>
+    <text x="460" y="210" font-size="15" font-weight="700" fill="#12141d">Модуль 5 · Спринт 2</text>
+    <text x="460" y="232" font-size="12" fill="#5b6072">Task Tracker CLI: консольное приложение, JSON</text>
 
     <rect x="24" y="276" width="368" height="78" rx="12" fill="#ffffff" stroke="#dfe1ee" stroke-dasharray="6 5"/>
-    <circle cx="52" cy="306" r="14" fill="#ffffff" stroke="#5b6072"/><text x="52" y="311" font-size="13" font-weight="700" fill="#5b6072" text-anchor="middle">3</text>
-    <text x="76" y="304" font-size="15" font-weight="700" fill="#5b6072">Спринт 3 · Expense Tracker</text>
-    <text x="76" y="326" font-size="12" fill="#5b6072">PostgreSQL и SQL · в разработке</text>
+    <circle cx="52" cy="306" r="14" fill="#ffffff" stroke="#5b6072"/><text x="52" y="311" font-size="13" font-weight="700" fill="#5b6072" text-anchor="middle">6</text>
+    <text x="76" y="304" font-size="15" font-weight="700" fill="#5b6072">Модуль 6 · Спринт 3</text>
+    <text x="76" y="326" font-size="12" fill="#5b6072">Expense Tracker: PostgreSQL и SQL · в разработке</text>
 
     <rect x="408" y="276" width="368" height="78" rx="12" fill="#ffffff" stroke="#dfe1ee" stroke-dasharray="6 5"/>
-    <circle cx="436" cy="306" r="14" fill="#ffffff" stroke="#5b6072"/><text x="436" y="311" font-size="13" font-weight="700" fill="#5b6072" text-anchor="middle">4</text>
-    <text x="460" y="304" font-size="15" font-weight="700" fill="#5b6072">Спринт 4 · URL Shortener API</text>
-    <text x="460" y="326" font-size="12" fill="#5b6072">Docker и CI · в разработке</text>
+    <circle cx="436" cy="306" r="14" fill="#ffffff" stroke="#5b6072"/><text x="436" y="311" font-size="13" font-weight="700" fill="#5b6072" text-anchor="middle">7</text>
+    <text x="460" y="304" font-size="15" font-weight="700" fill="#5b6072">Модуль 7 · Спринт 4</text>
+    <text x="460" y="326" font-size="12" fill="#5b6072">URL Shortener API: Docker и CI · в разработке</text>
 
     <text x="24" y="396" font-size="12" font-weight="700" fill="#5b6072" letter-spacing="1">ФИНАЛ</text>
     <rect x="24" y="410" width="752" height="66" rx="12" fill="#ffffff" stroke="#dfe1ee" stroke-dasharray="6 5"/>
-    <circle cx="52" cy="443" r="14" fill="#ffffff" stroke="#5b6072"/><text x="52" y="448" font-size="13" font-weight="700" fill="#5b6072" text-anchor="middle">★</text>
-    <text x="76" y="440" font-size="15" font-weight="700" fill="#5b6072">Релиз и портфолио</text>
+    <circle cx="52" cy="443" r="14" fill="#ffffff" stroke="#5b6072"/><text x="52" y="448" font-size="13" font-weight="700" fill="#5b6072" text-anchor="middle">8</text>
+    <text x="76" y="440" font-size="15" font-weight="700" fill="#5b6072">Модуль 8 · Релиз и портфолио</text>
     <text x="76" y="460" font-size="12" fill="#5b6072">проекты на GitHub и сертификат · в разработке</text>
   </g>
 </svg>
