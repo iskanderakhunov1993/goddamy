@@ -4,13 +4,13 @@ import { getCompletedLessonIds } from "../lib/progress.js";
 import {
   ArrowRight, ArrowsClockwise, ArrowsDownUp, BookOpen, BracketsCurly,
   Briefcase, ChartBar, ChartLineUp, CheckCircle, Code, Cube, Database, FileCode,
-  Funnel, Function, GitBranch, House, List, ListBullets,
+  Funnel, Function, GitBranch, House, Kanban, LinkSimple, List, ListBullets,
   PresentationChart, RocketLaunch, ShareNetwork, ShieldCheck,
   Table, TerminalWindow, UserCircle, X,
 } from "@phosphor-icons/react";
 
 const artworkSets = {
-  go: [TerminalWindow, BracketsCurly, ListBullets, Database, ShareNetwork, RocketLaunch],
+  go: [TerminalWindow, Kanban, BracketsCurly, ListBullets, ShareNetwork, Database, LinkSimple, RocketLaunch],
   sql: [Table, Funnel, ArrowsDownUp, ChartBar, GitBranch, PresentationChart],
   python: [Function, ArrowsClockwise, ListBullets, FileCode, Cube, ChartLineUp],
   product: [Briefcase, UserCircle, ChartLineUp, Funnel, ListBullets, RocketLaunch],
@@ -18,12 +18,14 @@ const artworkSets = {
 };
 
 export function ModuleArtwork({ course = "go", index = 0, number = null }) {
-  const Primary = (artworkSets[course] || artworkSets.go)[index % 6];
+  const set = artworkSets[course] || artworkSets.go;
+  const Primary = set[index % set.length];
   return <div className="stage-art module-art" aria-hidden="true"><Primary className="module-art-primary" size={44} weight="regular"/><span>{number || String(index + 1).padStart(2, "0")}</span></div>;
 }
 
 export function ModuleGlyph({ course = "go", index = 0 }) {
-  const Icon = (artworkSets[course] || artworkSets.go)[index % 6];
+  const set = artworkSets[course] || artworkSets.go;
+  const Icon = set[index % set.length];
   return <Icon className="go-module-icon" size={58} weight="light" aria-hidden="true"/>;
 }
 

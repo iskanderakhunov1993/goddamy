@@ -1,0 +1,18 @@
+# Проверка проекта курса Godemy. Положи этот файл в .github/workflows/godemy-check.yml.
+# При каждом push GitHub запускает ту же проверку, что и ты командой go run check.go.
+name: Godemy check
+
+on:
+  push:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache: false
+      - run: go run check.go

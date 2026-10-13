@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="390" viewBox="0 0 800 390" font-family="Arial, Helvetica, sans-serif" role="img" aria-label="Цикл спринта: планирование, работа с ежедневными встречами, обзор, ретроспектива и следующий спринт">
+  <defs>
+    <marker id="sc-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="#4b3aeb"/>
+    </marker>
+  </defs>
+  <rect width="800" height="390" fill="#ffffff"/>
+
+  <text x="24" y="36" font-size="18" font-weight="700" fill="#12141d">Из чего состоит спринт</text>
+
+  <path d="M24 74V64H776V74" fill="none" stroke="#dfe1ee" stroke-width="2"/>
+  <rect x="246" y="52" width="308" height="24" rx="12" fill="#ffffff"/>
+  <text x="400" y="69" font-size="13" fill="#5b6072" text-anchor="middle">Один спринт: не больше месяца</text>
+
+  <g fill="none" stroke="#4b3aeb" stroke-width="2" marker-end="url(#sc-arrow)">
+    <line x1="176" y1="124" x2="198" y2="124"/>
+    <line x1="430" y1="124" x2="452" y2="124"/>
+    <line x1="610" y1="124" x2="632" y2="124"/>
+    <path d="M704 162V204H98V168"/>
+  </g>
+  <rect x="268" y="192" width="264" height="24" rx="12" fill="#ffffff"/>
+  <text x="400" y="209" font-size="13" font-weight="700" fill="#4b3aeb" text-anchor="middle">Следующий спринт начинается сразу</text>
+
+  <g>
+    <rect x="24" y="90" width="150" height="70" rx="11" fill="#e9e6ff" stroke="#4b3aeb"/>
+    <text x="99" y="120" font-size="14" font-weight="700" fill="#12141d" text-anchor="middle">Планирование</text>
+    <text x="99" y="141" font-size="12" fill="#5b6072" text-anchor="middle">цель и задачи</text>
+
+    <rect x="202" y="90" width="226" height="70" rx="11" fill="#f5f6fb" stroke="#dfe1ee"/>
+    <text x="315" y="120" font-size="14" font-weight="700" fill="#12141d" text-anchor="middle">Работа над задачами</text>
+    <text x="315" y="141" font-size="12" fill="#5b6072" text-anchor="middle">каждый день встреча до 15 минут</text>
+
+    <rect x="456" y="90" width="152" height="70" rx="11" fill="#f5f6fb" stroke="#dfe1ee"/>
+    <text x="532" y="120" font-size="14" font-weight="700" fill="#12141d" text-anchor="middle">Обзор спринта</text>
+    <text x="532" y="141" font-size="12" fill="#5b6072" text-anchor="middle">показ результата</text>
+
+    <rect x="636" y="90" width="140" height="70" rx="11" fill="#f5f6fb" stroke="#dfe1ee"/>
+    <text x="706" y="120" font-size="14" font-weight="700" fill="#12141d" text-anchor="middle">Ретроспектива</text>
+    <text x="706" y="141" font-size="12" fill="#5b6072" text-anchor="middle">как работалось</text>
+  </g>
+
+  <text x="24" y="260" font-size="13" font-weight="700" fill="#5b6072">Что есть у команды в каждом спринте</text>
+  <g>
+    <rect x="24" y="274" width="240" height="88" rx="12" fill="#f5f6fb" stroke="#dfe1ee"/>
+    <text x="40" y="302" font-size="14" font-weight="700" fill="#12141d">Цель спринта</text>
+    <text x="40" y="324" font-size="13" fill="#5b6072">Одна фраза: зачем этот</text>
+    <text x="40" y="343" font-size="13" fill="#5b6072">спринт нужен</text>
+
+    <rect x="280" y="274" width="240" height="88" rx="12" fill="#f5f6fb" stroke="#dfe1ee"/>
+    <text x="296" y="302" font-size="14" font-weight="700" fill="#12141d">Бэклог спринта</text>
+    <text x="296" y="324" font-size="13" fill="#5b6072">Задачи на спринт и план,</text>
+    <text x="296" y="343" font-size="13" fill="#5b6072">как их сделать</text>
+
+    <rect x="536" y="274" width="240" height="88" rx="12" fill="#e3f4ea" stroke="#1b7a4b"/>
+    <text x="552" y="302" font-size="14" font-weight="700" fill="#12141d">Инкремент</text>
+    <text x="552" y="324" font-size="13" fill="#1b7a4b">То, что к концу спринта</text>
+    <text x="552" y="343" font-size="13" fill="#1b7a4b">готово и работает</text>
+  </g>
+</svg>

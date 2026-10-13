@@ -178,8 +178,9 @@ footer div button { min-height: 40px; }
 /* ---------- Карточки модулей Go на телефоне: без пустого экрана под одну иконку ---------- */
 @media (max-width: 720px) {
   .go-module-card { min-height: 0; padding: var(--g-s-4); display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: var(--g-s-3); align-items: start; }
-  .go-module-card .go-module-icon { width: 36px; height: 36px; grid-row: span 3; }
-  .go-module-card h3 { margin: 0; font-size: var(--g-fs-base); }
+  .go-module-card .go-module-icon { width: 36px; height: 36px; grid-row: span 4; }
+  .go-module-card .go-module-phase { margin-top: 0; }
+  .go-module-card h3, .go-module-card .go-module-phase + h3 { margin: 0; font-size: var(--g-fs-base); }
   .go-module-card .go-module-status { margin-top: var(--g-s-3); }
   .go-module-card:hover { transform: none; }
 }

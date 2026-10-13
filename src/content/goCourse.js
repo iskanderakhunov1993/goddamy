@@ -7,7 +7,7 @@ export const course = {
   outcomes: ["Писать идиоматичный Go-код", "Разбивать задачи на спринты", "Тестировать и документировать приложения", "Работать с Git и GitHub"],
   technologies: ["Go", "Git", "GitHub", "JSON", "PostgreSQL", "HTTP", "Unit-тесты"],
   projects: [
-    { id: "task-tracker", title: "Консольный Task Tracker", status: "Доступен", description: "CLI-приложение, JSON, тесты и первый GitHub release." },
+    { id: "task-tracker", title: "Консольный Task Tracker", status: "Доступен", description: "CLI-приложение, JSON, тесты и GitHub release." },
     { id: "expense-manager", title: "Менеджер расходов", status: "Скоро", description: "Учёт расходов, категории и отчёты." },
     { id: "rest-api", title: "REST API", status: "Скоро", description: "CRUD, HTTP и документация API." },
     { id: "postgres-auth", title: "PostgreSQL и авторизация", status: "Скоро", description: "Хранение данных и безопасный вход." },
@@ -170,6 +170,6 @@ export const sprints = [
 export const stages = [
   { id: "project", title: "О проекте", path: "/go/task-tracker" },
   { id: "setup", title: "Подготовка", path: "/go/task-tracker/setup" },
-  ...sprints.map((s) => ({ id: `sprint-${s.number}`, title: `Спринт ${s.number}`, path: `/go/task-tracker/sprint/${s.number}` })),
+  ...sprints.map((s) => ({ id: `sprint-${s.number}`, title: `Этап ${s.number}`, path: `/go/task-tracker/sprint/${s.number}` })),
   { id: "retrospective", title: "Ретроспектива", path: "/go/task-tracker/retrospective" },
 ];

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="440" viewBox="0 0 800 440" font-family="Arial, Helvetica, sans-serif" role="img" aria-label="Водопадная модель: пять этапов идут по очереди, первый отзыв пользователей приходит в конце">
+  <defs>
+    <marker id="wf-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#4b3aeb"/>
+    </marker>
+  </defs>
+  <rect width="800" height="440" fill="#ffffff"/>
+
+  <text x="24" y="38" font-size="18" font-weight="700" fill="#12141d">Водопадная модель</text>
+  <text x="24" y="60" font-size="13" fill="#5b6072">Следующий этап начинается, когда закрыт предыдущий</text>
+
+  <g fill="none" stroke="#4b3aeb" stroke-width="2" marker-end="url(#wf-arrow)">
+    <path d="M174 112H249V136"/>
+    <path d="M324 168H399V192"/>
+    <path d="M474 224H549V248"/>
+    <path d="M624 280H699V304"/>
+  </g>
+
+  <g>
+    <rect x="24" y="84" width="150" height="56" rx="11" fill="#e9e6ff" stroke="#4b3aeb"/>
+    <text x="99" y="108" font-size="14" font-weight="700" fill="#12141d" text-anchor="middle">Требования</text>
+    <text x="99" y="127" font-size="12" fill="#5b6072" text-anchor="middle">январь–февраль</text>
+
+    <rect x="174" y="140" width="150" height="56" rx="11" fill="#f5f6fb" stroke="#dfe1ee"/>
+    <text x="249" y="164" font-size="14" font-weight="700" fill="#12141d" text-anchor="middle">Проектирование</text>
+    <text x="249" y="183" font-size="12" fill="#5b6072" text-anchor="middle">март–апрель</text>
+
+    <rect x="324" y="196" width="150" height="56" rx="11" fill="#f5f6fb" stroke="#dfe1ee"/>
+    <text x="399" y="220" font-size="14" font-weight="700" fill="#12141d" text-anchor="middle">Разработка</text>
+    <text x="399" y="239" font-size="12" fill="#5b6072" text-anchor="middle">май–сентябрь</text>
+
+    <rect x="474" y="252" width="150" height="56" rx="11" fill="#f5f6fb" stroke="#dfe1ee"/>
+    <text x="549" y="276" font-size="14" font-weight="700" fill="#12141d" text-anchor="middle">Тестирование</text>
+    <text x="549" y="295" font-size="12" fill="#5b6072" text-anchor="middle">октябрь–ноябрь</text>
+
+    <rect x="624" y="308" width="150" height="56" rx="11" fill="#f5f6fb" stroke="#dfe1ee"/>
+    <text x="699" y="332" font-size="14" font-weight="700" fill="#12141d" text-anchor="middle">Релиз</text>
+    <text x="699" y="351" font-size="12" fill="#5b6072" text-anchor="middle">декабрь</text>
+  </g>
+
+  <rect x="24" y="268" width="330" height="84" rx="12" fill="#fff3d6" stroke="#b26a00"/>
+  <text x="40" y="294" font-size="13" font-weight="700" fill="#b26a00">Слабое место</text>
+  <text x="40" y="315" font-size="13" fill="#12141d">Ошибку в требованиях находят в конце,</text>
+  <text x="40" y="335" font-size="13" fill="#12141d">когда на ней уже стоит весь код.</text>
+
+  <line x1="24" y1="394" x2="776" y2="394" stroke="#dfe1ee" stroke-width="2"/>
+  <circle cx="24" cy="394" r="5" fill="#4b3aeb"/>
+  <circle cx="776" cy="394" r="5" fill="#b3261e"/>
+  <text x="24" y="420" font-size="13" fill="#5b6072">Январь: требования собраны</text>
+  <rect x="496" y="404" width="280" height="26" rx="13" fill="#fdecea"/>
+  <text x="636" y="422" font-size="13" font-weight="700" fill="#b3261e" text-anchor="middle">Декабрь: первый отзыв пользователей</text>
+</svg>
