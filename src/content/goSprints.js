@@ -63,7 +63,7 @@ const lessonPath = (topic, number) => `/go/lesson/sprint-bookmarks-api/${topic}/
 export const goSprints = [
   {
     id: "bookmarks-api",
-    number: 2,
+    number: 1,
     moduleId: "sprint-bookmarks-api",
     title: "Первый HTTP-сервер",
     project: "Bookmarks API",
@@ -74,7 +74,7 @@ export const goSprints = [
     source: { title: "Похожие задачи на roadmap.sh", url: "https://roadmap.sh/backend/projects" },
 
     ticket: {
-      key: "GO-2",
+      key: "GO-1",
       from: "Тимлид",
       channel: "задача в трекере",
       title: "Сервис закладок: первая версия API",
@@ -214,6 +214,12 @@ export const goSprints = [
       { id: "blockers", question: "Что мешало?", placeholder: "Факт, что уже пробовалось и что помогло. Например: «сервер падал под нагрузкой — помог запуск с -race»" },
       { id: "next", question: "Что сделаю иначе в следующем спринте?", placeholder: "Одно конкретное изменение" },
     ],
+
+    next: {
+      title: "Спринт 2 · Task Tracker CLI",
+      text: "Следующий проект совсем другой: консольное приложение без сети. Команды, аргументы, хранение в файле и релиз на GitHub.",
+      path: "/go/lesson/project-task-tracker/task-discovery/project-task-tracker-task-discovery-1",
+    },
 
     learned: [
       "Читать контракт API и делать сервис, который ему соответствует",

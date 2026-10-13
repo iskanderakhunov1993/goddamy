@@ -147,7 +147,7 @@ export function App() {
       : secTask ? `${getSecurityChallenge(secTask[1]).title} — Godemy`
       : bootcampSprint ? `Спринт ${bootcampSprint.number} · ${bootcampSprint.project} — Godemy`
       : courseLesson ? "Урок курса Основы Go — Godemy"
-      : sprint ? `Спринт ${sprint[1]} · Task Tracker — Godemy`
+      : sprint ? `Этап ${sprint[1]} · Task Tracker — Godemy`
       : goTask ? `${getGoChallenge(goTask[1]).title} — Godemy`
       : sqlTask ? `${getSqlChallenge(sqlTask[1]).title} — Godemy`
       : pythonTask ? `${getPythonChallenge(pythonTask[1]).title} — Godemy`

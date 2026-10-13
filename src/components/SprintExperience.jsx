@@ -241,7 +241,7 @@ function SubmitStage({ sprint, navigate }) {
   </>;
 }
 
-function RetroStage({ sprint }) {
+function RetroStage({ sprint, navigate }) {
   const [saved, setSaved] = useState(() => getRetro(sprint.id));
   const [answers, setAnswers] = useState(saved.answers);
   const submitted = Boolean(getSubmission(submissionId(sprint))?.ok);
@@ -275,8 +275,9 @@ function RetroStage({ sprint }) {
     </section>
 
     <section className="bc-section">
-      <h2>Что дальше</h2>
-      <p>Следующий спринт пишется. В нём сервис будет ходить в чужой API, и появятся таймауты и работа с сетью со стороны клиента. Пока он не готов, реши задачи в тренажёре или улучши этот проект.</p>
+      <h2>Что дальше: {sprint.next.title}</h2>
+      <p>{sprint.next.text}</p>
+      <p><button className="bc-button" onClick={() => navigate(sprint.next.path)}>К следующему спринту <ArrowRight size={17}/></button></p>
     </section>
   </>;
 }

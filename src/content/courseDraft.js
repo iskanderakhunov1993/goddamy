@@ -1,6 +1,9 @@
 import { courseCurriculum } from "./courseCurriculum.js";
 
-const DRAFT_KEY = "godemy-course-editor-draft-cache-v2";
+// Версия ключа растёт, когда в коде меняется структура программы (порядок модулей,
+// состав тем): черновик со старой структурой показывал бы автору прежний курс.
+// Прежние черновики остаются в localStorage под старым ключом и не применяются.
+const DRAFT_KEY = "godemy-course-editor-draft-cache-v3";
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 

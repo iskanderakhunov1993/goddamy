@@ -12,6 +12,34 @@ const bootcampModules = courseCurriculum.filter((module) => module.id === "team-
 const bootcampLessons = bootcampModules.flatMap((module) => module.topics.flatMap((topic) => topic.lessons));
 const blockTypes = new Set(["heading", "paragraph", "image", "quote", "list", "dialogue", "link", "code", "callout", "quiz", "task", "submission", "divider"]);
 
+test("the course runs foundation modules first, then numbered sprints", () => {
+  assert.deepEqual(courseCurriculum.map((module) => `${module.phase} ${module.title}`), [
+    "МОДУЛЬ 1 Старт",
+    "МОДУЛЬ 2 Как работают команды",
+    "МОДУЛЬ 3 База Go и инженерный подход",
+    "СПРИНТ 1 Первый HTTP-сервер",
+    "СПРИНТ 2 Task Tracker CLI",
+    "СПРИНТ 3 Expense Tracker",
+    "СПРИНТ 4 URL Shortener API",
+    "ФИНАЛ Релиз и портфолио",
+  ]);
+  assert.equal(goSprints[0].number, 1);
+  assert.equal(getGoSprintByModule(courseCurriculum[3].id), goSprints[0]);
+  assert.ok(authoredLessonIds.has(goSprints[0].next.path.split("/").at(-1)), "следующий спринт начинается с написанного урока");
+});
+
+test("team topics live in one module, and moved lessons keep their ids", () => {
+  const start = courseCurriculum.find((module) => module.id === "internship-start");
+  const team = courseCurriculum.find((module) => module.id === "team-methods");
+  assert.deepEqual(start.topics.map((topic) => topic.id), ["welcome", "setup"]);
+  assert.deepEqual(team.topics[0].lessons.map((lesson) => lesson.id), ["internship-start-it-process-1", "internship-start-it-process-2", "internship-start-it-process-4", "internship-start-it-process-5"]);
+  assert.equal(lessonContent["internship-start-it-process-3"], undefined, "урок про Agile и Scrum заменён модулем 2");
+  const titles = courseCurriculum.flatMap((module) => module.topics.flatMap((topic) => topic.lessons.map((lesson) => lesson.title)));
+  assert.equal(new Set(titles).size, titles.length, "названия уроков не повторяются");
+  const ids = courseCurriculum.flatMap((module) => module.topics.flatMap((topic) => topic.lessons.map((lesson) => lesson.id)));
+  assert.equal(new Set(ids).size, ids.length);
+});
+
 test("every bootcamp lesson is authored, well-formed and ends with a check", () => {
   assert.ok(bootcampLessons.length >= 24);
   for (const lesson of bootcampLessons) {

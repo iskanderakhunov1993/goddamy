@@ -36,7 +36,7 @@ export function ProgressBar({ value, label = "Общий прогресс" }) {
 }
 
 // По умолчанию — этапы проекта Task Tracker; спринты буткемпа передают свои шаги.
-export function LearningLayout({ current, navigate, children, layoutStages = stages, eyebrow = "ПРОЕКТ 1", title = "Task Tracker", ariaLabel = "Этапы проекта" }) {
+export function LearningLayout({ current, navigate, children, layoutStages = stages, eyebrow = "СПРИНТ 2", title = "Task Tracker", ariaLabel = "Этапы проекта" }) {
   const activeIndex = layoutStages.findIndex((stage) => stage.id === current);
   return <div className="learning-layout">
     <aside className="stage-sidebar" aria-label={ariaLabel}>
@@ -207,6 +207,7 @@ export function CoursePage({ navigate }) {
           const timeLabel = minutes >= 60 ? `≈ ${Math.round(minutes / 60)} ч` : `≈ ${minutes} мин`;
           return <button className={`go-module-card ${ready ? "" : "in-progress"}`} key={stage.id} onClick={() => setOutlineSection(stage.id)}>
             <ModuleGlyph course="go" index={index}/>
+            <small className="go-module-phase">{stage.phase}</small>
             <h3>{stage.title}</h3>
             <span className="go-module-meta">{ready ? `${topicsLabel(stage.topics)} · ${timeLabel}` : "План модуля, уроки ещё пишутся"}</span>
             <div className="go-module-status">
@@ -422,7 +423,8 @@ export function StoryLesson({ sectionId = "intro", topicId = "welcome", lessonId
   const current = findLesson(course, sectionId, topicId, lessonId);
   const currentIndex = flatLessons.findIndex((item) => item.section.id === current.section.id && item.topic.id === current.topic.id && item.id === current.id);
   const previous = flatLessons[currentIndex - 1];
-  const next = flatLessons[currentIndex + 1];
+  // Следующим считается только написанный урок: шаблонные слоты программы не открываются.
+  const next = authoredLessonIds.has(flatLessons[currentIndex + 1]?.id) ? flatLessons[currentIndex + 1] : null;
   const lessonIndex = current.topic.lessons.findIndex((item) => item.id === current.id);
   const objectives = current.objectives?.length ? current.objectives : ["Понять основную идею урока", "Связать её с задачей проекта", "Проверить себя на небольшом примере"];
   const lessonBlocks = Array.isArray(current.blocks) ? current.blocks : [];
@@ -496,13 +498,13 @@ export function StoryLesson({ sectionId = "intro", topicId = "welcome", lessonId
 export function ProjectPage({ navigate }) {
   return <LearningLayout current="project" navigate={navigate}>
     <article className="learning-article">
-      <header className="learning-header"><small>ПРОЕКТ 1 · 4 СПРИНТА</small><h1>{project.title}</h1><p>{project.description}</p><button className="primary" onClick={() => navigate("/go/task-tracker/setup")}>Начать подготовку <ArrowRight size={17}/></button></header>
+      <header className="learning-header"><small>СПРИНТ 2 · 4 ЭТАПА</small><h1>{project.title}</h1><p>{project.description}</p><button className="primary" onClick={() => navigate("/go/task-tracker/setup")}>Начать подготовку <ArrowRight size={17}/></button></header>
       <StoryMessage story={storyBeats.project}/>
       <section className="situation-grid"><div><Target size={24}/><small>РАБОЧАЯ СИТУАЦИЯ</small><h2>{project.situation}</h2></div><div><Lightbulb size={24}/><small>ПРОБЛЕМА</small><p>{project.problem}</p></div></section>
       <section><h2>Что ты создашь</h2><div className="requirements-grid">{project.requirements.map((item) => <span key={item}><CheckCircle size={18}/>{item}</span>)}</div></section>
-      <section><h2>Контракт команд</h2><p>Твой Task Tracker должен понимать эти команды. Именно их проверяет скрипт check.go, который ты запускаешь у себя после каждого спринта.</p><div className="contract-table">{cliContract.map(([command, text]) => <p key={command}><code className="inline-code">{command}</code><span>{text}</span></p>)}</div><ul>{contractRules.map((item) => <li key={item}>{item}</li>)}</ul></section>
+      <section><h2>Контракт команд</h2><p>Твой Task Tracker должен понимать эти команды. Именно их проверяет скрипт check.go, который ты запускаешь у себя после каждого этапа.</p><div className="contract-table">{cliContract.map(([command, text]) => <p key={command}><code className="inline-code">{command}</code><span>{text}</span></p>)}</div><ul>{contractRules.map((item) => <li key={item}>{item}</li>)}</ul></section>
       <section className="scope-grid"><div><h3>Входит в проект</h3><div className="tag-list">{project.stack.map((item) => <span key={item}>{item}</span>)}</div></div><div><h3>Не входит</h3><ul>{project.exclusions.map((item) => <li key={item}>{item}</li>)}</ul></div></section>
-      <section><h2>Маршрут из четырёх спринтов</h2><div className="sprint-overview">{sprints.map((sprint) => <button key={sprint.number} onClick={() => navigate(`/go/task-tracker/sprint/${sprint.number}`)}><span>0{sprint.number}</span><b>{sprint.title}</b><small>{sprint.result}</small><ArrowRight size={17}/></button>)}</div></section>
+      <section><h2>Маршрут из четырёх этапов</h2><div className="sprint-overview">{sprints.map((sprint) => <button key={sprint.number} onClick={() => navigate(`/go/task-tracker/sprint/${sprint.number}`)}><span>0{sprint.number}</span><b>{sprint.title}</b><small>{sprint.result}</small><ArrowRight size={17}/></button>)}</div></section>
       <section className="completion-panel"><div><RocketLaunch size={27}/><h2>Готовый результат</h2><p>{project.result}</p></div><div><h3>Критерии завершения</h3>{project.completionCriteria.map((item) => <p key={item}><Check size={15}/>{item}</p>)}</div><div><h3>Артефакты GitHub</h3>{project.artifacts.map((item) => <p key={item}><GithubLogo size={15}/>{item}</p>)}</div></section>
       <PageNavigation current="project" navigate={navigate}/>
     </article>
@@ -535,9 +537,9 @@ function StoryMessage({ story }) {
 }
 
 function AutoCheck({ sprint = null }) {
-  return <ContentBlock eyebrow="АВТОПРОВЕРКА" title={sprint ? `Проверь спринт ${sprint} у себя` : "Скрипт проверки check.go"} icon={<Terminal size={24}/>}>
+  return <ContentBlock eyebrow="АВТОПРОВЕРКА" title={sprint ? `Проверь этап ${sprint} у себя` : "Скрипт проверки check.go"} icon={<Terminal size={24}/>}>
     {sprint
-      ? <p>Запусти проверку в папке проекта. Спринт готов, когда в разделе «Спринт {sprint}» все пункты отмечены ✓. Проверки следующих спринтов пока могут не проходить — это нормально.</p>
+      ? <p>Запусти проверку в папке проекта. Этап готов, когда в разделе «Этап {sprint}» все пункты отмечены ✓. Проверки следующих этапов пока могут не проходить — это нормально.</p>
       : <p>Скачай check.go в корень своего репозитория. Он собирает твоё приложение, запускает его в пустой временной папке и проверяет контракт команд, хранение, обработку ошибок, тесты и README. Твой tasks.json он не трогает.</p>}
     <pre className="check-command"><code>go run check.go</code></pre>
     {!sprint && <p><a className="check-download" href="/task-tracker/check.go" download>Скачать check.go</a></p>}
@@ -559,11 +561,11 @@ export function SprintPage({ number, navigate }) {
   return <LearningLayout current={current} navigate={navigate}>
     <article className="learning-article sprint-page">
       <header className="learning-header">
-        <small>СПРИНТ {sprint.number} ИЗ 4</small>
+        <small>СПРИНТ 2 · ЭТАП {sprint.number} ИЗ 4</small>
         <h1>{sprint.title}</h1>
         <p>{sprint.situation}</p>
         <div className="sprint-goal"><Target size={21}/><span><small>ЦЕЛЬ</small><b>{sprint.goal}</b></span></div>
-        <p className="sprint-result"><b>В конце спринта:</b> {sprint.result}</p>
+        <p className="sprint-result"><b>В конце этапа:</b> {sprint.result}</p>
       </header>
 
       <Checklist items={sprint.tasks} title="Что сделать" storageId={`go-task-tracker-sprint-${sprint.number}-tasks`}/>
@@ -571,7 +573,7 @@ export function SprintPage({ number, navigate }) {
       <section className="sprint-check">
         <h2>Как понять, что готово</h2>
         <ul className="sprint-criteria">{sprint.criteria.map((item) => <li key={item}><CheckCircle size={18}/>{item}</li>)}</ul>
-        <p>Запусти проверку в папке проекта. Спринт готов, когда в разделе «Спринт {sprint.number}» все пункты отмечены ✓. Проверки следующих спринтов пока могут не проходить.</p>
+        <p>Запусти проверку в папке проекта. Этап готов, когда в разделе «Этап {sprint.number}» все пункты отмечены ✓. Проверки следующих этапов пока могут не проходить.</p>
         <pre className="check-command"><code>go run check.go</code></pre>
         <p className="check-note">Скрипт скачивается на шаге <button className="inline" onClick={() => navigate("/go/task-tracker/setup")}>«Подготовка»</button>.</p>
       </section>
@@ -598,7 +600,7 @@ export function SprintPage({ number, navigate }) {
         </SprintDetails>
       </div>
 
-      <section className="sprint-finish"><CheckCircle size={28}/><div><h2>Завершение спринта</h2><p>Отметь задачи, добейся зелёной проверки и переходи дальше.</p></div><button className="primary" onClick={() => navigate(stages[stages.findIndex((stage) => stage.id === current) + 1].path)}>Следующий этап <ArrowRight size={17}/></button></section>
+      <section className="sprint-finish"><CheckCircle size={28}/><div><h2>Завершение этапа</h2><p>Отметь задачи, добейся зелёной проверки и переходи дальше.</p></div><button className="primary" onClick={() => navigate(stages[stages.findIndex((stage) => stage.id === current) + 1].path)}>Следующий этап <ArrowRight size={17}/></button></section>
       <PageNavigation current={current} navigate={navigate}/>
     </article>
   </LearningLayout>;

@@ -137,7 +137,7 @@ func main() {
 	}
 	check(1, "Проект собирается (go build .)", true, "")
 
-	// Спринт 1: добавление и список.
+	// Этап 1: добавление и список.
 	reset()
 	r := run("list")
 	check(1, "list на пустом списке не падает", r.code == 0 && !panicked(r), "код выхода "+fmt.Sprint(r.code)+"\n"+r.output)
@@ -163,7 +163,7 @@ func main() {
 	r = run("fly")
 	check(1, "Неизвестная команда — понятная ошибка", r.code != 0 && !panicked(r), "ожидался ненулевой код выхода без panic, получено "+fmt.Sprint(r.code))
 
-	// Спринт 2: управление по ID.
+	// Этап 2: управление по ID.
 	reset()
 	run("add", "Первая")
 	run("add", "Вторая")
@@ -200,7 +200,7 @@ func main() {
 		}
 	}
 
-	// Спринт 3: хранение.
+	// Этап 3: хранение.
 	reset()
 	run("add", "Пережить перезапуск")
 	data, err := os.ReadFile(filepath.Join(work, "tasks.json"))
@@ -224,7 +224,7 @@ func main() {
 	}
 	check(3, "Не остаётся временных .tmp файлов", leftover == "", "в папке остался "+leftover)
 
-	// Спринт 4: качество и релиз.
+	// Этап 4: качество и релиз.
 	test := exec.Command("go", "test", "./...")
 	test.Dir = project
 	out, err := test.CombinedOutput()
@@ -240,7 +240,7 @@ func main() {
 	// Отчёт.
 	passed := 0
 	for sprint := 1; sprint <= 4; sprint++ {
-		fmt.Printf("\nСпринт %d\n", sprint)
+		fmt.Printf("\nЭтап %d\n", sprint)
 		for _, res := range results {
 			if res.sprint != sprint {
 				continue

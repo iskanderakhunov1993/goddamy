@@ -12,28 +12,34 @@
 
 | № | Модуль | Что внутри | Результат | Статус |
 |---|---|---|---|---|
-| 1 | Старт | Знакомство с курсом, процессы в IT, терминал, Go, Git, GitHub | Ссылка на первый публичный репозиторий с commit, проверяется по API GitHub | написан, 16 уроков |
-| 2 | Как работают команды | Водопад и Agile-манифест, Kanban (Toyota, доска «до и после», WIP-лимит), Scrum (спринт, роли, встречи, ретро), неделя спринта на курсе | Своя доска в GitHub Projects | написан, 13 уроков |
-| 3 | База Go и инженерный подход | Язык, данные, файлы и JSON, тесты, основы PostgreSQL | Задачи тренажёра | написан, 25 уроков |
+| Модуль 1 | Старт | Знакомство с курсом, терминал, Go, Git, GitHub | Ссылка на первый публичный репозиторий с commit, проверяется по API GitHub | написан, 11 уроков |
+| Модуль 2 | Как работают команды | Продукт, фича, роли и инструменты команды; водопад и Agile-манифест; Kanban (Toyota, доска «до и после», WIP-лимит); Scrum (спринт, роли, встречи, ретро); неделя спринта на курсе | Своя доска в GitHub Projects | написан, 17 уроков |
+| Модуль 3 | База Go и инженерный подход | Язык, данные, файлы и JSON, тесты, основы PostgreSQL | Задачи тренажёра | написан, 25 уроков |
 
-Чего не хватает в базе: короткой темы «Как устроен интернет» (клиент и сервер, DNS, HTTP). Сейчас HTTP объясняется в теории спринта 2. Когда появится спринт 3, эту тему стоит вынести в модуль 1.
+Всё про команду и процессы собрано в модуле 2. Тема «Продукт и команда» переехала туда из «Старта», а короткий урок «Agile и Scrum на практике» убран: его целиком заменяют темы про Agile, Kanban и Scrum.
+
+Чего не хватает в базе: короткой темы «Как устроен интернет» (клиент и сервер, DNS, HTTP). Сейчас HTTP объясняется в теории спринта 1. Тему «Основы PostgreSQL» из модуля 3 стоит перенести в теорию спринта 3, где база данных впервые нужна.
 
 ## Спринты
 
+Порядок задал владелец: первым идёт сервер, потому что это основная рабочая задача Go-разработчика.
+
 | № | Спринт | Проект | Что нового | Задача на roadmap.sh | Статус |
 |---|---|---|---|---|---|
-| 1 | Консольное приложение | Task Tracker CLI | CLI, структуры, файлы, JSON, unit-тесты | [task-tracker](https://roadmap.sh/projects/task-tracker) | написан в прежнем формате (подготовка и 4 этапа, 26 проверок); перевести в формат спринта |
-| 2 | Первый HTTP-сервер | Bookmarks API | net/http, маршруты, JSON API, коды ответа, sync.Mutex, httptest, GitHub Actions | [blogging-platform-api](https://roadmap.sh/projects/blogging-platform-api) | **готов**, 11 уроков, 41 проверка |
-| 3 | Клиент чужого API | GitHub Activity CLI | http.Client, таймауты и context, разбор чужого JSON, ошибки сети | [github-user-activity](https://roadmap.sh/projects/github-user-activity) | план |
-| 4 | Сервис с базой данных | Expense Tracker API | PostgreSQL, SQL, миграции, слой хранения, Docker Compose для базы | [expense-tracker-api](https://roadmap.sh/projects/expense-tracker-api) | план |
-| 5 | Кэш и внешние сервисы | Weather API | кэш со сроком жизни, конфигурация через окружение, ограничение частоты запросов | [weather-api-wrapper-service](https://roadmap.sh/projects/weather-api-wrapper-service) | план |
-| 6 | Поставка сервиса | URL Shortener | Docker, middleware, логирование, healthcheck, полный CI | [url-shortening-service](https://roadmap.sh/projects/url-shortening-service) | план |
-| 7 | Реальное время | Broadcast Server | WebSocket, горутины и каналы, корректная остановка | [broadcast-server](https://roadmap.sh/projects/broadcast-server) | план |
-| 8 | Финальный сервис | Бронирование билетов | вход по токену, роли, транзакции | [movie-reservation-system](https://roadmap.sh/projects/movie-reservation-system) | план |
+| Спринт 1 | Первый HTTP-сервер | Bookmarks API | net/http, маршруты, JSON API, коды ответа, sync.Mutex, httptest, GitHub Actions | [blogging-platform-api](https://roadmap.sh/projects/blogging-platform-api) | **готов** в формате спринта, 11 уроков, 41 проверка |
+| Спринт 2 | Консольное приложение | Task Tracker CLI | аргументы командной строки, файлы, JSON, unit-тесты, релиз | [task-tracker](https://roadmap.sh/projects/task-tracker) | написан в прежнем формате (подготовка и 4 этапа, 26 проверок); перевести в формат спринта |
+| Спринт 3 | Сервис с базой данных | Expense Tracker | PostgreSQL, SQL, миграции, слой хранения, Docker Compose для базы | [expense-tracker-api](https://roadmap.sh/projects/expense-tracker-api) | план |
+| Спринт 4 | Поставка сервиса | URL Shortener API | Docker, middleware, логирование, healthcheck, полный CI | [url-shortening-service](https://roadmap.sh/projects/url-shortening-service) | план |
+| Спринт 5 | Клиент чужого API | GitHub Activity CLI | http.Client, таймауты и context, разбор чужого JSON, ошибки сети | [github-user-activity](https://roadmap.sh/projects/github-user-activity) | план |
+| Спринт 6 | Кэш и внешние сервисы | Weather API | кэш со сроком жизни, конфигурация через окружение, ограничение частоты запросов | [weather-api-wrapper-service](https://roadmap.sh/projects/weather-api-wrapper-service) | план |
+| Спринт 7 | Реальное время | Broadcast Server | WebSocket, горутины и каналы, корректная остановка | [broadcast-server](https://roadmap.sh/projects/broadcast-server) | план |
+| Спринт 8 | Финальный сервис | Бронирование билетов | вход по токену, роли, транзакции | [movie-reservation-system](https://roadmap.sh/projects/movie-reservation-system) | план |
 
 После спринтов — модуль «Релиз и портфолио»: оформление репозиториев и сертификат.
 
-Спринты 4 и 6 заменяют нынешние модули-заглушки «Expense Tracker» и «URL Shortener API». Спринты 4, 6 и 8 требуют PostgreSQL и Docker в проверке: в GitHub Actions они доступны как сервисы, локально ученику понадобится Docker.
+Спринты 3 и 4 уже стоят в кабинете как модули-заглушки «В разработке». Спринты 3, 4 и 8 требуют PostgreSQL и Docker в проверке: в GitHub Actions они доступны как сервисы, локально ученику понадобится Docker.
+
+В Task Tracker четыре внутренних шага называются этапами, а не спринтами: спринт — это весь проект.
 
 ## Формат спринта
 
