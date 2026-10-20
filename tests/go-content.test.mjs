@@ -17,7 +17,8 @@ test("starter and reference solution declare the same package and function signa
   for (const challenge of goChallenges) {
     assert.match(challenge.starter, /^package main/);
     assert.match(challenge.referenceSolution, /^package main/);
-    const signatureMatch = challenge.starter.match(/func \w+\([^)]*\)[^{]*\{/);
+    // Сигнатура функции или метода: у метода перед именем стоит получатель в скобках.
+    const signatureMatch = challenge.starter.match(/func (?:\([^)]*\) )?\w+\([^)]*\)[^{]*\{/);
     assert.ok(signatureMatch, `${challenge.id} starter should declare a function`);
     assert.ok(challenge.referenceSolution.includes(signatureMatch[0]), `${challenge.id} reference solution should keep the same signature as the starter`);
   }

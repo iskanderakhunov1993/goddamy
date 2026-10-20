@@ -1,5 +1,263 @@
 export const goChallenges = [
   {
+    id: "greeting",
+    title: "Приветствие",
+    category: "Основы",
+    level: "Лёгкая",
+    minutes: 5,
+    description: "Напиши функцию, которая возвращает приветствие по имени: для имени «Анна» получится «Привет, Анна!».",
+    starter: `package main
+
+import "fmt"
+
+func Greeting(name string) string {
+	// твой код
+	return ""
+}`,
+    harness: `func main() {
+	fmt.Println(Greeting("Анна"))
+	fmt.Println(Greeting("Go"))
+}`,
+    referenceSolution: `package main
+
+import "fmt"
+
+func Greeting(name string) string {
+	return "Привет, " + name + "!"
+}`,
+    hint: "Строки складываются оператором +. Не забудь запятую с пробелом и восклицательный знак.",
+  },
+  {
+    id: "seconds",
+    title: "Сколько секунд",
+    category: "Основы",
+    level: "Лёгкая",
+    minutes: 6,
+    description: "Переведи время в секунды: функция получает часы и минуты и возвращает общее число секунд.",
+    starter: `package main
+
+import "fmt"
+
+func Seconds(hours, minutes int) int {
+	// твой код
+	return 0
+}`,
+    harness: `func main() {
+	fmt.Println(Seconds(1, 0))
+	fmt.Println(Seconds(0, 15))
+	fmt.Println(Seconds(2, 30))
+}`,
+    referenceSolution: `package main
+
+import "fmt"
+
+func Seconds(hours, minutes int) int {
+	total := hours*3600 + minutes*60
+	return total
+}`,
+    hint: "В часе 3600 секунд, в минуте 60. Посчитай обе части и сложи в одной переменной.",
+  },
+  {
+    id: "grade",
+    title: "Оценка по баллам",
+    category: "Условия",
+    level: "Лёгкая",
+    minutes: 8,
+    description: "Верни оценку по числу баллов: от 90 — «отлично», от 70 — «хорошо», от 50 — «зачёт», меньше — «незачёт».",
+    starter: `package main
+
+import "fmt"
+
+func Grade(score int) string {
+	// твой код
+	return ""
+}`,
+    harness: `func main() {
+	fmt.Println(Grade(95))
+	fmt.Println(Grade(90))
+	fmt.Println(Grade(71))
+	fmt.Println(Grade(50))
+	fmt.Println(Grade(12))
+}`,
+    referenceSolution: `package main
+
+import "fmt"
+
+func Grade(score int) string {
+	switch {
+	case score >= 90:
+		return "отлично"
+	case score >= 70:
+		return "хорошо"
+	case score >= 50:
+		return "зачёт"
+	default:
+		return "незачёт"
+	}
+}`,
+    hint: "Проверяй условия сверху вниз, от большего порога к меньшему: подойдёт цепочка if / else if или switch без выражения.",
+  },
+  {
+    id: "factorial",
+    title: "Факториал",
+    category: "Циклы",
+    level: "Лёгкая",
+    minutes: 8,
+    description: "Посчитай факториал числа: произведение всех целых от 1 до n. Факториал нуля равен 1.",
+    starter: `package main
+
+import "fmt"
+
+func Factorial(n int) int {
+	// твой код
+	return 0
+}`,
+    harness: `func main() {
+	fmt.Println(Factorial(0))
+	fmt.Println(Factorial(1))
+	fmt.Println(Factorial(5))
+	fmt.Println(Factorial(10))
+}`,
+    referenceSolution: `package main
+
+import "fmt"
+
+func Factorial(n int) int {
+	result := 1
+	for i := 2; i <= n; i++ {
+		result *= i
+	}
+	return result
+}`,
+    hint: "Начни с result := 1 и в цикле for умножай его на числа от 2 до n. Для нуля цикл не выполнится ни разу.",
+  },
+  {
+    id: "book-card",
+    title: "Карточка книги",
+    category: "Структуры",
+    level: "Лёгкая",
+    minutes: 8,
+    description: "Опиши книгу одной строкой: для книги «Идиот» 1869 года функция возвращает «Идиот (1869)».",
+    starter: `package main
+
+import "fmt"
+
+type Book struct {
+	Title string
+	Year  int
+}
+
+func Describe(b Book) string {
+	// твой код
+	return ""
+}`,
+    harness: `func main() {
+	fmt.Println(Describe(Book{Title: "Идиот", Year: 1869}))
+	fmt.Println(Describe(Book{Title: "Мастер и Маргарита", Year: 1967}))
+}`,
+    referenceSolution: `package main
+
+import "fmt"
+
+type Book struct {
+	Title string
+	Year  int
+}
+
+func Describe(b Book) string {
+	return fmt.Sprintf("%s (%d)", b.Title, b.Year)
+}`,
+    hint: "К полям структуры обращаются через точку: b.Title и b.Year. Строку удобно собрать через fmt.Sprintf с %s и %d.",
+  },
+  {
+    id: "rename-task",
+    title: "Переименовать задачу",
+    category: "Указатели",
+    level: "Лёгкая",
+    minutes: 10,
+    description: "Функция получает указатель на задачу и меняет её название. После вызова у исходной задачи должно быть новое название.",
+    starter: `package main
+
+import "fmt"
+
+type Task struct {
+	ID    int
+	Title string
+}
+
+func Rename(t *Task, title string) {
+	// твой код
+}`,
+    harness: `func main() {
+	task := Task{ID: 1, Title: "Черновик"}
+	Rename(&task, "Купить билеты")
+	fmt.Println(task.ID, task.Title)
+	Rename(&task, "Сдать отчёт")
+	fmt.Println(task.ID, task.Title)
+}`,
+    referenceSolution: `package main
+
+import "fmt"
+
+type Task struct {
+	ID    int
+	Title string
+}
+
+func Rename(t *Task, title string) {
+	t.Title = title
+}`,
+    hint: "Через указатель поле меняется так же, как у обычной структуры: t.Title = title. Go сам разыменует указатель.",
+  },
+  {
+    id: "counter-methods",
+    title: "Счётчик с методами",
+    category: "Методы",
+    level: "Лёгкая",
+    minutes: 10,
+    description: "Допиши два метода счётчика: Inc увеличивает значение на единицу, Value возвращает текущее значение.",
+    starter: `package main
+
+import "fmt"
+
+type Counter struct {
+	value int
+}
+
+func (c *Counter) Inc() {
+	// твой код
+}
+
+func (c *Counter) Value() int {
+	// твой код
+	return 0
+}`,
+    harness: `func main() {
+	counter := Counter{}
+	fmt.Println(counter.Value())
+	counter.Inc()
+	counter.Inc()
+	counter.Inc()
+	fmt.Println(counter.Value())
+}`,
+    referenceSolution: `package main
+
+import "fmt"
+
+type Counter struct {
+	value int
+}
+
+func (c *Counter) Inc() {
+	c.value++
+}
+
+func (c *Counter) Value() int {
+	return c.value
+}`,
+    hint: "У методов указательный получатель (c *Counter), поэтому c.value++ меняет сам счётчик, а не его копию.",
+  },
+  {
     id: "sum-even",
     title: "Сумма чётных чисел",
     category: "Слайсы",
@@ -89,10 +347,7 @@ func WordFrequency(words []string) map[string]int {
     description: "Найди задачу в слайсе структур и измени её статус.",
     starter: `package main
 
-import (
-	"errors"
-	"fmt"
-)
+import "fmt"
 
 type Task struct {
 	ID     int
@@ -132,7 +387,7 @@ func SetStatus(tasks []Task, id int, status string) error {
 	}
 	return errors.New("task not found")
 }`,
-    hint: "Итерируйся по индексу (for i := range tasks), если хочешь изменить элемент слайса на месте.",
+    hint: "Итерируйся по индексу (for i := range tasks), если хочешь изменить элемент слайса на месте. Пакет errors добавь в import самостоятельно.",
   },
   {
     id: "expense-total",
@@ -199,11 +454,7 @@ func Totals(items []Expense) map[string]int {
     description: "Проверь пользовательскую команду и верни понятную ошибку вместо panic.",
     starter: `package main
 
-import (
-	"errors"
-	"fmt"
-	"strings"
-)
+import "fmt"
 
 func ParseCommand(input string) (string, error) {
 	// твой код
@@ -230,7 +481,7 @@ func ParseCommand(input string) (string, error) {
 	}
 	return trimmed, nil
 }`,
-    hint: "Обрежь пробелы через strings.TrimSpace и опиши пустой ввод через errors.New.",
+    hint: "Обрежь пробелы через strings.TrimSpace и опиши пустой ввод через errors.New. Пакеты errors, strings добавь в import самостоятельно.",
   },
   {
     id: "json-backup",
@@ -241,10 +492,7 @@ func ParseCommand(input string) (string, error) {
     description: "Сериализуй список задач и корректно сообщи о повреждённом файле.",
     starter: `package main
 
-import (
-	"encoding/json"
-	"fmt"
-)
+import "fmt"
 
 func LoadTasks(data []byte) ([]string, error) {
 	// твой код
@@ -270,7 +518,7 @@ func LoadTasks(data []byte) ([]string, error) {
 	}
 	return tasks, nil
 }`,
-    hint: "Используй json.Unmarshal(data, &tasks) и оборачивай ошибку через fmt.Errorf с %w.",
+    hint: "Используй json.Unmarshal(data, &tasks) и оборачивай ошибку через fmt.Errorf с %w. Пакет encoding/json добавь в import самостоятельно.",
   },
   {
     id: "http-status",
@@ -321,11 +569,7 @@ func CreateExpense(w http.ResponseWriter, r *http.Request) {
     description: "Распредели обработку ссылок между несколькими воркерами.",
     starter: `package main
 
-import (
-	"fmt"
-	"strings"
-	"sync"
-)
+import "fmt"
 
 func Process(jobs []string, workers int) []string {
 	// твой код
@@ -363,7 +607,7 @@ func Process(jobs []string, workers int) []string {
 	wg.Wait()
 	return results
 }`,
-    hint: "Пиши результат по индексу results[i] — тогда порядок не зависит от того, какой воркер каким job'ом занялся.",
+    hint: "Пиши результат по индексу results[i] — тогда порядок не зависит от того, какой воркер каким job'ом занялся. Пакеты strings, sync добавь в import самостоятельно.",
   },
   {
     id: "request-timeout",
@@ -377,7 +621,6 @@ func Process(jobs []string, workers int) []string {
 import (
 	"context"
 	"fmt"
-	"time"
 )
 
 func Fetch(ctx context.Context, url string) error {
@@ -406,7 +649,7 @@ func Fetch(ctx context.Context, url string) error {
 		return ctx.Err()
 	}
 }`,
-    hint: "Создай дочерний контекст через context.WithTimeout, не забудь defer cancel(), и слушай ctx.Done() в select.",
+    hint: "Создай дочерний контекст через context.WithTimeout, не забудь defer cancel(), и слушай ctx.Done() в select. Пакет time добавь в import самостоятельно.",
   },
 ];
 
