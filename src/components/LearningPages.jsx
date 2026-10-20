@@ -5,13 +5,16 @@ import {
   ArrowLeft, ArrowRight, Check, CheckCircle, Circle, Code,
   GithubLogo, Lightbulb, RocketLaunch, Target, BookOpen, House,
   List, X, CaretRight, CaretDown, UserCircle, PencilSimple, Flame, ArrowUpRight,
-  Certificate, Terminal
+  Certificate, Terminal, Lock
 } from "@phosphor-icons/react";
 import { cliContract, contractRules, project, setupTasks, sprints, stages, storyBeats } from "../content/goCourse.js";
 import { authoredLessonIds, courseCurriculum, courseStats, readyModuleIds } from "../content/courseCurriculum.js";
 import { ALLOWED_EDITOR_EMAIL } from "../lib/supabaseClient.js";
 import { courseLessonPath, findLesson, flattenCourse, loadCourseDraft } from "../content/courseDraft.js";
 import { getGoSprintByModule, sprintPath } from "../content/goSprints.js";
+import { getLessonTasks } from "../content/goLessonTasks/index.js";
+import { authoredGoLessons, findGoLesson, getSolvedTaskKeys, lessonAccess, taskPath } from "../lib/goCourseProgress.js";
+import { LockedLesson, ProgramDrawer } from "./LessonTasks.jsx";
 import "../styles-sprint.css";
 import { LessonBlocks } from "./LessonBlocks.jsx";
 import { ModuleGlyph } from "./CourseCabinet.jsx";
@@ -143,12 +146,14 @@ function CourseOutline({ course = courseCurriculum, initialSectionId = null, onC
           const written = lessons.filter((entry) => authoredLessonIds.has(entry.id));
           const ready = written.length > 0;
           const complete = ready && written.every((entry) => completed.has(entry.id));
-          return <button key={item.id || label} disabled={isLessonView && !ready} onClick={() => {
+          // Уроки открываются по порядку: закрытый урок виден в списке, но не открывается.
+          const locked = isLessonView && ready && !lessonAccess(authoredGoLessons, item.id, completed).unlocked;
+          return <button key={item.id || label} disabled={isLessonView && (!ready || locked)} title={locked ? "Откроется после предыдущего урока" : undefined} onClick={() => {
             if (isLessonView) { onClose(); navigate(courseLessonPath({ ...item, section, topic })); }
             else if (section) setSelection((state) => ({ ...state, topic: item.id }));
             else setSelection({ section: item.id, topic: null });
           }}>
-            <span>{String(index + 1).padStart(2, "0")}</span><b>{label}</b>{!ready ? <em>В разработке</em> : complete ? <Check size={17} aria-label="Пройдено"/> : <Circle size={17}/>}{!(isLessonView && !ready) && <CaretRight size={17}/>}
+            <span>{String(index + 1).padStart(2, "0")}</span><b>{label}</b>{!ready ? <em>В разработке</em> : complete ? <Check size={17} aria-label="Пройдено"/> : locked ? <Lock size={17} aria-label="Закрыт"/> : <Circle size={17}/>}{!(isLessonView && (!ready || locked)) && <CaretRight size={17}/>}
           </button>;
         })}
       </div>
@@ -451,12 +456,23 @@ export function StoryLesson({ sectionId = "intro", topicId = "welcome", lessonId
     setCompletedIds((ids) => new Set(ids).add(current.id));
     navigate(path || (item ? courseLessonPath(item) : "/go/task-tracker"));
   };
+  // После теории урока идут задания (как в тренажёре Практикума): урок засчитывается,
+  // когда решены все его задания, а не когда дочитан текст.
+  const [menu, setMenu] = useState(false);
+  const tasks = getLessonTasks(current.id);
+  const solvedKeys = getSolvedTaskKeys();
+  const solvedCount = tasks.filter((task) => solvedKeys.has(task.key)).length;
+  const firstOpenTask = Math.max(tasks.findIndex((task) => !solvedKeys.has(task.key)), 0);
+  const tasksDone = tasks.length > 0 && solvedCount === tasks.length;
+  const goLesson = findGoLesson(current.id);
+  const access = goLesson ? lessonAccess(authoredGoLessons, current.id, completedIds) : { unlocked: true };
+  if (goLesson && !access.unlocked) return <LockedLesson lesson={goLesson} blockedBy={access.blockedBy} navigate={navigate}/>;
 
   return <main className="story-lesson-shell">
     <aside className="story-side">
       <button onClick={() => navigate("/go")} aria-label="К программе"><ArrowLeft size={20}/></button>
       <button onClick={() => navigate("/")} aria-label="На главную"><House size={20}/></button>
-      <button onClick={() => navigate("/go")} aria-label="Мой курс"><BookOpen size={20}/></button>
+      <button onClick={() => (goLesson ? setMenu(true) : navigate("/go"))} aria-label="Программа модуля"><BookOpen size={20}/></button>
     </aside>
     <article className="story-lesson lesson-reader">
       <header>
@@ -489,9 +505,16 @@ export function StoryLesson({ sectionId = "intro", topicId = "welcome", lessonId
           <button className={`lesson-feedback ${feedback === "confusing" ? "active" : ""}`} aria-pressed={feedback === "confusing"} onClick={() => sendFeedback("confusing")}>Непонятно</button>
           {feedback && <span className="lesson-feedback-thanks">Спасибо, учли</span>}
         </div>
-        <div className="lesson-pager">{previous && <button onClick={() => openLesson(previous)}><ArrowLeft size={17}/> Назад</button>}<button className="story-next" onClick={() => openLesson(next, forwardPath)}>{forwardLabel} <ArrowRight size={17}/></button></div>
+        <div className="lesson-pager">
+          {previous && <button onClick={() => navigate(courseLessonPath(previous))}><ArrowLeft size={17}/> Назад</button>}
+          {tasks.length > 0 && <span className="lesson-task-count">Заданий решено: {solvedCount} из {tasks.length}</span>}
+          {tasks.length > 0 && !tasksDone && <button className="story-next" onClick={() => navigate(taskPath(goLesson, firstOpenTask + 1))}>{solvedCount ? "Продолжить задания" : "Перейти к заданиям"} <ArrowRight size={17}/></button>}
+          {tasksDone && <button onClick={() => navigate(taskPath(goLesson, 1))}>К заданиям</button>}
+          {(tasks.length === 0 || tasksDone) && <button className="story-next" onClick={() => (tasks.length ? navigate(forwardPath) : openLesson(next, forwardPath))}>{forwardLabel} <ArrowRight size={17}/></button>}
+        </div>
       </footer>
     </article>
+    {menu && goLesson && <ProgramDrawer lesson={goLesson} navigate={navigate} onClose={() => setMenu(false)}/>}
   </main>;
 }
 

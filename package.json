@@ -10,7 +10,8 @@
     "test": "node --test tests/*.test.mjs",
     "build": "vite build && node scripts/prepare-sites-build.mjs",
     "preview": "vite preview",
-    "test:sites": "node --test tests/sites-worker.test.mjs"
+    "test:sites": "node --test tests/sites-worker.test.mjs",
+    "verify:tasks": "for f in src/content/goLessonTasks/[a-z]*.js; do case $f in *index.js) ;; *) node scripts/verify-lesson-tasks.mjs $f || exit 1;; esac; done"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

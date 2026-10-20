@@ -10,7 +10,7 @@ import { parseRepoUrl, verifyFirstRepo, verifySprintRepo } from "../src/lib/gith
 const publicFile = (href) => new URL(`../public${href}`, import.meta.url);
 const bootcampModules = courseCurriculum.filter((module) => module.id === "team-methods" || getGoSprintByModule(module.id));
 const bootcampLessons = bootcampModules.flatMap((module) => module.topics.flatMap((topic) => topic.lessons));
-const blockTypes = new Set(["heading", "paragraph", "image", "quote", "list", "dialogue", "link", "code", "callout", "quiz", "task", "submission", "divider"]);
+const blockTypes = new Set(["heading", "paragraph", "image", "quote", "list", "dialogue", "link", "code", "callout", "quiz", "task", "submission", "practice", "divider"]);
 
 test("the course runs foundation modules first, then numbered sprints", () => {
   assert.deepEqual(courseCurriculum.map((module) => `${module.phase} ${module.title}`), [
@@ -64,6 +64,44 @@ test("bootcamp copy addresses the learner as «ты» without gendered forms", (
   assert.doesNotMatch(text, /Bit Tech|\/characters\/|avatar/i);
   assert.doesNotMatch(text, /[Тт]ы (сделал|написал|готов|должен|научился|узнал|встречал|отправил)(?![а-яё])/);
   assert.doesNotMatch(text, /(^|[\s«(])[Вв]ы (можете|должны|будете|узнаете)/);
+});
+
+test("lesson tasks belong to written lessons and are well-formed", async () => {
+  const { lessonTasks } = await import("../src/content/goLessonTasks/index.js");
+  const keys = new Set();
+  for (const [lessonId, tasks] of Object.entries(lessonTasks)) {
+    assert.ok(authoredLessonIds.has(lessonId), `${lessonId}: задания у ненаписанного урока`);
+    for (const task of tasks) {
+      assert.ok(!keys.has(task.key), `${task.key}: задание повторяется`);
+      keys.add(task.key);
+      assert.ok(task.title && task.minutes > 0, task.key);
+      if (task.kind === "quiz") {
+        assert.equal(task.options.filter((option) => option.startsWith("*")).length, 1, `${task.key}: один верный вариант`);
+        assert.ok(task.question && task.explanation, task.key);
+      } else {
+        assert.equal(task.kind, "code", task.key);
+        assert.match(task.harness.trim(), /^func main\(\) \{/, task.key);
+        assert.match(task.starter, /^package main/, task.key);
+        assert.match(task.referenceSolution, /^package main/, task.key);
+      }
+    }
+  }
+  const moduleThree = courseCurriculum.find((module) => module.id === "go-foundations").topics.flatMap((topic) => topic.lessons);
+  for (const lesson of moduleThree) {
+    const count = lessonTasks[lesson.id]?.length || 0;
+    assert.ok(count >= 3 && count <= 5, `${lesson.id}: в уроке Модуля 3 должно быть 3–5 заданий, сейчас ${count}`);
+  }
+});
+
+test("lessons open in order: the next one unlocks after the previous is complete", async () => {
+  const { lessonAccess } = await import("../src/lib/goCourseProgress.js");
+  const lessons = [{ id: "a", title: "A" }, { id: "b", title: "B" }, { id: "c", title: "C" }];
+  assert.equal(lessonAccess(lessons, "a", new Set()).unlocked, true, "первый урок открыт всегда");
+  assert.equal(lessonAccess(lessons, "b", new Set()).unlocked, false);
+  assert.equal(lessonAccess(lessons, "b", new Set()).blockedBy.id, "a");
+  assert.equal(lessonAccess(lessons, "b", new Set(["a"])).unlocked, true);
+  assert.equal(lessonAccess(lessons, "c", new Set(["a"])).blockedBy.id, "b");
+  assert.equal(lessonAccess(lessons, "c", new Set(["c"])).unlocked, true, "пройденный урок не закрывается");
 });
 
 test("a sprint is a five-step week with a ticket from a role and a contract", () => {

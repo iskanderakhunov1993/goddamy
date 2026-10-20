@@ -10,6 +10,7 @@ import { AcademyHub, PublicGoLanding, GoTrainer } from "./components/AcademyExpe
 import { GoTask } from "./components/GoTask.jsx";
 import { getGoChallenge } from "./content/goChallenges.js";
 import { GoSprintPage } from "./components/SprintExperience.jsx";
+import { LessonTaskPage } from "./components/LessonTasks.jsx";
 import { getGoSprint } from "./content/goSprints.js";
 import { SqlCoursePage, SqlTask, SqlTrainer } from "./components/SqlExperience.jsx";
 import { getSqlChallenge } from "./content/sqlChallenges.js";
@@ -130,6 +131,7 @@ export function App() {
     };
     const sprint = route.match(/^\/go\/task-tracker\/sprint\/([1-4])$/);
     const courseLesson = route.match(/^\/go\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
+    const lessonTask = route.match(/^\/go\/lesson\/.+\/task\/\d+$/);
     const bootcampSprint = getGoSprint(route.match(/^\/go\/sprint\/([^/]+)/)?.[1]);
     const goTask = route.match(/^\/(?:task|go\/practice)\/([^/]+)$/);
     const sqlTask = route.match(/^\/sql\/practice\/([^/]+)$/);
@@ -146,6 +148,7 @@ export function App() {
       : secLesson ? "Урок · Основы кибербезопасности — Godemy"
       : secTask ? `${getSecurityChallenge(secTask[1]).title} — Godemy`
       : bootcampSprint ? `Спринт ${bootcampSprint.number} · ${bootcampSprint.project} — Godemy`
+      : lessonTask ? "Задание урока · курс Go — Godemy"
       : courseLesson ? "Урок курса Основы Go — Godemy"
       : sprint ? `Этап ${sprint[1]} · Task Tracker — Godemy`
       : goTask ? `${getGoChallenge(goTask[1]).title} — Godemy`
@@ -170,6 +173,7 @@ export function App() {
   };
   const sprintMatch = route.match(/^\/go\/task-tracker\/sprint\/([1-4])$/);
   const lessonMatch = route.match(/^\/go\/lesson\/([^/]+)\/([^/]+)\/([^/]+)$/);
+  const lessonTaskMatch = route.match(/^\/go\/lesson\/([^/]+)\/([^/]+)\/([^/]+)\/task\/(\d+)$/);
   const goSprintMatch = route.match(/^\/go\/sprint\/([^/]+)(?:\/([^/]+))?$/);
   const goSprint = goSprintMatch ? getGoSprint(goSprintMatch[1]) : null;
   const taskMatch = route.match(/^\/(?:task|go\/practice)(?:\/([^/]+))?$/);
@@ -247,13 +251,14 @@ export function App() {
   else if (route === "/course-editor") content = <EditorAuthGate><CourseEditor navigate={navigate}/></EditorAuthGate>;
   else if (route === "/terms") content = <TermsPage navigate={navigate}/>;
   else if (route === "/privacy") content = <PrivacyPage navigate={navigate}/>;
+  else if (lessonTaskMatch) content = <LessonTaskPage lessonId={lessonTaskMatch[3]} number={Number(lessonTaskMatch[4])} navigate={navigate} key={route}/>;
   else if (goSprint) content = <GoSprintPage sprint={goSprint} stageId={goSprintMatch[2]} navigate={navigate} key={`${goSprint.id}-${goSprintMatch[2] || "task"}`}/>;
   else if (lessonMatch) content = <StoryLesson sectionId={lessonMatch[1]} topicId={lessonMatch[2]} lessonId={lessonMatch[3]} navigate={navigate}/>;
   else if (route === "/lesson") content = <StoryLesson navigate={navigate}/>;
   else if (route === "/trainer" || route === "/go/practice") content = <Trainer setPage={navigate}/>;
   else if (taskMatch) content = <GoTask challengeId={taskMatch[1]} navigate={navigate} key={taskMatch[1]}/>;
   else content = <CoursePage navigate={navigate}/>;
-  const immersive = route === "/kids" || route === "/school/report" || route === "/school" || route === "/school/practice" || Boolean(schoolTaskMatch) || Boolean(schoolLessonMatch) || Boolean(extraLessonMatch) || route === "/youtube" || Boolean(ytLessonMatch) || route === "/kubernetes" || route === "/kubernetes/practice" || Boolean(k8sTaskMatch) || Boolean(k8sLessonMatch) || route === "/security" || route === "/security/practice" || Boolean(secTaskMatch) || Boolean(secLessonMatch) || Boolean(taskMatch) || Boolean(sqlTaskMatch) || Boolean(pythonTaskMatch) || Boolean(qaTaskMatch) || route === "/trainer" || route === "/go/practice" || route === "/sql" || route === "/sql/practice" || route === "/python" || route === "/python/practice" || route === "/product" || route === "/product/practice" || route === "/qa" || route === "/qa/practice" || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch);
+  const immersive = route === "/kids" || route === "/school/report" || route === "/school" || route === "/school/practice" || Boolean(schoolTaskMatch) || Boolean(schoolLessonMatch) || Boolean(extraLessonMatch) || route === "/youtube" || Boolean(ytLessonMatch) || route === "/kubernetes" || route === "/kubernetes/practice" || Boolean(k8sTaskMatch) || Boolean(k8sLessonMatch) || route === "/security" || route === "/security/practice" || Boolean(secTaskMatch) || Boolean(secLessonMatch) || Boolean(taskMatch) || Boolean(sqlTaskMatch) || Boolean(pythonTaskMatch) || Boolean(qaTaskMatch) || route === "/trainer" || route === "/go/practice" || route === "/sql" || route === "/sql/practice" || route === "/python" || route === "/python/practice" || route === "/product" || route === "/product/practice" || route === "/qa" || route === "/qa/practice" || route === "/go" || route === "/lesson" || route === "/course-editor" || Boolean(lessonMatch) || Boolean(lessonTaskMatch);
   return <>{!immersive && <Header setPage={navigate}/>} {content}{!immersive && <Footer setPage={navigate}/>}</>;
 }
 
